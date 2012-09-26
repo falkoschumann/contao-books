@@ -32,7 +32,7 @@ CREATE TABLE `tl_book` (
 -- --------------------------------------------------------
 
 -- 
--- Table `tl_chapter`
+-- Table `tl_book_chapter`
 -- 
 
 CREATE TABLE `tl_book_chapter` (

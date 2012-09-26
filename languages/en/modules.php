@@ -41,13 +41,6 @@
 /**
  * Back end modules
  */
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
-(
-	'books' => array
-	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
-		'icon'   => 'system/modules/books/html/icon.png'
-	)
-));
- 
+$GLOBALS['TL_LANG']['MOD']['books'] = array('Books', 'Manage books and chapters.');
+
 ?>
