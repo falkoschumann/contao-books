@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project name="books" default="install">
+
+	<property file="build.properties" />
+
+	<target name="install">
+		<fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir" />
+
+		<copy todir="${contao.dir}/system/modules/${ant.project.name}">
+			<fileset dir=".">
+				<exclude name=".git" />
+				<exclude name=".gitignore" />
+				<exclude name="build.*" />
+				<exclude name="sql/" />
+			</fileset>
+		</copy>
+	</target>
+
+</project>
