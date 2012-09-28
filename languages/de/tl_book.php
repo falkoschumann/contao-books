@@ -41,13 +41,24 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_book'][''] = array('', '');
+$GLOBALS['TL_LANG']['tl_book']['title']     = array('Titel', 'Bitte geben Sie den Buchtitel ein.');
+$GLOBALS['TL_LANG']['tl_book']['subtitle']  = array('Untertitel', 'Geben Sie dem Buch optional einen Untertitel.');
+$GLOBALS['TL_LANG']['tl_book']['alias']     = array('Buchalias', 'Der Buchalias ist eine eindeutige Referenz, die anstelle der numerischen Buch-ID aufgerufen werden kann.');
+$GLOBALS['TL_LANG']['tl_book']['author']    = array('Autor', 'Hier können Sie den Autor des Buches angeben.');
+$GLOBALS['TL_LANG']['tl_book']['language']  = array('Sprache', 'Bitte geben Sie die Sprache des Buches gemäß des ISO-639-1 Standards ein (z.B. "de" für Deutsch).');
+$GLOBALS['TL_LANG']['tl_book']['category']  = array('Kategorie', 'Kategorie oder Kategorien des Buches, z.B. "Buch", "Satsang" oder "Sat Sandesh"');
+$GLOBALS['TL_LANG']['tl_book']['note']      = array('Notiz', '');
+$GLOBALS['TL_LANG']['tl_book']['text']      = array('Vorwort', 'Sie können HTML-Tags verwenden, um den Test zu formatieren.');
+$GLOBALS['TL_LANG']['tl_book']['published'] = array('Buch veröffentlichen', 'Das Buch auf der Webseite anzeigen.');
 
 
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_book'][''] = '';
+$GLOBALS['TL_LANG']['tl_book']['book_legend']    = 'Buch';
+$GLOBALS['TL_LANG']['tl_book']['meta_legend']    = 'Meta-Informationen';
+$GLOBALS['TL_LANG']['tl_book']['text_legend']    = 'Vorwort';
+$GLOBALS['TL_LANG']['tl_book']['publish_legend'] = 'Veröffentlichung';
 
 
 /**

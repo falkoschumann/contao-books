@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array(''),
-		'default'                     => ''
+		'default'                     => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},language,category,note;{text_legend},text;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -124,12 +124,85 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	// Fields
 	'fields' => array
 	(
-		'' => array
+		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book'][''],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['title'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'search'                  => true,
+			'sorting'                 => true
+		),
+		'subtitle' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'search'                  => true
+		),
+		'alias' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['alias'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
+			'search'                  => true,
+			'sorting'                 => true
+		),
+		'author' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['author'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'filter'                  => true,
+			'search'                  => true,
+			'sorting'                 => true
+		),
+		'language' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['language'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('minlength'=>2, 'maxlength'=>2, 'rgxp'=>'alpha', 'tl_class'=>'w50'),
+			'filter'                  => true,
+			'sorting'                 => true
+		),
+		'category' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['category'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'filter'                  => true,
+			'search'                  => true,
+			'sorting'                 => true
+		),
+		'note' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['note'],
+			'exclude'                 => true,
+			'inputType'               => 'textarea',
+			'eval'                    => array('wrap'=>'soft'),
+			'search'                  => true
+		),
+		'text' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['text'],
+			'exclude'                 => true,
+			'inputType'               => 'textarea',
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
+			'search'                  => true
+		),
+		'published' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['published'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
+			'filter'                  => true,
+			'sorting'                 => true
 		)
 	)
 );
