@@ -33,7 +33,7 @@
  * @copyright  Falko Schumann 2012
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
- * @license    3-clauses-BSD
+ * @license    BSD-3-clause
  * @filesource
  */
 

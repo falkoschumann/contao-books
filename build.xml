@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<project name="books" default="install">
+<project name="books">
 
 	<property file="build.properties" />
 
-	<target name="install">
-		<fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir" />
+	<fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir" />
 
-		<copy todir="${contao.dir}/system/modules/${ant.project.name}">
+	<property name="deploy.dir" location="${contao.dir}/system/modules/${ant.project.name}" />
+
+	<target name="dist">
+		<echo>Hier fehlt noch die Implementierung, um das ZIP für das Contao Extension Repository zusammenzustellen.</echo>
+	</target>
+
+	<target name="deploy">
+		<copy todir="${deploy.dir}">
 			<fileset dir=".">
 				<exclude name=".git" />
 				<exclude name=".gitignore" />
@@ -14,6 +20,10 @@
 				<exclude name="sql/" />
 			</fileset>
 		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="${deploy.dir}" />
 	</target>
 
 </project>
