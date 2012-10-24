@@ -48,7 +48,7 @@ $GLOBALS['TL_LANG']['tl_book']['author']    = array('Autor', 'Hier können Sie d
 $GLOBALS['TL_LANG']['tl_book']['language']  = array('Sprache', 'Bitte geben Sie die Sprache des Buches gemäß des ISO-639-1 Standards ein (z.B. "de" für Deutsch).');
 $GLOBALS['TL_LANG']['tl_book']['category']  = array('Kategorie', 'Kategorie oder Kategorien des Buches, z.B. "Buch", "Satsang" oder "Sat Sandesh"');
 $GLOBALS['TL_LANG']['tl_book']['note']      = array('Notiz', '');
-$GLOBALS['TL_LANG']['tl_book']['text']      = array('Vorwort', 'Sie können HTML-Tags verwenden, um den Test zu formatieren.');
+$GLOBALS['TL_LANG']['tl_book']['text']      = array('Vorwort', 'Sie können HTML-Tags verwenden, um den Text zu formatieren.');
 $GLOBALS['TL_LANG']['tl_book']['published'] = array('Buch veröffentlichen', 'Das Buch auf der Webseite anzeigen.');
 
 
@@ -64,10 +64,11 @@ $GLOBALS['TL_LANG']['tl_book']['publish_legend'] = 'Veröffentlichung';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_book']['new']    = array('Neues Buch', 'Ein neues Buch anlegen');
-$GLOBALS['TL_LANG']['tl_book']['edit']   = array('Buch bearbeiten', 'Buch ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_book']['copy']   = array('Buch duplizieren', 'Buch ID %s duplizieren');
-$GLOBALS['TL_LANG']['tl_book']['delete'] = array('Buch löschen', 'Buch ID %s löschen');
-$GLOBALS['TL_LANG']['tl_book']['show']   = array('Buchdetails', 'Details des Buches ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_book']['new']        = array('Neues Buch', 'Ein neues Buch anlegen');
+$GLOBALS['TL_LANG']['tl_book']['edit']       = array('Buch bearbeiten', 'Buch ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_book']['editheader'] = array('Buch-Einstellungen bearbeiten', 'Einstellungen des Buches ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_book']['copy']       = array('Buch duplizieren', 'Buch ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_book']['delete']     = array('Buch löschen', 'Buch ID %s löschen');
+$GLOBALS['TL_LANG']['tl_book']['show']       = array('Buchdetails', 'Details des Buches ID %s anzeigen');
 
 ?>

@@ -41,34 +41,29 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_book']['title']     = array('Title', 'Please enter the book title.');
-$GLOBALS['TL_LANG']['tl_book']['subtitle']  = array('Sub title', 'Optional enter a sub title for the book.');
-$GLOBALS['TL_LANG']['tl_book']['alias']     = array('Book alias', 'The book alias is an unique reference to the book which can be called instead of its numeric ID.');
-$GLOBALS['TL_LANG']['tl_book']['author']    = array('Author', 'Here you can enter the author of the book.');
-$GLOBALS['TL_LANG']['tl_book']['language']  = array('Language', 'Please enter the page language according to the ISO-639-1 standard (e.g. "en" for English');
-$GLOBALS['TL_LANG']['tl_book']['category']  = array('Catgeory', 'Category or categories of the book, e.g. "Book", "Satsang" or "Sat Sandesh"');
-$GLOBALS['TL_LANG']['tl_book']['note']      = array('Note', '');
-$GLOBALS['TL_LANG']['tl_book']['text']      = array('Preface', 'You can use HTML tags to format the text.');
-$GLOBALS['TL_LANG']['tl_book']['published'] = array('Publish book', 'Make the book publicly visible on the website.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['title']     = array('Titel', 'Bitte geben Sie den Kapiteltitel ein.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['alias']     = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['note']      = array('Notiz', '');
+$GLOBALS['TL_LANG']['tl_book_chapter']['text']      = array('Text', 'Sie können HTML-Tags verwenden, um den Text zu formatieren.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['published'] = array('Kapitel veröffentlichen', 'Das Kapitel auf der Webseite anzeigen.');
 
 
 /**
  * Reference
  */
-$GLOBALS['TL_LANG']['tl_book']['book_legend']    = 'Book';
-$GLOBALS['TL_LANG']['tl_book']['meta_legend']    = 'Meta information';
-$GLOBALS['TL_LANG']['tl_book']['text_legend']    = 'Preface';
-$GLOBALS['TL_LANG']['tl_book']['publish_legend'] = 'Publish settings';
+$GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] = 'Kapitel';
+$GLOBALS['TL_LANG']['tl_book_chapter']['meta_legend']    = 'Meta-Informationen';
+$GLOBALS['TL_LANG']['tl_book_chapter']['text_legend']    = 'Text';
+$GLOBALS['TL_LANG']['tl_book_chapter']['publish_legend'] = 'Veröffentlichung';
 
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_book']['new']         = array('New book', 'Create a new book');
-$GLOBALS['TL_LANG']['tl_book']['edit']        = array('Edit book', 'Edit book ID %s');
-$GLOBALS['TL_LANG']['tl_book']['editheader']  = array('Edit book settings', 'Edit the settings of book ID %s');
-$GLOBALS['TL_LANG']['tl_book']['copy']        = array('Duplicate book', 'Duplicate book ID %s');
-$GLOBALS['TL_LANG']['tl_book']['delete']      = array('Delete book', 'Delete book ID %s');
-$GLOBALS['TL_LANG']['tl_book']['show']        = array('Book details', 'Show the details of book ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['new']    = array('Neues Kapitel', 'Ein neues Kapitel anlegen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['edit']   = array('Kapitel bearbeiten', 'Kapitel ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_book_chapter']['copy']   = array('Kapitel duplizieren', 'Kapitel ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_book_chapter']['delete'] = array('Kapitel löschen', 'Kapitel ID %s löschen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['show']   = array('Kapiteldetails', 'Details des Kapitels ID %s anzeigen');
 
 ?>

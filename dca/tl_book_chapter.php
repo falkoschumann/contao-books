@@ -39,17 +39,16 @@
 
 
 /**
- * Table tl_book
+ * Table tl_book_chapter
  */
-$GLOBALS['TL_DCA']['tl_book'] = array
+$GLOBALS['TL_DCA']['tl_book_chapter'] = array
 (
 
 	// Config
 	'config' => array
 	(
 		'dataContainer'               => 'Table',
-		'ctable'                      => array('tl_book_chapter'),
-		'switchToEdit'                => true,
+		'ptable'                      => 'tl_book',
 		'enableVersioning'            => true
 	),
 
@@ -58,15 +57,12 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
-			'fields'                  => array('title'),
-			'flag'                    => 1,
-			'panelLayout'             => 'sort,filter;search,limit'
-		),
-		'label' => array
-		(
-			'fields'                  => array('title', 'author'),
-			'format'                  => '%s <span style="color:#b3b3b3;padding-left:3px">[%s]</span>'
+			'mode'                    => 4,
+			'flag'                    => 10,
+			'fields'                  => array('sorting'),
+			'headerFields'            => array('title', 'subtitle', 'author', 'category', 'language', 'published'),
+			'panelLayout'             => 'filter;search,limit',
+			'child_record_callback'   => array('tl_book_chapter', 'listChapters')
 		),
 		'global_operations' => array
 		(
@@ -82,34 +78,26 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book']['edit'],
-				'href'                => 'table=tl_book_chapter',
-				'icon'                => 'edit.gif',
-				'attributes'          => 'class="contextmenu"'
-			),
-			'editheader' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book']['editheader'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'header.gif',
-				'attributes'          => 'class="edit-header"'
+				'icon'                => 'edit.gif'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book']['copy'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.gif'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book']['delete'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book']['show'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.gif'
 			)
@@ -120,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array(''),
-		'default'                     => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},language,category,note;{text_legend},text;{publish_legend},published'
+		'default'                     => '{chapter_legend},title,alias;{meta_legend:hide},note;{text_legend},text;{publish_legend},published'
 	),
 
 	// Subpalettes
@@ -134,62 +122,23 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	(
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['title'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['title'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'search'                  => true,
-			'sorting'                 => true
-		),
-		'subtitle' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'search'                  => true
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['alias'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['alias'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
-			'search'                  => true,
-			'sorting'                 => true
-		),
-		'author' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['author'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'filter'                  => true,
-			'search'                  => true,
-			'sorting'                 => true
-		),
-		'language' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['language'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('minlength'=>2, 'maxlength'=>2, 'rgxp'=>'alpha', 'tl_class'=>'w50'),
-			'filter'                  => true,
-			'sorting'                 => true
-		),
-		'category' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['category'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'filter'                  => true,
-			'search'                  => true,
-			'sorting'                 => true
+			'search'                  => true
 		),
 		'note' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['note'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['note'],
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('wrap'=>'soft'),
@@ -197,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'text' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['text'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['text'],
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
@@ -205,14 +154,41 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'published' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['published'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'filter'                  => true,
-			'sorting'                 => true
+			'filter'                  => true
 		)
 	)
 );
+
+
+/**
+ * Class tl_book_chapter
+ *
+ * Provide miscellaneous methods that are used by the data configuration array.
+ * @copyright  Falko Schumann 2012
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Controller
+ */
+class tl_book_chapter extends Backend
+{
+	
+	/**
+	 * Add the title of chapter
+	 * @param array
+	 * @return string
+	 */
+	public function listChapters($arrRow)
+	{
+		$key = $arrRow['published'] ? 'published' : 'unpublished';
+		$title = $arrRow['title'];
+		$offset = $arrRow['depth'] * 30;
+
+		return '<div class="cte_type ' . $key . '" style="padding-left: ' . $offset . 'px; font-size:10pt; color: black;">' . $title . '</div>';
+	}
+
+}
 
 ?>
