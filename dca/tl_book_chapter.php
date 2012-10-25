@@ -140,8 +140,12 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['alias'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
-			'search'                  => true
+			'eval'                    => array('rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'search'                  => true,
+			'save_callback' => array
+			(
+				array('tl_book_chapter', 'generateAlias')
+			)
 		),
 		'note' => array
 		(
@@ -262,6 +266,40 @@ class tl_book_chapter extends Backend
 		$this->createNewVersion('tl_book_chapter', $intId);
 	}
 
+	/**
+	 * Auto-generate the Chapter alias if it has not been set yet
+	 * @param mixed
+	 * @param DataContainer
+	 * @return mixed
+	 */
+	public function generateAlias($varValue, DataContainer $dc)
+	{
+		$autoAlias = false;
+	
+		// Generate alias if there is none
+		if (!strlen($varValue))
+		{
+			$autoAlias = true;
+			$varValue = standardize($this->restoreBasicEntities($dc->activeRecord->title));
+		}
+	
+		$objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=? AND pid=? AND id<>?")->execute($varValue, $dc->activeRecord->pid, $dc->activeRecord->id);
+	
+		// Check whether the news alias exists
+ 		if ($objAlias->numRows > 0 && !$autoAlias)
+ 		{
+ 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+ 		}
+	
+		// Add ID to alias
+		if ($objAlias->numRows && $autoAlias)
+		{
+			$varValue .= '-' . $dc->id;
+		}
+	
+		return $varValue;
+	}
+	
 }
 
 ?>

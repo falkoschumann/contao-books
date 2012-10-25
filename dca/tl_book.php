@@ -161,9 +161,12 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['alias'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'alnum', 'unique'=>true, 'spaceToUnderscore'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'search'                  => true,
-			'sorting'                 => true
+			'save_callback' => array
+			(
+				array('tl_book', 'generateAlias')
+			)
 		),
 		'author' => array
 		(
@@ -301,6 +304,40 @@ class tl_book extends Backend
 
 	}
 
+	/**
+	 * Auto-generate the Book alias if it has not been set yet
+	 * @param mixed
+	 * @param DataContainer
+	 * @return mixed
+	 */
+	public function generateAlias($varValue, DataContainer $dc)
+	{
+		$autoAlias = false;
+	
+		// Generate alias if there is none
+		if (!strlen($varValue))
+		{
+			$autoAlias = true;
+			$varValue = standardize($this->restoreBasicEntities($dc->activeRecord->title));
+		}
+	
+		$objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($varValue);
+	
+		// Check whether the news alias exists
+		if ($objAlias->numRows > 1 && !$autoAlias)
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+		}
+	
+		// Add ID to alias
+		if ($objAlias->numRows && $autoAlias)
+		{
+			$varValue .= '-' . $dc->id;
+		}
+	
+		return $varValue;
+	}
+	
 }
 
 ?>
