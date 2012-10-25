@@ -64,6 +64,7 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['new']    = array('Neues Kapitel', 'Ein n
 $GLOBALS['TL_LANG']['tl_book_chapter']['edit']   = array('Kapitel bearbeiten', 'Kapitel ID %s bearbeiten');
 $GLOBALS['TL_LANG']['tl_book_chapter']['copy']   = array('Kapitel duplizieren', 'Kapitel ID %s duplizieren');
 $GLOBALS['TL_LANG']['tl_book_chapter']['delete'] = array('Kapitel löschen', 'Kapitel ID %s löschen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'] = array('Kapitel veröffentlichen/unveröffentlichen', 'Kapitel ID %s veröffentlichen/unveröffentlichen');
 $GLOBALS['TL_LANG']['tl_book_chapter']['show']   = array('Kapiteldetails', 'Details des Kapitels ID %s anzeigen');
 
 ?>

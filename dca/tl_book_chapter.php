@@ -95,6 +95,13 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
+			'toggle' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'],
+				'icon'                => 'visible.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback'     => array('tl_book_chapter', 'toggleIcon')
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['show'],
@@ -174,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
  */
 class tl_book_chapter extends Backend
 {
-	
+
 	/**
 	 * Add the title of chapter
 	 * @param array
@@ -186,7 +193,73 @@ class tl_book_chapter extends Backend
 		$title = $arrRow['title'];
 		$offset = $arrRow['depth'] * 30;
 
-		return '<div class="cte_type ' . $key . '" style="padding-left: ' . $offset . 'px; font-size:10pt; color: black;">' . $title . '</div>';
+		return '<div class="cte_type ' . $key . '" style="padding-left: ' . $offset . 'px; font-size:12px; color: #666966;">' . $title . '</div>';
+	}
+
+	/**
+	 * Return the "toggle visibility" button
+	 * @param array
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (strlen($this->Input->get('tid')))
+		{
+			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+			$this->redirect($this->getReferer());
+		}
+
+		//  Check permissions AFTER checking the tid, so hacking attempts are logged
+		// if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book_chapter::published', 'alexf'))
+		// {
+		// 		return '';
+		// }
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+
+		if (!$row['published'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+	}
+
+	/**
+	 * Disable/enable a user group
+	 * @param integer
+	 * @param boolean
+	 */
+	public function toggleVisibility($intId, $blnVisible)
+	{
+		// Check permissions to publish
+		// if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book_chapter::published', 'alexf'))
+		// {
+		// 		$this->log('Not enough permissions to publish/unpublish Book ID "'.$intId.'"', 'tl_book_chapter toggleVisibility', TL_ERROR);
+		// 		$this->redirect('contao/main.php?act=error');
+		// }
+
+		$this->createInitialVersion('tl_book_chapter', $intId);
+
+		// Trigger the save_callback
+		// if (is_array($GLOBALS['TL_DCA']['tl_book_chapter']['fields']['published']['save_callback']))
+		// {
+		// 		foreach ($GLOBALS['TL_DCA']['tl_book_chapter']['fields']['published']['save_callback'] as $callback)
+		// 		{
+		// 			$this->import($callback[0]);
+		// 			$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+		// 		}
+		// }
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_book_chapter SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+
+		$this->createNewVersion('tl_book_chapter', $intId);
 	}
 
 }

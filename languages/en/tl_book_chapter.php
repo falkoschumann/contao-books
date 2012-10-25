@@ -64,6 +64,7 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['new']    = array('New chapter', 'Create 
 $GLOBALS['TL_LANG']['tl_book_chapter']['edit']   = array('Edit chapter', 'Edit chapter ID %s');
 $GLOBALS['TL_LANG']['tl_book_chapter']['copy']   = array('Duplicate chapter', 'Duplicate chapter ID %s');
 $GLOBALS['TL_LANG']['tl_book_chapter']['delete'] = array('Delete chapter', 'Delete chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'] = array('Publish/unpublish chapter', 'Publish/unpublish chapter ID %s');
 $GLOBALS['TL_LANG']['tl_book_chapter']['show']   = array('Chapter details', 'Show the details of chapter ID %s');
 
 ?>

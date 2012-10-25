@@ -69,6 +69,7 @@ $GLOBALS['TL_LANG']['tl_book']['edit']        = array('Edit book', 'Edit book ID
 $GLOBALS['TL_LANG']['tl_book']['editheader']  = array('Edit book settings', 'Edit the settings of book ID %s');
 $GLOBALS['TL_LANG']['tl_book']['copy']        = array('Duplicate book', 'Duplicate book ID %s');
 $GLOBALS['TL_LANG']['tl_book']['delete']      = array('Delete book', 'Delete book ID %s');
+$GLOBALS['TL_LANG']['tl_book']['toggle']     = array('Publish/unpublish book', 'Publish/unpublish book ID %s');
 $GLOBALS['TL_LANG']['tl_book']['show']        = array('Book details', 'Show the details of book ID %s');
 
 ?>
