@@ -131,7 +131,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['title'],
 			'exclude'                 => true,
-			'inputType'               => 'text',
+			'inputType'               => 'inputUnit',
+			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'search'                  => true
 		),
@@ -195,9 +196,31 @@ class tl_book_chapter extends Backend
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
 		$title = $arrRow['title'];
-		$offset = $arrRow['depth'] * 30;
+		$arrHeadline = deserialize($title);
+		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		switch ($hl) {
+			case 'h1':
+				$offset = 10;
+				break;
+			case 'h2':
+				$offset = 40;
+				break;
+			case 'h3':
+				$offset = 70;
+				break;
+			case 'h4':
+				$offset = 100;
+				break;
+			case 'h5':
+				$offset = 130;
+				break;
+			case 'h6':
+				$offset = 160;
+				break;
+		}
 
-		return '<div class="cte_type ' . $key . '" style="padding-left: ' . $offset . 'px; font-size:12px; color: #666966;">' . $title . '</div>';
+		return '<div class="cte_type ' . $key . '"><' . $hl . ' style="padding-left: ' . $offset . 'px;">' . $headline . '</' . $hl . '></div>';
 	}
 
 	/**

@@ -39,7 +39,6 @@ CREATE TABLE `tl_book_chapter` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `pid` int(10) unsigned NOT NULL default '0',
   `sorting` int(10) unsigned NOT NULL default '0',
-  `depth` int(10) unsigned NOT NULL default '0',
   `tstamp` int(10) unsigned NOT NULL default '0',
   `title` varchar(255) NOT NULL default '',
   `alias` varbinary(128) NOT NULL default '',
