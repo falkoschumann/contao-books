@@ -39,20 +39,8 @@
 
 
 /**
- * Back end modules
- */
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
-(
-	'books' => array
-	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
-		'icon'   => 'system/modules/books/html/icon.png'
-	)
-));
-
-/**
  * Content elements
  */
-$GLOBALS['TL_CTE']['includes']['book'] = 'ContentBook';
+$GLOBALS['TL_LANG']['CTE']['book'] = array('Book', 'Includes a book.');
 
 ?>

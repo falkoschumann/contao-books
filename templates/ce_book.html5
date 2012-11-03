@@ -1,0 +1,12 @@
+<div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+
+<?php echo $this->text; ?>
+
+<!-- indexer::stop -->
+
+<?php echo $this->chapters; ?>
+<?php echo $this->book_navigation; ?>
+
+<!-- indexer::continue -->
+
+</div>

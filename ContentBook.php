@@ -39,20 +39,29 @@
 
 
 /**
- * Back end modules
+ * Class ContentBook
+ *
+ * @copyright  Falko Schumann 2012
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Controller
  */
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
-(
-	'books' => array
-	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
-		'icon'   => 'system/modules/books/html/icon.png'
-	)
-));
+class ContentBook extends ContentElement
+{
 
-/**
- * Content elements
- */
-$GLOBALS['TL_CTE']['includes']['book'] = 'ContentBook';
+	/**
+	 * Template
+	 * @var string
+	 */
+	protected $strTemplate = 'ce_book';
+
+	/**
+	 * Generate module
+	 */
+	protected function compile()
+	{
+		return '';
+	}
+	
+};
 
 ?>

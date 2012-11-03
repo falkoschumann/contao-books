@@ -39,20 +39,50 @@
 
 
 /**
- * Back end modules
+ * Add palettes to tl_content
  */
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
-(
-	'books' => array
-	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
-		'icon'   => 'system/modules/books/html/icon.png'
-	)
-));
+$GLOBALS['TL_DCA']['tl_content']['palettes']['book'] = '{type_legend},type;{include_legend},book;{protected_legend:hide},protected;{expert_legend:hide},guests,invisible,cssID,space';
+
 
 /**
- * Content elements
+ * Add fields to tl_content
  */
-$GLOBALS['TL_CTE']['includes']['book'] = 'ContentBook';
+$GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
+(
+		'label' => &$GLOBALS['TL_LANG']['tl_content']['book'],
+		'exclude' => true,
+		'inputType' => 'select',
+		'options_callback' => array('tl_content_book', 'getBooks'),
+		'eval' => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'long')
+);
+
+/**
+ * Class tl_content_book
+ *
+ * @copyright  Falko Schumann 2012
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Controller
+*/
+class tl_content_book extends Backend
+{
+
+	/**
+	 * Get all books and return them as array
+	 * @return array
+	 */
+	public function getBooks()
+	{
+		$arrBooks = array();
+		$objBooks = $this->Database->execute("SELECT id, title, author, language FROM tl_book ORDER BY title");
+
+		while ($objBooks->next())
+		{
+			$arrBooks[$objBooks->author][$objBooks->id] = $objBooks->title . ' (ID ' . $objBooks->id . ', ' . $objBooks->language . ')';
+		}
+
+		return $arrBooks;
+	}
+
+}
 
 ?>
