@@ -48,18 +48,32 @@
 class ContentBook extends ContentElement
 {
 
-	/**
-	 * Template
-	 * @var string
-	 */
-	protected $strTemplate = 'ce_book';
 
 	/**
-	 * Generate module
+	 * Parse the template
+	 * @return string
+	 */
+	public function generate()
+	{
+		$this->strTemplate = 'ce_book';
+		return parent::generate();
+	}
+	
+	/**
+	 * Compile the current element
 	 */
 	protected function compile()
 	{
-		return '';
+		$bookId = $this->book;
+		$objBooks = $this->Database->prepare('SELECT * FROM tl_book WHERE (id=?) AND published=1')->execute($bookId);
+		$objBooks->next();
+		$objBook = (object) $objBooks->row();
+		$this->Template->title = $objBook->title;
+		$this->Template->subtitle = $objBook->subtitle;
+		$this->Template->author = $objBook->author;
+		$this->Template->text = $objBook->text;
+		
+		// TODO Inhaltsverzeichnis
 	}
 	
 };

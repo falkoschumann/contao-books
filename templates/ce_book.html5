@@ -1,12 +1,9 @@
 <div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
-
+<p class="author"><?php echo $this->author; ?></p>
+<h1 class="title"><?php echo $this->title; ?></h1>
+<h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
 <?php echo $this->text; ?>
-
 <!-- indexer::stop -->
-
-<?php echo $this->chapters; ?>
-<?php echo $this->book_navigation; ?>
-
+<p>TOC</p>
 <!-- indexer::continue -->
-
 </div>

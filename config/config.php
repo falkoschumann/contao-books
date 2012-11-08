@@ -53,6 +53,6 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 /**
  * Content elements
  */
-$GLOBALS['TL_CTE']['includes']['book'] = 'ContentBook';
+array_insert( $GLOBALS['TL_CTE']['includes'], 0, array( 'book' => 'ContentBook' ) );
 
 ?>

@@ -199,26 +199,6 @@ class tl_book_chapter extends Backend
 		$arrHeadline = deserialize($title);
 		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-// 		switch ($hl) {
-// 			case 'h1':
-// 				$offset = 10;
-// 				break;
-// 			case 'h2':
-// 				$offset = 40;
-// 				break;
-// 			case 'h3':
-// 				$offset = 70;
-// 				break;
-// 			case 'h4':
-// 				$offset = 100;
-// 				break;
-// 			case 'h5':
-// 				$offset = 130;
-// 				break;
-// 			case 'h6':
-// 				$offset = 160;
-// 				break;
-// 		}
 		switch ($hl) {
 			case 'h6':
 				$offset .= " . . . ";
@@ -234,8 +214,8 @@ class tl_book_chapter extends Backend
 				$offset .= "";
 		}
 		
-		//return '<div class="cte_type ' . $key . '"><' . $hl . ' style="padding-left: ' . $offset . 'px;">' . $headline . '</' . $hl . '></div>';
-		return '<div class="cte_type ' . $key . '"><span style="color:gray;">' . $offset .'</span>'  . $headline . '</div>';
+		return '<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] . '</div>' .
+			'<div style="font-size: 12px;">' . $offset . $headline . '</div>';
 	}
 
 	/**
