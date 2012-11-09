@@ -60,11 +60,13 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['publish_legend'] = 'Veröffentlichung';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_book_chapter']['new']    = array('Neues Kapitel', 'Ein neues Kapitel anlegen');
-$GLOBALS['TL_LANG']['tl_book_chapter']['edit']   = array('Kapitel bearbeiten', 'Kapitel ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_book_chapter']['copy']   = array('Kapitel duplizieren', 'Kapitel ID %s duplizieren');
-$GLOBALS['TL_LANG']['tl_book_chapter']['delete'] = array('Kapitel löschen', 'Kapitel ID %s löschen');
-$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'] = array('Kapitel veröffentlichen/unveröffentlichen', 'Kapitel ID %s veröffentlichen/unveröffentlichen');
-$GLOBALS['TL_LANG']['tl_book_chapter']['show']   = array('Kapiteldetails', 'Details des Kapitels ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['new']        = array('Neues Kapitel', 'Ein neues Kapitel anlegen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['edit']       = array('Kapitel bearbeiten', 'Kapitel ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_book_chapter']['editheader'] = array('Kapitel bearbeiten', 'Die Kapiteleinstellungen bearbeiten');
+$GLOBALS['TL_LANG']['tl_book_chapter']['copy']       = array('Kapitel duplizieren', 'Kapitel ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_book_chapter']['delete']     = array('Kapitel löschen', 'Kapitel ID %s löschen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['toggle']     = array('Kapitel veröffentlichen/unveröffentlichen', 'Kapitel ID %s veröffentlichen/unveröffentlichen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['show']       = array('Kapiteldetails', 'Details des Kapitels ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_book_chapter']['pastenew']   = array('Neues Kapitel oben erstellen', 'Neues Kapitel nach dem Kapitel ID %s erstellen');
 
 ?>

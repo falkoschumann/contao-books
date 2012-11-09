@@ -60,11 +60,13 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['publish_legend'] = 'Publish settings';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_book_chapter']['new']    = array('New chapter', 'Create a new chapter');
-$GLOBALS['TL_LANG']['tl_book_chapter']['edit']   = array('Edit chapter', 'Edit chapter ID %s');
-$GLOBALS['TL_LANG']['tl_book_chapter']['copy']   = array('Duplicate chapter', 'Duplicate chapter ID %s');
-$GLOBALS['TL_LANG']['tl_book_chapter']['delete'] = array('Delete chapter', 'Delete chapter ID %s');
-$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'] = array('Publish/unpublish chapter', 'Publish/unpublish chapter ID %s');
-$GLOBALS['TL_LANG']['tl_book_chapter']['show']   = array('Chapter details', 'Show the details of chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['new']        = array('New chapter', 'Create a new chapter');
+$GLOBALS['TL_LANG']['tl_book_chapter']['edit']       = array('Edit chapter', 'Edit chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['editheader'] = array('Edit chapter settings', 'Edit the settings of the chapter');
+$GLOBALS['TL_LANG']['tl_book_chapter']['copy']       = array('Duplicate chapter', 'Duplicate chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['delete']     = array('Delete chapter', 'Delete chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['toggle']     = array('Publish/unpublish chapter', 'Publish/unpublish chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['show']       = array('Chapter details', 'Show the details of chapter ID %s');
+$GLOBALS['TL_LANG']['tl_book_chapter']['pastenew']   = array('Add new at the top', 'Add new after chapter ID %s');
 
 ?>
