@@ -4,6 +4,11 @@
 <h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
 <?php echo $this->text; ?>
 <!-- indexer::stop -->
-<p>TOC</p>
+<?php if (count($this->chapters)) { ?>
+<ul class="toc">
+<?php foreach ($this->chapters as $chapter) { ?>
+<li><a href="<?php echo $chapter['url']; ?>"><?php echo $chapter['title']; ?></a></li>
+<?php }} ?>
+</ul>
 <!-- indexer::continue -->
 </div>

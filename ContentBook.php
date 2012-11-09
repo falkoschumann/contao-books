@@ -73,7 +73,21 @@ class ContentBook extends ContentElement
 		$this->Template->author = $objBook->author;
 		$this->Template->text = $objBook->text;
 		
-		// TODO Inhaltsverzeichnis
+		$objChapters = $this->Database->prepare('SELECT title, alias FROM tl_book_chapter WHERE (pid=?) AND published=1')->execute($bookId);
+		$chapters = array();
+		if (TL_MODE == 'FE')
+		{
+			while ($objChapters->next())
+			{
+				$objChapter = (object) $objChapters->row();
+				$arrHeadline = deserialize($objChapter->title);
+				$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+				$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+				$url = $objChapter->alias;
+				$chapters[] = array( 'title' => $headline, 'url' => $url );
+			}
+		}
+		$this->Template->chapters = $chapters;
 	}
 	
 };
