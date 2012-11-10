@@ -4,11 +4,25 @@
 <h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
 <?php echo $this->text; ?>
 <!-- indexer::stop -->
-<?php if (count($this->chapters)) { ?>
+<?php
+if (count($this->chapters)) {
+?>
 <ul class="toc">
-<?php foreach ($this->chapters as $chapter) { ?>
+<?php
+	$level = 1;
+	foreach ($this->chapters as $chapter) {
+		if ($level < $chapter['level']) {
+?><ul><?php
+		}
+		else if ($level > $chapter['level']) {
+?></ul><?php
+		}
+		$level = $chapter['level'];
+?>
 <li><a href="<?php echo $chapter['url']; ?>"><?php echo $chapter['title']; ?></a></li>
-<?php }} ?>
+<?php
+	}
+} ?>
 </ul>
 <!-- indexer::continue -->
 </div>
