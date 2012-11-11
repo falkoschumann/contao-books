@@ -48,14 +48,20 @@
 class ContentBook extends ContentElement
 {
 
-
 	/**
 	 * Parse the template
 	 * @return string
 	 */
 	public function generate()
 	{
-		$this->strTemplate = 'ce_book';
+		if (isset($_GET['items']))
+		{
+			$this->strTemplate = 'ce_book_chapter';
+		}
+		else
+		{
+			$this->strTemplate = 'ce_book';
+		}		
 		return parent::generate();
 	}
 	
@@ -63,6 +69,18 @@ class ContentBook extends ContentElement
 	 * Compile the current element
 	 */
 	protected function compile()
+	{	
+		if ($this->strTemplate == 'ce_book')
+		{
+			$this->compileBook();
+		}
+		else
+		{
+			$this->compileChapter();
+		}
+	}
+	
+	private function compileBook()
 	{
 		$bookId = $this->book;
 		$objBooks = $this->Database->prepare('SELECT * FROM tl_book WHERE (id=?) AND published=1')->execute($bookId);
@@ -73,7 +91,7 @@ class ContentBook extends ContentElement
 		$this->Template->author = $objBook->author;
 		$this->Template->text = $objBook->text;
 		
-		$objChapters = $this->Database->prepare('SELECT title, alias FROM tl_book_chapter WHERE (pid=?) AND published=1 ORDER BY sorting')->execute($bookId);
+		$objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_book_chapter WHERE (pid=?) AND published=1 ORDER BY sorting')->execute($bookId);
 		$chapters = array();
 		if (TL_MODE == 'FE')
 		{
@@ -89,7 +107,7 @@ class ContentBook extends ContentElement
 		}
 		$this->Template->chapters = $chapters;
 	}
-	
+		
 	private function getChapterUrl($objChapter)
 	{
 		global $objPage;
@@ -98,8 +116,13 @@ class ContentBook extends ContentElement
 				'alias' => $objPage->alias
 		);
 		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
-		$item = ($objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias']) ? $objChapter->alias : $objChapter->id;
+		$item = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
 		return $this->generateFrontendUrl($page, $itemPrefix . $item);
+	}
+	
+	private function isAliasSetAndEnabled($objChapter)
+	{
+		return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
 	
 	private function getChapterLevel($objChapter)
@@ -122,6 +145,51 @@ class ContentBook extends ContentElement
 		}
 	}
 	
+	private function compileChapter()
+	{
+		$chapterId = is_numeric($this->Input->get('items')) ? $this->Input->get('items') : 0;
+		$chapterAlias = $this->Input->get('items');
+		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE (id=? OR alias=?) AND published=1')->execute($chapterId, $chapterAlias);
+		$objChapters->next();
+		$objChapter = (object) $objChapters->row();
+		
+		$arrHeadline = deserialize($objChapter->title);
+		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		
+		$this->Template->title = $headline;
+		$this->Template->hl = $hl;
+		$this->Template->text = $objChapter->text;
+
+		$this->Template->bookUrl = $this->getBookUrl();
+		$bookId = $objChapter->pid;
+		$chapterSorting = $objChapter->sorting;
+		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($bookId, $chapterSorting);
+		if ($objChapters->next())
+		{
+			$objChapter = (object) $objChapters->row();
+			$this->Template->previousUrl = $this->getChapterUrl($objChapter);
+		}
+		
+		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting>? ORDER BY sorting LIMIT 1')->execute($bookId, $chapterSorting);
+		if ($objChapters->next())
+		{
+			$objChapter = (object) $objChapters->row();
+			$this->Template->nextUrl = $this->getChapterUrl($objChapter);
+		}
+	}
+
+	private function getBookUrl()
+	{
+		global $objPage;
+		$page = array(
+				'id' => $objPage->id,
+				'alias' => $objPage->alias
+		);
+		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
+		return $this->generateFrontendUrl($page);
+	}
+
 };
 
 ?>

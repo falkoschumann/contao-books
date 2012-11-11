@@ -1,13 +1,13 @@
 <div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
-<p class="author"><?php echo $this->author; ?></p>
-<h1 class="title"><?php echo $this->title; ?></h1>
-<h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
+<p class="bookauthor"><?php echo $this->author; ?></p>
+<h1 class="booktitle"><?php echo $this->title; ?></h1>
+<h2 class="booksubtitle"><?php echo $this->subtitle; ?></h2>
 <?php echo $this->text; ?>
 <!-- indexer::stop -->
 <?php
 if (count($this->chapters)) {
 ?>
-<ul class="toc">
+<ul class="booktoc">
 <?php
 	$level = 1;
 	foreach ($this->chapters as $chapter) {

@@ -39,6 +39,13 @@
 
 
 /**
+ * Miscellaneous
+ */
+$GLOBALS['TL_LANG']['MSC']['bookToc'] = 'Table of content';
+$GLOBALS['TL_LANG']['MSC']['bookPreviousPage'] = 'Previous page';
+$GLOBALS['TL_LANG']['MSC']['bookNextPage'] = 'Next page';
+
+/**
  * Content elements
  */
 $GLOBALS['TL_LANG']['CTE']['book'] = array('Book', 'Includes a book.');

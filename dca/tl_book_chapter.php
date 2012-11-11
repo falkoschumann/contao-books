@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['alias'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alnum', 'spaceToUnderscore'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'alnum', 'doNotCopy'=>true, 'spaceToUnderscore'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'search'                  => true,
 			'save_callback' => array
 			(
