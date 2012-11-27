@@ -201,20 +201,32 @@ class tl_book_chapter extends Backend
 		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		switch ($hl) {
 			case 'h6':
-				$offset .= " . . . ";
+				$offset = " . . . . . . . . . . . . . . . ";
+				$level = 6; 
+				break;
 			case 'h5':
-				$offset .= " . . . ";
+				$offset = " . . . . . . . . . . . . ";
+				$level = 5;
+				break;
 			case 'h4':
-				$offset .= " . . . ";
+				$offset = " . . . . . . . . . ";
+				$level = 4;
+				break;
 			case 'h3':
-				$offset .= " . . . ";
+				$offset = " . . . . . . ";
+				$level = 3;
+				break;
 			case 'h2':
-				$offset .= " . . . ";
+				$offset = " . . . ";
+				$level = 2;
+				break;
 			case 'h1':
-				$offset .= "";
+				$offset = "";
+				$level = 1;
+				break;
 		}
 		
-		return '<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] . '</div>' .
+		return '<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] . ' #' . $level . '</div>' .
 			'<div style="font-size: 12px;">' . $offset . $headline . '</div>';
 	}
 
