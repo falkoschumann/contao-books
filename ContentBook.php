@@ -83,7 +83,7 @@ class ContentBook extends ContentElement
 	private function compileBook()
 	{
 		$bookId = $this->book;
-		$objBooks = $this->Database->prepare('SELECT * FROM tl_book WHERE (id=?) AND published=1')->execute($bookId);
+		$objBooks = $this->Database->prepare('SELECT title, subtitle, author, text FROM tl_book WHERE (id=?) AND published=1')->execute($bookId);
 		$objBooks->next();
 		$objBook = (object) $objBooks->row();
 		$this->Template->title = $objBook->title;
@@ -91,7 +91,7 @@ class ContentBook extends ContentElement
 		$this->Template->author = $objBook->author;
 		$this->Template->text = $objBook->text;
 		
-		$objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_book_chapter WHERE (pid=?) AND published=1 ORDER BY sorting')->execute($bookId);
+		$objChapters = $this->Database->prepare('SELECT id, title, alias, show_in_toc FROM tl_book_chapter WHERE (pid=?) AND published=1 ORDER BY sorting')->execute($bookId);
 		$chapters = array();
 		if (TL_MODE == 'FE')
 		{
@@ -102,7 +102,8 @@ class ContentBook extends ContentElement
 				$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 				$url = $this->getChapterUrl($objChapter);
 				$level = $this->getChapterLevel($objChapter);
-				$chapters[] = array( 'title' => $headline, 'url' => $url , 'level' => $level);
+				$show_in_toc = $objChapter->show_in_toc;
+				$chapters[] = array( 'title' => $headline, 'url' => $url , 'level' => $level, 'show_in_toc' => $show_in_toc);
 			}
 		}
 		$this->Template->chapters = $chapters;

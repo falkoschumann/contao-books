@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array(''),
-		'default'                     => '{chapter_legend},title,alias;{meta_legend:hide},note;{text_legend},text;{publish_legend},published'
+		'default'                     => '{chapter_legend},title,alias;{meta_legend:hide},note;{text_legend},text;{publish_legend},published,show_in_toc'
 	),
 
 	// Subpalettes
@@ -167,6 +167,14 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'filter'                  => true
+		),
+		'show_in_toc' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),

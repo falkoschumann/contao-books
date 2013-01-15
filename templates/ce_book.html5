@@ -26,11 +26,15 @@ if (count($this->chapters)) {
 			if ($itemOpen)
 			{
 				echo '</li>';
+				$itemOpen = false;
 			}
 		}
 		$level = $chapter['level'];
-		echo '<li class="booktoc"><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
-		$itemOpen = true;
+		if ($chapter['show_in_toc'])
+		{
+			echo '<li class="booktoc"><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
+			$itemOpen = true;
+		}
 	}
 } ?>
 <!-- indexer::continue -->
