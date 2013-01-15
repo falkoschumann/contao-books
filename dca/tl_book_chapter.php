@@ -232,10 +232,10 @@ class tl_book_chapter extends Backend
 				$offset = "";
 				$level = 1;
 				break;
-		}
+		}		
 		
 		return '<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] . ' #' . $level . '</div>' .
-			'<div style="font-size: 12px;">' . $offset . $headline . '</div>';
+			'<div style="font-size: 12px' . ($arrRow['show_in_toc'] ? '' : '; color: #AAA; font-style: italic') . ';">' . $offset . $headline . '</div>';
 	}
 
 	/**
