@@ -6,23 +6,32 @@
 <!-- indexer::stop -->
 <?php
 if (count($this->chapters)) {
-?>
-<ul class="booktoc">
-<?php
-	$level = 1;
+	$level = 0;
+	$itemOpen = false;
 	foreach ($this->chapters as $chapter) {
-		if ($level < $chapter['level']) {
-?><ul><?php
+		if ($level < $chapter['level'])
+		{
+			echo '<ul class="booktoc">';
 		}
-		else if ($level > $chapter['level']) {
-?></ul><?php
+		else if ($level > $chapter['level'])
+		{
+			if ($itemOpen)
+			{
+				echo '</li>';
+			}
+			echo '</ul>';
+		}
+		else
+		{
+			if ($itemOpen)
+			{
+				echo '</li>';
+			}
 		}
 		$level = $chapter['level'];
-?>
-<li><a href="<?php echo $chapter['url']; ?>"><?php echo $chapter['title']; ?></a></li>
-<?php
+		echo '<li class="booktoc"><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
+		$itemOpen = true;
 	}
 } ?>
-</ul>
 <!-- indexer::continue -->
 </div>
