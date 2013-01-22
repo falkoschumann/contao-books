@@ -39,25 +39,58 @@
 
 
 /**
- * Back end modules
+ * Class BookInsertTags
+ *
+ * @copyright  Falko Schumann 2012
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Controller
  */
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
-(
-	'books' => array
-	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
-		'icon'   => 'system/modules/books/html/icon.png'
-	)
-));
+class BookInsertTags extends Frontend
+{
 
-/**
- * Content elements
- */
-array_insert($GLOBALS['TL_CTE']['includes'], 0, array( 'book' => 'ContentBook' ));
+	public function replaceInsertTags($strTag)
+	{
+		$arrSplit = explode('::', $strTag);
+		$insertTag = $arrSplit[0];
+		$idOrAlias = $arrSplit[1];
+		if ($insertTag == 'bookchapter')
+		{
+			$objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_book_chapter WHERE (id=? || alias=?) AND published=1')->execute($idOrAlias, $idOrAlias);
+			$objChapter = $objChapters->next();	
+			if ($objChapter)
+			{
+				$arrHeadline = deserialize($objChapter->title);
+				$title = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+				$url = $this->getChapterUrl($objChapter);
+				return '<a href="' . $url . '" class="bookchapter">' . $title . '</a>';
+			}
+			else
+			{
+				return '{Unbekanntens Kapitel: ' . $idOrAlias . '}';
+			}
+		}
+		
+		return false;
+	}
 
-/**
- * Insert tags 
- */
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('BookInsertTags', 'replaceInsertTags');
+	private function getChapterUrl($objChapter)
+	{
+		global $objPage;
+		$page = array(
+				'id' => $objPage->id,
+				'alias' => $objPage->alias
+		);
+		
+		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
+		$item = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
+		return $this->generateFrontendUrl($page, $itemPrefix . $item);
+	}
+	
+	private function isAliasSetAndEnabled($objChapter)
+	{
+		return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
+	}
+	
+};
 
 ?>
