@@ -161,7 +161,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['text'],
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true, 'helpwizard'=>true),
+			'explanation'             => 'bookchapter_text',
 			'search'                  => true
 		),
 		'published' => array
