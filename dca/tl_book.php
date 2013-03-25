@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['text'],
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
+			'eval'                    => array('allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
 			'search'                  => true
 		),
 		'published' => array

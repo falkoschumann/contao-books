@@ -148,9 +148,10 @@ class ContentBook extends ContentElement
 	
 	private function compileChapter()
 	{
+		$bookId = $this->book;
 		$chapterId = is_numeric($this->Input->get('items')) ? $this->Input->get('items') : 0;
 		$chapterAlias = $this->Input->get('items');
-		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE (id=? OR alias=?) AND published=1')->execute($chapterId, $chapterAlias);
+		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND (id=? OR alias=?) AND published=1')->execute($bookId, $chapterId, $chapterAlias);
 		$objChapters->next();
 		$objChapter = (object) $objChapters->row();
 		
