@@ -1,0 +1,10 @@
+${basedir}/**
+config/
+dca/
+html/
+languages/
+templates/
+BookInsertTags.php
+ContentBook.php
+LICENSE.txt
+README.txt

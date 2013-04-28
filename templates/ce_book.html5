@@ -1,45 +1,48 @@
 <div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
 <div class="inside">
-<p class="author"><?php echo $this->author; ?></p>
-<h1 class="title"><?php echo $this->title; ?></h1>
-<h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
-<?php echo $this->text; ?>
-<!-- indexer::stop -->
-<nav class="toc">
-<?php
-if (count($this->chapters)) {
-	$level = 0;
-	$itemOpen = false;
-	foreach ($this->chapters as $chapter) {
-		if ($level < $chapter['level'])
-		{
-			echo '<ul>';
-		}
-		else if ($level > $chapter['level'])
-		{
-			if ($itemOpen)
-			{
-				echo '</li>';
+	<p class="author"><?php echo $this->author; ?></p>
+	<h1 class="title"><?php echo $this->title; ?></h1>
+	<h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
+	<?php echo $this->text; ?>
+	<!-- indexer::stop -->
+	<nav class="toc">
+		<?php
+		if (count($this->chapters)) {
+			$currentLevel = 0;
+			$isOpenListItem = false;
+			foreach ($this->chapters as $chapter) {
+				if ($currentLevel < $chapter['level'])
+				{
+					echo "<ul>\n";
+				}
+				else if ($currentLevel > $chapter['level'])
+				{
+					for ($i = $currentLevel; $i > $chapter['level']; $i--)
+					{
+						if ($isOpenListItem)
+						{
+							echo "</li>\n";
+						}
+						echo "</ul>\n";
+					}
+				}
+				else // $currentLevel == $chapter['level']
+				{
+					if ($isOpenListItem)
+					{
+						echo "</li>\n";
+					}
+				}
+
+				if ($chapter['show_in_toc'])
+				{
+					echo '<li><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
+					$isOpenListItem = true;
+				}
+				$currentLevel = $chapter['level'];
 			}
-			echo '</ul>';
-		}
-		else
-		{
-			if ($itemOpen)
-			{
-				echo '</li>';
-				$itemOpen = false;
-			}
-		}
-		$level = $chapter['level'];
-		if ($chapter['show_in_toc'])
-		{
-			echo '<li><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
-			$itemOpen = true;
-		}
-	}
-} ?>
-</nav>
-<!-- indexer::continue -->
+		} ?>
+	</nav>
+	<!-- indexer::continue -->
 </div>
 </div>

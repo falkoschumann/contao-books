@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<project name="books">
+<project name="books" default="dist">
 
-	<property file="build.properties" />
+    <property file="build.properties"/>
 
-	<fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir" />
+    <fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir"/>
 
-	<property name="deploy.dir" location="${contao.dir}/system/modules/${ant.project.name}" />
+    <property name="release.version" value="1.0.0" description="release version: major.minor.patch"/>
+    <property name="release.status" value="beta1"
+              description="release state: alpha1-alpha3, beta1-beta3, rc1-rc3, stable"/>
+    <property name="deploy.dir" location="${contao.dir}/system/modules/${ant.project.name}"/>
 
-	<target name="dist">
-		<echo>Hier fehlt noch die Implementierung, um das ZIP für das Contao Extension Repository zusammenzustellen.</echo>
-	</target>
+    <fileset id="fileset.dist" dir="${basedir}" includesfile="dist.include" />
 
-	<target name="deploy">
-		<copy todir="${deploy.dir}">
-			<fileset dir=".">
-				<exclude name=".git" />
-				<exclude name=".gitignore" />
-				<exclude name="build.*" />
-				<exclude name="sql/" />
-			</fileset>
-		</copy>
-	</target>
+    <target name="dist">
+        <zip destfile="${ant.project.name}-${release.version}-${release.status}.zip">
+            <zipfileset dir="${basedir}" includesfile="dist.include" prefix="${ant.project.name}"/>
+        </zip>
+    </target>
 
-	<target name="clean">
-		<delete dir="${deploy.dir}" />
-	</target>
+    <target name="deploy">
+        <copy todir="${deploy.dir}">
+            <fileset refid="fileset.dist"/>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${deploy.dir}"/>
+    </target>
 
 </project>
