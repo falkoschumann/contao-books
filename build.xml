@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<project name="books" default="dist">
+<project name="books" default="package">
 
-    <property file="build.properties"/>
+	<property file="build.properties"/>
 
-    <fail unless="contao.dir" message="Das Conta-Verzeichnis muss angegeben werden: contao.dir"/>
+	<property name="release.version" value="1.0.0" description="release version: major.minor.patch"/>
+	<property name="release.status" value="beta1" description="release state: alpha1-alpha3, beta1-beta3, rc1-rc3, stable"/>
+	<property name="install.dir" location="${contao.dir}/system/modules/${ant.project.name}"/>
 
-    <property name="release.version" value="1.0.0" description="release version: major.minor.patch"/>
-    <property name="release.status" value="beta1"
-              description="release state: alpha1-alpha3, beta1-beta3, rc1-rc3, stable"/>
-    <property name="deploy.dir" location="${contao.dir}/system/modules/${ant.project.name}"/>
+	<fileset id="fileset.package" dir="${basedir}" includesfile="package.include" />
 
-    <fileset id="fileset.dist" dir="${basedir}" includesfile="dist.include" />
+	<target name="package">
+		<zip destfile="${ant.project.name}-${release.version}-${release.status}.zip">
+			<zipfileset dir="${basedir}" includesfile="package.include" prefix="${ant.project.name}"/>
+		</zip>
+	</target>
 
-    <target name="dist">
-        <zip destfile="${ant.project.name}-${release.version}-${release.status}.zip">
-            <zipfileset dir="${basedir}" includesfile="dist.include" prefix="${ant.project.name}"/>
-        </zip>
-    </target>
+	<target name="install">
+		<fail unless="contao.dir" message="Das Installationsverzeichnis von Contao muss zur Installation angegeben werden: contao.dir"/>
+		<copy todir="${install.dir}">
+			<fileset refid="fileset.package"/>
+		</copy>
+	</target>
 
-    <target name="deploy">
-        <copy todir="${deploy.dir}">
-            <fileset refid="fileset.dist"/>
-        </copy>
-    </target>
-
-    <target name="clean">
-        <delete dir="${deploy.dir}"/>
-    </target>
+	<target name="clean">
+		<delete dir="${install.dir}"/>
+	</target>
 
 </project>
