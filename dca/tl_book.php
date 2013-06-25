@@ -13,9 +13,6 @@
  *  - Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials  provided with the distribution.
- *  - Neither the name of the Muspellheim.de nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written  permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -146,15 +143,23 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'search'                  => true,
+
 			'sorting'                 => true
 		),
 		'subtitle' => array
+
 		(
+
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
+
 			'exclude'                 => true,
+
 			'inputType'               => 'text',
+
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+
 			'search'                  => true
+
 		),
 		'alias' => array
 		(
@@ -205,13 +210,20 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'eval'                    => array('wrap'=>'soft'),
 			'search'                  => true
 		),
+
 		'text' => array
+
 		(
+
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['text'],
+
 			'exclude'                 => true,
+
 			'inputType'               => 'textarea',
 			'eval'                    => array('allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
+
 			'search'                  => true
+
 		),
 		'published' => array
 		(
