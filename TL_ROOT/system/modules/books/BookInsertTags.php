@@ -42,8 +42,14 @@
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
-class BookInsertTags extends Frontend
+class BookInsertTags extends System
 {
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->import('Database');
+	}
 
 	public function replaceInsertTags($strTag)
 	{
