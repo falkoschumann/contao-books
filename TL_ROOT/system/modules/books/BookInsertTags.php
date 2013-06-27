@@ -42,14 +42,8 @@
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
-class BookInsertTags extends System
+class BookInsertTags extends Frontend
 {
-
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import('Database');
-	}
 
 	public function replaceInsertTags($strTag)
 	{
@@ -76,9 +70,14 @@ class BookInsertTags extends System
 				{
 					return $this->getChapterTitle($objChapter);
 				}
-				else {
+				else
+				{
 					return '<a href="' . $url . '" class="bookchapter">' . $title . '</a>';
 				}
+			}
+			else if ($insertTag == 'bookchapter_close')
+			{
+				return '</a>';
 			}
 			else
 			{
