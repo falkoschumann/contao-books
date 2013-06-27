@@ -42,7 +42,7 @@ CREATE TABLE `tl_book_chapter` (
   `tstamp` int(10) unsigned NOT NULL default '0',
   `title` varchar(255) NOT NULL default '',
   `alias` varbinary(128) NOT NULL default '',
-  `show_in_toc` char(1) NOT NULL default '',
+  `show_in_toc` char(1) NOT NULL default '1',
   `published` char(1) NOT NULL default '',
   `note` varchar(255) NOT NULL default '',
   `text` mediumtext NOT NULL,
