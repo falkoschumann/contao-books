@@ -70,11 +70,21 @@ class tl_content_book extends Backend
 	public function getBooks()
 	{
 		$arrBooks = array();
-		$objBooks = $this->Database->execute("SELECT id, title, author, language FROM tl_book ORDER BY title");
+		$objBooks = $this->Database->execute("SELECT id, title, author, category, language FROM tl_book ORDER BY title");
 
 		while ($objBooks->next())
 		{
-			$arrBooks[$objBooks->author][$objBooks->id] = $objBooks->title . ' (ID ' . $objBooks->id . ', ' . $objBooks->language . ')';
+			$item = $objBooks->title . ' (ID ' . $objBooks->id;
+			if (strlen($objBooks->category) > 0)
+			{
+				$item .= ', ' . $objBooks->category;
+			}
+			if (strlen($objBooks->language) > 0)
+			{
+				$item .= ', ' . $objBooks->language;
+			}
+			$item .= ')';
+			$arrBooks[$objBooks->author][$objBooks->id] = $item;
 		}
 
 		return $arrBooks;
