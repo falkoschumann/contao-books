@@ -14,3 +14,7 @@ werden. Zu jeden Buch lassen sich beliebig viele Kapitel und Unterkapitel
 anlegen.
 
 Bücher können als Inhaltselement in Artikeln verwendet werden.
+
+Die Erweiterung kann über das
+[Contao Extension Repository](https://contao.org/extension-list/view/books.html)
+installiert werden.
