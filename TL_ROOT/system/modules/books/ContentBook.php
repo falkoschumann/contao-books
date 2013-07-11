@@ -108,14 +108,9 @@ class ContentBook extends ContentElement
 		
 	private function getChapterUrl($objChapter)
 	{
-		global $objPage;
-		$page = array(
-				'id' => $objPage->id,
-				'alias' => $objPage->alias
-		);
 		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
 		$item = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
-		return $this->generateFrontendUrl($page, $itemPrefix . $item);
+		return $this->generateFrontendUrl($GLOBALS['objPage']->row(), $itemPrefix . $item);
 	}
 	
 	private function isAliasSetAndEnabled($objChapter)
@@ -180,13 +175,7 @@ class ContentBook extends ContentElement
 
 	private function getBookUrl()
 	{
-		global $objPage;
-		$page = array(
-				'id' => $objPage->id,
-				'alias' => $objPage->alias
-		);
-		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
-		return $this->generateFrontendUrl($page);
+		return $this->generateFrontendUrl($GLOBALS['objPage']->row());
 	}
 
 };

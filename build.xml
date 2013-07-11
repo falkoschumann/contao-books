@@ -21,7 +21,7 @@
 	</target>
 
 	<target name="uninstall">
-		<delete dir="${install.dir}/system/modules/books"/>
+		<delete dir="${install.dir}/system/modules/${ant.project.name}"/>
 	</target>
 
 </project>
