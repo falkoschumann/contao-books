@@ -6,42 +6,45 @@
 	<?php echo $this->text; ?>
 	<!-- indexer::stop -->
 	<nav class="toc">
-		<?php
-		if (count($this->chapters)) {
-			$currentLevel = 0;
-			$isOpenListItem = false;
-			foreach ($this->chapters as $chapter) {
-				if ($currentLevel < $chapter['level'])
-				{
-					echo "<ul>\n";
-				}
-				else if ($currentLevel > $chapter['level'])
-				{
-					for ($i = $currentLevel; $i > $chapter['level']; $i--)
-					{
-						if ($isOpenListItem)
-						{
-							echo "</li>\n";
-						}
-						echo "</ul>\n";
-					}
-				}
-				else // $currentLevel == $chapter['level']
-				{
-					if ($isOpenListItem)
-					{
-						echo "</li>\n";
-					}
-				}
+<?php
+$chapterCount = count($this->chapters);
+for ($current = 0; $current < $chapterCount; $current++)
+{
+	$chapter = $this->chapters[$current];
+	if (!$chapter['show_in_toc'])
+		continue;
 
-				if ($chapter['show_in_toc'])
-				{
-					echo '<li><a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
-					$isOpenListItem = true;
-				}
-				$currentLevel = $chapter['level'];
-			}
-		} ?>
+	$lastLevel = ($current == 0) ? 0 : $this->chapters[$current-1]['level'];
+	$currentLevel = $chapter['level'];
+	$nextLevel = (($current + 1) < $chapterCount) ? $this->chapters[$current+1]['level'] : 0;
+
+	if ($lastLevel == $currentLevel)
+	{
+		echo "<li>";
+	}
+
+	// lastLevel < currentLevel 
+	for ($i = $lastLevel; $i < $currentLevel; $i++)
+	{
+		echo "<ul>\n";
+		echo "<li>";
+	}
+
+	echo '<a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
+
+	if ($nextLevel == $currentLevel)
+	{
+		echo "</li>\n";
+	}
+
+	// currentLevel < nextLevel
+	for ($i = $currentLevel; $i > $nextLevel; $i--)
+	{
+		echo "</li>\n";
+		echo "</ul>\n";
+	}
+}
+?>
 	</nav>
 	<!-- indexer::continue -->
 </div>
