@@ -10,7 +10,3 @@ Thumbs.db
 .idea/
 *.iml
 nbproject/
-
-# Books
-build.properties
-*.zip
