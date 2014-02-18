@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -36,61 +36,23 @@
 
 
 /**
- * Add palettes to tl_content
+ * Register the classes
  */
-$GLOBALS['TL_DCA']['tl_content']['palettes']['book'] = '{type_legend},type;{include_legend},book;{protected_legend:hide},protected;{expert_legend:hide},guests,invisible,cssID,space';
-
-
-/**
- * Add fields to tl_content
- */
-$GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
+ClassLoader::addClasses(array
 (
-		'label' => &$GLOBALS['TL_LANG']['tl_content']['book'],
-		'exclude' => true,
-		'inputType' => 'select',
-		'options_callback' => array('tl_content_book', 'getBooks'),
-		'eval' => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'long'),
-        'sql' => "int(10) unsigned NOT NULL default '0'"
-);
+	// Classes
+	'BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
+
+	// Elements
+	'ContentBook'    => 'system/modules/books/elements/ContentBook.php',
+));
+
 
 /**
- * Class tl_content_book
- *
- * @copyright  Falko Schumann 2012
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Controller
-*/
-class tl_content_book extends Backend
-{
-
-	/**
-	 * Get all books and return them as array
-	 * @return array
-	 */
-	public function getBooks()
-	{
-		$arrBooks = array();
-		$objBooks = $this->Database->execute("SELECT id, title, author, category, language FROM tl_book ORDER BY title");
-
-		while ($objBooks->next())
-		{
-			$item = $objBooks->title . ' (ID ' . $objBooks->id;
-			if (strlen($objBooks->category) > 0)
-			{
-				$item .= ', ' . $objBooks->category;
-			}
-			if (strlen($objBooks->language) > 0)
-			{
-				$item .= ', ' . $objBooks->language;
-			}
-			$item .= ')';
-			$arrBooks[$objBooks->author][$objBooks->id] = $item;
-		}
-
-		return $arrBooks;
-	}
-
-}
-
-?>
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+	'ce_book'         => 'system/modules/books/templates',
+	'ce_book_chapter' => 'system/modules/books/templates',
+));

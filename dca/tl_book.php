@@ -136,6 +136,14 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	// Fields
 	'fields' => array
 	(
+        'id' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+        ),
+        'tstamp' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL default '0'"
+        ),
 		'title' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book']['title'],
@@ -144,7 +152,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'search'                  => true,
 
-			'sorting'                 => true
+			'sorting'                 => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'subtitle' => array
 
@@ -158,8 +167,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 
-			'search'                  => true
-
+			'search'                  => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'alias' => array
 		(
@@ -171,7 +180,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'save_callback' => array
 			(
 				array('tl_book', 'generateAlias')
-			)
+			),
+            'sql'                     => "varbinary(128) NOT NULL default ''"
 		),
 		'author' => array
 		(
@@ -181,7 +191,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'filter'                  => true,
 			'search'                  => true,
-			'sorting'                 => true
+			'sorting'                 => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'language' => array
 		(
@@ -190,7 +201,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('minlength'=>2, 'maxlength'=>2, 'rgxp'=>'alpha', 'tl_class'=>'w50'),
 			'filter'                  => true,
-			'sorting'                 => true
+			'sorting'                 => true,
+            'sql'                     => "varchar(2) NOT NULL default ''"
 		),
 		'category' => array
 		(
@@ -200,7 +212,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'filter'                  => true,
 			'search'                  => true,
-			'sorting'                 => true
+			'sorting'                 => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'note' => array
 		(
@@ -208,7 +221,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('wrap'=>'soft'),
-			'search'                  => true
+			'search'                  => true,
+            'sql'                     => "text NOT NULL"
 		),
 
 		'text' => array
@@ -222,7 +236,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true),
 
-			'search'                  => true
+			'search'                  => true,
+            'sql'                     => "mediumtext NOT NULL"
 
 		),
 		'published' => array
@@ -232,7 +247,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'filter'                  => true,
-			'sorting'                 => true
+			'sorting'                 => true,
+            'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
 );

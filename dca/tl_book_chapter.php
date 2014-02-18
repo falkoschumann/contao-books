@@ -124,6 +124,22 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 	// Fields
 	'fields' => array
 	(
+        'id' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+        ),
+        'pid' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL default '0'"
+        ),
+        'sorting' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL default '0'"
+        ),
+        'tstamp' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL default '0'"
+        ),
 		'title' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['title'],
@@ -131,7 +147,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'search'                  => true
+			'search'                  => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'alias' => array
 		(
@@ -143,7 +160,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'save_callback' => array
 			(
 				array('tl_book_chapter', 'generateAlias')
-			)
+			),
+            'sql'                     => "varbinary(128) NOT NULL default ''"
 		),
 		'note' => array
 		(
@@ -151,7 +169,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('wrap'=>'soft'),
-			'search'                  => true
+			'search'                  => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 
 		'text' => array
@@ -166,8 +185,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true, 'helpwizard'=>true),
 			'explanation'             => 'bookchapter_text',
 
-			'search'                  => true
-
+			'search'                  => true,
+            'sql'                     => "mediumtext NOT NULL"
 		),
 		'published' => array
 		(
@@ -175,7 +194,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'filter'                  => true
+			'filter'                  => true,
+            'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'show_in_toc' => array
 		(
@@ -183,7 +203,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'filter'                  => true
+			'filter'                  => true,
+            'sql'                     => "char(1) NOT NULL default '1'"
 		)
 	)
 );
