@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -39,5 +39,3 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_content']['book'] = array('Buch', '');
-
-?>

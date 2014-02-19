@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -179,5 +179,3 @@ class ContentBook extends ContentElement
 	}
 
 };
-
-?>

@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -45,5 +45,3 @@ $GLOBALS['TL_LANG']['XPL']['bookchapter_text'] = array
 	array('{{bookchapter_url::*}}', 'Insère l\'URL d\'un chapitre de ce livre. L\'étoile * doit être remplacée par l\'ID ou l\'alias du chapitre.'),
 	array('{{bookchapter_title::*}}', 'Insère le titre d\'un chapitre de ce livre. L\'étoile * doit être remplacée par l\'ID ou l\'alias du chapitre.')
 );
-
-?>

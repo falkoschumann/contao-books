@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -39,5 +39,3 @@
  * Back end modules
  */
 $GLOBALS['TL_LANG']['MOD']['books'] = array('Books', 'Manage books and chapters.');
-
-?>

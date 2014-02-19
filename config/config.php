@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -56,5 +56,3 @@ array_insert($GLOBALS['TL_CTE']['includes'], 0, array( 'book' => 'ContentBook' )
  * Insert tags 
  */
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('BookInsertTags', 'replaceInsertTags');
-
-?>

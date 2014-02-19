@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -46,5 +46,3 @@ $GLOBALS['TL_LANG']['MSC']['bookNextPage'] = 'Nächste Seite';
  * Content elements
  */
 $GLOBALS['TL_LANG']['CTE']['book'] = array('Buch', 'Fügt ein Buch ein.');
-
-?>

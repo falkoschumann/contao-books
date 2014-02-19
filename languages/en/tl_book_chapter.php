@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Books Extension for Contao
@@ -66,5 +66,3 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['delete']     = array('Delete chapter', '
 $GLOBALS['TL_LANG']['tl_book_chapter']['toggle']     = array('Publish/unpublish chapter', 'Publish/unpublish chapter ID %s');
 $GLOBALS['TL_LANG']['tl_book_chapter']['show']       = array('Chapter details', 'Show the details of chapter ID %s');
 $GLOBALS['TL_LANG']['tl_book_chapter']['pastenew']   = array('Add new at the top', 'Add new after chapter ID %s');
-
-?>
