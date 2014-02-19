@@ -2,7 +2,7 @@
 
 /**
  * Books Extension for Contao
- * Copyright (c) 2012, Falko Schumann <http://www.muspellheim.de>
+ * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP version 5
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  * @license    BSD-2-clause
- * @filesource
  */
 
 
