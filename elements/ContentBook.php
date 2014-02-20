@@ -33,6 +33,11 @@
  */
 
 
+namespace Muspellheim\Books;
+
+
+// FIXME Auto_item funktioniert nicht mehr: Wird ein Kapitel ohne "items" in der URL aufgerufen, wird die Seite nicht gefunden.
+
 /**
  * Class ContentBook
  *
@@ -40,7 +45,7 @@
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
-class ContentBook extends ContentElement
+class ContentBook extends \ContentElement
 {
 
 	/**
@@ -64,7 +69,7 @@ class ContentBook extends ContentElement
 	 * Compile the current element
 	 */
 	protected function compile()
-	{	
+	{
 		if ($this->strTemplate == 'ce_book')
 		{
 			$this->compileBook();

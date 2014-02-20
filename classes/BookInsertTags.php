@@ -33,6 +33,9 @@
  */
 
 
+namespace Muspellheim\Books;
+
+
 /**
  * Class BookInsertTags
  *
@@ -40,7 +43,7 @@
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
-class BookInsertTags extends Frontend
+class BookInsertTags extends \Frontend
 {
 
 	public function replaceInsertTags($strTag)

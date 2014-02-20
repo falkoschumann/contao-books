@@ -34,15 +34,24 @@
 
 
 /**
+ * Register the namespaces
+ */
+ClassLoader::addNamespaces(array
+(
+    'Muspellheim\Books',
+));
+
+
+/**
  * Register the classes
  */
 ClassLoader::addClasses(array
 (
 	// Classes
-	'BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
+	'Muspellheim\Books\BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
 
 	// Elements
-	'ContentBook'    => 'system/modules/books/elements/ContentBook.php',
+	'Muspellheim\Books\ContentBook'    => 'system/modules/books/elements/ContentBook.php',
 ));
 
 
