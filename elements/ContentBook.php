@@ -39,7 +39,7 @@ namespace Muspellheim\Books;
 // FIXME Auto_item funktioniert nicht mehr: Wird ein Kapitel ohne "items" in der URL aufgerufen, wird die Seite nicht gefunden.
 
 /**
- * Class ContentBook
+ * The content element book.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
@@ -48,10 +48,6 @@ namespace Muspellheim\Books;
 class ContentBook extends \ContentElement
 {
 
-	/**
-	 * Parse the template
-	 * @return string
-	 */
 	public function generate()
 	{
 		if (isset($_GET['items']))
@@ -61,13 +57,11 @@ class ContentBook extends \ContentElement
 		else
 		{
 			$this->strTemplate = 'ce_book';
-		}		
+		}
 		return parent::generate();
 	}
-	
-	/**
-	 * Compile the current element
-	 */
+
+
 	protected function compile()
 	{
 		if ($this->strTemplate == 'ce_book')
@@ -79,53 +73,56 @@ class ContentBook extends \ContentElement
 			$this->compileChapter();
 		}
 	}
-	
+
+
 	private function compileBook()
 	{
-		$bookId = $this->book;
-		$objBooks = $this->Database->prepare('SELECT title, subtitle, author, text FROM tl_book WHERE (id=?) AND published=1')->execute($bookId);
-		$objBooks->next();
-		$objBook = (object) $objBooks->row();
-		$this->Template->title = $objBook->title;
+		$bookId  = $this->book;
+		$objBook = BookModel::findPublishedById($bookId);
+		// TODO Check if book exists
+		$this->Template->title    = $objBook->title;
 		$this->Template->subtitle = $objBook->subtitle;
-		$this->Template->author = $objBook->author;
-		$this->Template->text = $objBook->text;
-		
-		$objChapters = $this->Database->prepare('SELECT id, title, alias, show_in_toc FROM tl_book_chapter WHERE (pid=?) AND published=1 ORDER BY sorting')->execute($bookId);
-		$chapters = array();
+		$this->Template->author   = $objBook->author;
+		$this->Template->text     = $objBook->text;
+
+		$objChapters = ChapterModel::findPublishedByPid($bookId);
+		$chapters    = array();
 		if (TL_MODE == 'FE')
 		{
 			while ($objChapters->next())
 			{
-				$objChapter = (object) $objChapters->row();
-				$arrHeadline = deserialize($objChapter->title);
-				$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-				$url = $this->getChapterUrl($objChapter);
-				$level = $this->getChapterLevel($objChapter);
-				$show_in_toc = $objChapter->show_in_toc;
-				$chapters[] = array( 'title' => $headline, 'url' => $url , 'level' => $level, 'show_in_toc' => $show_in_toc);
+				$arrHeadline = deserialize($objChapters->title);
+				$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+				$url         = $this->getChapterUrl($objChapters);
+				$level       = $this->getChapterLevel($objChapters);
+				$show_in_toc = $objChapters->show_in_toc;
+				$chapters[]  = array('title' => $headline, 'url' => $url, 'level' => $level, 'show_in_toc' => $show_in_toc);
 			}
 		}
 		$this->Template->chapters = $chapters;
 	}
-		
+
+
 	private function getChapterUrl($objChapter)
 	{
-		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
-		$item = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
+		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
+		$item       = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
 		return $this->generateFrontendUrl($GLOBALS['objPage']->row(), $itemPrefix . $item);
 	}
-	
+
+
 	private function isAliasSetAndEnabled($objChapter)
 	{
 		return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
-	
+
+
 	private function getChapterLevel($objChapter)
 	{
 		$arrHeadline = deserialize($objChapter->title);
-		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-		switch ($hl) {
+		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		switch ($hl)
+		{
 			case 'h1':
 				return 1;
 			case 'h2':
@@ -140,41 +137,43 @@ class ContentBook extends \ContentElement
 				return 6;
 		}
 	}
-	
+
+
 	private function compileChapter()
 	{
-		$bookId = $this->book;
-		$chapterId = is_numeric($this->Input->get('items')) ? $this->Input->get('items') : 0;
+		$bookId       = $this->book;
+		$chapterId    = is_numeric($this->Input->get('items')) ? $this->Input->get('items') : 0;
 		$chapterAlias = $this->Input->get('items');
-		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND (id=? OR alias=?) AND published=1')->execute($bookId, $chapterId, $chapterAlias);
+		$objChapters  = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND (id=? OR alias=?) AND published=1')->execute($bookId, $chapterId, $chapterAlias);
 		$objChapters->next();
-		$objChapter = (object) $objChapters->row();
-		
+		$objChapter = (object)$objChapters->row();
+
 		$arrHeadline = deserialize($objChapter->title);
-		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-		
+		$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+
 		$this->Template->title = $headline;
-		$this->Template->hl = $hl;
-		$this->Template->text = $objChapter->text;
+		$this->Template->hl    = $hl;
+		$this->Template->text  = $objChapter->text;
 
 		$this->Template->bookUrl = $this->getBookUrl();
-		$bookId = $objChapter->pid;
-		$chapterSorting = $objChapter->sorting;
-		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($bookId, $chapterSorting);
+		$bookId                  = $objChapter->pid;
+		$chapterSorting          = $objChapter->sorting;
+		$objChapters             = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($bookId, $chapterSorting);
 		if ($objChapters->next())
 		{
-			$objChapter = (object) $objChapters->row();
+			$objChapter                  = (object)$objChapters->row();
 			$this->Template->previousUrl = $this->getChapterUrl($objChapter);
 		}
-		
+
 		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting>? ORDER BY sorting LIMIT 1')->execute($bookId, $chapterSorting);
 		if ($objChapters->next())
 		{
-			$objChapter = (object) $objChapters->row();
+			$objChapter              = (object)$objChapters->row();
 			$this->Template->nextUrl = $this->getChapterUrl($objChapter);
 		}
 	}
+
 
 	private function getBookUrl()
 	{

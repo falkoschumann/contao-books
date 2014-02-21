@@ -33,37 +33,38 @@
  */
 
 
-/**
- * Register the namespaces
- */
-ClassLoader::addNamespaces(array
-(
-	'Muspellheim\Books',
-));
+namespace Muspellheim\Books;
 
 
 /**
- * Register the classes
+ * The model for chapter.
+ *
+ * @copyright  Falko Schumann 2014
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Models
  */
-ClassLoader::addClasses(array
-(
-	// Classes
-	'Muspellheim\Books\BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
+class ChapterModel extends \Model
+{
 
-	// Elements
-	'Muspellheim\Books\ContentBook'    => 'system/modules/books/elements/ContentBook.php',
-
-	// Models
-	'Muspellheim\Books\BookModel'      => 'system/modules/books/models/BookModel.php',
-	'Muspellheim\Books\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
-));
+	/**
+	 * Table name
+	 *
+	 * @var string
+	 */
+	protected static $strTable = 'tl_book_chapter';
 
 
-/**
- * Register the templates
- */
-TemplateLoader::addFiles(array
-(
-	'ce_book'         => 'system/modules/books/templates',
-	'ce_book_chapter' => 'system/modules/books/templates',
-));
+	public static function findPublishedByPid($intPid)
+	{
+		$t                   = static::$strTable;
+		$arrColumns          = array("$t.pid=?");
+		$arrOptions['order'] = "$t.pid, $t.sorting";
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$arrColumns[] = "$t.published=1";
+		}
+		return static::findBy($arrColumns, $intPid, $arrOptions);
+	}
+
+}
