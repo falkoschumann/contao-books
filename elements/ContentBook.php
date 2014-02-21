@@ -50,6 +50,8 @@ class ContentBook extends \ContentElement
 
 	public function generate()
 	{
+		if (TL_MODE == 'BE') return $this->displayWildcard();
+
 		if (isset($_GET['items']))
 		{
 			$this->strTemplate = 'ce_book_chapter';
@@ -61,6 +63,26 @@ class ContentBook extends \ContentElement
 		return parent::generate();
 	}
 
+
+	/**
+	 * @return string
+	 */
+	private function displayWildcard()
+	{
+		$bookId  = $this->book;
+		$objBook = BookModel::findPublishedById($bookId);
+
+		$objTemplate           = new \BackendTemplate('be_wildcard');
+		$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
+		$objTemplate->title    = $objBook->title;
+		if ($objBook->subtitle) $objTemplate->title .= ' - ' . $objBook->subtitle;
+		if ($objBook->author) $objTemplate->title .= ' (' . $objBook->author . ')';
+		$objTemplate->id   = $objBook->id;
+		$objTemplate->link = $objBook->title;
+		$objTemplate->href = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $objBook->id;
+		return $objTemplate->parse();
+	}
+	
 
 	protected function compile()
 	{
