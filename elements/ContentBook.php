@@ -41,9 +41,9 @@ namespace Muspellheim\Books;
 /**
  * Class ContentBook
  *
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Controller
+ * @package    Books
  */
 class ContentBook extends \ContentElement
 {
@@ -181,4 +181,4 @@ class ContentBook extends \ContentElement
 		return $this->generateFrontendUrl($GLOBALS['objPage']->row());
 	}
 
-};
+}

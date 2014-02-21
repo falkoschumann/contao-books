@@ -39,9 +39,9 @@ namespace Muspellheim\Books;
 /**
  * Class BookInsertTags
  *
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Controller
+ * @package    Books
  */
 class BookInsertTags extends \Frontend
 {
@@ -123,4 +123,4 @@ class BookInsertTags extends \Frontend
 		return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
 	
-};
+}
