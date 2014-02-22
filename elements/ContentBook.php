@@ -48,12 +48,38 @@ namespace Muspellheim\Books;
 class ContentBook extends \ContentElement
 {
 
+	/**
+	 * @var BookModel
+	 */
+	var $objBook;
+
+	/**
+	 * @var ChapterModel
+	 */
+	var $objChapter;
+
+
 	public function generate()
 	{
+		$this->objBook = BookModel::findPublishedById($this->book);
+
 		if (TL_MODE == 'BE') return $this->displayWildcard();
 
 		if (isset($_GET['items']))
 		{
+			$chapter = \Input::get('items');
+		}
+		else
+		{
+			if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
+			{
+				$chapter = \Input::get('auto_item');
+			}
+		}
+
+		if ($chapter)
+		{
+			$this->objChapter  = ChapterModel::findByIdOrAlias($chapter);
 			$this->strTemplate = 'ce_book_chapter';
 		}
 		else
@@ -69,20 +95,17 @@ class ContentBook extends \ContentElement
 	 */
 	private function displayWildcard()
 	{
-		$bookId  = $this->book;
-		$objBook = BookModel::findPublishedById($bookId);
-
 		$objTemplate           = new \BackendTemplate('be_wildcard');
 		$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
-		$objTemplate->title    = $objBook->title;
-		if ($objBook->subtitle) $objTemplate->title .= ' - ' . $objBook->subtitle;
-		if ($objBook->author) $objTemplate->title .= ' (' . $objBook->author . ')';
-		$objTemplate->id   = $objBook->id;
-		$objTemplate->link = $objBook->title;
-		$objTemplate->href = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $objBook->id;
+		$objTemplate->title    = $this->objBook->title;
+		if ($this->objBook->subtitle) $objTemplate->title .= ' - ' . $this->objBook->subtitle;
+		if ($this->objBook->author) $objTemplate->title .= ' (' . $this->objBook->author . ')';
+		$objTemplate->id   = $this->objBook->id;
+		$objTemplate->link = $this->objBook->title;
+		$objTemplate->href = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $this->objBook->id;
 		return $objTemplate->parse();
 	}
-	
+
 
 	protected function compile()
 	{
@@ -99,15 +122,13 @@ class ContentBook extends \ContentElement
 
 	private function compileBook()
 	{
-		$bookId  = $this->book;
-		$objBook = BookModel::findPublishedById($bookId);
 		// TODO Check if book exists
-		$this->Template->title    = $objBook->title;
-		$this->Template->subtitle = $objBook->subtitle;
-		$this->Template->author   = $objBook->author;
-		$this->Template->text     = $objBook->text;
+		$this->Template->title    = $this->objBook->title;
+		$this->Template->subtitle = $this->objBook->subtitle;
+		$this->Template->author   = $this->objBook->author;
+		$this->Template->text     = $this->objBook->text;
 
-		$objChapters = ChapterModel::findPublishedByPid($bookId);
+		$objChapters = ChapterModel::findPublishedByPid($this->objBook->id);
 		$chapters    = array();
 		if (TL_MODE == 'FE')
 		{
@@ -163,10 +184,7 @@ class ContentBook extends \ContentElement
 
 	private function compileChapter()
 	{
-		$bookId       = $this->book;
-		$chapterId    = is_numeric($this->Input->get('items')) ? $this->Input->get('items') : 0;
-		$chapterAlias = $this->Input->get('items');
-		$objChapters  = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND (id=? OR alias=?) AND published=1')->execute($bookId, $chapterId, $chapterAlias);
+		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND id=? AND published=1')->execute($this->objBook->id, $this->objChapter->id);
 		$objChapters->next();
 		$objChapter = (object)$objChapters->row();
 
@@ -181,14 +199,14 @@ class ContentBook extends \ContentElement
 		$this->Template->bookUrl = $this->getBookUrl();
 		$bookId                  = $objChapter->pid;
 		$chapterSorting          = $objChapter->sorting;
-		$objChapters             = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($bookId, $chapterSorting);
+		$objChapters             = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($this->objBook->id, $chapterSorting);
 		if ($objChapters->next())
 		{
 			$objChapter                  = (object)$objChapters->row();
 			$this->Template->previousUrl = $this->getChapterUrl($objChapter);
 		}
 
-		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting>? ORDER BY sorting LIMIT 1')->execute($bookId, $chapterSorting);
+		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting>? ORDER BY sorting LIMIT 1')->execute($this->objBook->id, $chapterSorting);
 		if ($objChapters->next())
 		{
 			$objChapter              = (object)$objChapters->row();
