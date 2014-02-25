@@ -39,9 +39,20 @@ namespace Muspellheim\Books;
 /**
  * The model for chapter.
  *
- * @copyright  Falko Schumann 2014
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Models
+ * @copyright Falko Schumann 2014
+ * @author    Falko Schumann <http://www.muspellheim.de>
+ * @package   Models
+ * @property int            id
+ * @property int            pid   reference BookModel
+ * @property int            sorting
+ * @property int            tstamp
+ * @property string         title
+ * @property string         alias
+ * @property boolean        published
+ * @property string         note  TODO Check if note is needed.
+ * @property string         text
+ * @property boolean        show_in_toc
+ * @property-read BookModel relatedBook
  */
 class ChapterModel extends \Model
 {
@@ -54,17 +65,93 @@ class ChapterModel extends \Model
 	protected static $strTable = 'tl_book_chapter';
 
 
-	public static function findPublishedByPid($intPid)
+	public function __get($key)
 	{
-		$t                   = static::$strTable;
-		$arrColumns          = array("$t.pid=?");
-		$arrOptions['order'] = "$t.pid, $t.sorting";
+		switch ($key)
+		{
+			case 'relatedBook':
+				return $this->getRelated('pid');
+			default:
+				return parent::__get($key);
+		}
+	}
+
+
+	/**
+	 * @param int $pid
+	 * @return ChapterModel|Collection|null
+	 */
+	public static function findPublishedByPid($pid)
+	{
+		$t                = static::$strTable;
+		$columns          = array("$t.pid=?");
+		$options['order'] = "$t.pid, $t.sorting";
 
 		if (!BE_USER_LOGGED_IN)
 		{
-			$arrColumns[] = "$t.published=1";
+			$columns[] = "$t.published=1";
 		}
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($columns, $pid, $options);
+	}
+
+
+	/**
+	 * @param int $id
+	 * @return ChapterModel|null
+	 */
+	public static function findPublishedById($id)
+	{
+		$t       = static::$strTable;
+		$columns = array("$t.id=?");
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$columns[] = "$t.published=1";
+		}
+		return static::findOneBy($columns, $id);
+	}
+
+
+	/**
+	 * @param ChapterModel $chapter
+	 * @return ChapterModel|null
+	 */
+	public static function findPreviousPublishedFor($chapter)
+	{
+		$t       = static::$strTable;
+		$columns = array("$t.pid=?", "$t.sorting<?");
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$columns[] = "$t.published=1";
+		}
+		$options = array
+		(
+			'order' => 'sorting'
+		);
+		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting . ' DESC'), $options);
+
+	}
+
+
+	/**
+	 * @param ChapterModel $chapter
+	 * @return ChapterModel|null
+	 */
+	public static function findNextPublishedFor($chapter)
+	{
+		$t       = static::$strTable;
+		$columns = array("$t.pid=?", "$t.sorting>?");
+
+		if (!BE_USER_LOGGED_IN)
+		{
+			$columns[] = "$t.published=1";
+		}
+		$options = array
+		(
+			'order' => 'sorting'
+		);
+		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
 	}
 
 }

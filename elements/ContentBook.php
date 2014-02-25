@@ -184,34 +184,21 @@ class ContentBook extends \ContentElement
 
 	private function compileChapter()
 	{
-		$objChapters = $this->Database->prepare('SELECT id, pid, alias, sorting, title, text FROM tl_book_chapter WHERE pid=? AND id=? AND published=1')->execute($this->objBook->id, $this->objChapter->id);
-		$objChapters->next();
-		$objChapter = (object)$objChapters->row();
-
+		$objChapter  = ChapterModel::findPublishedById($this->objChapter->id);
 		$arrHeadline = deserialize($objChapter->title);
 		$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 
-		$this->Template->title = $headline;
-		$this->Template->hl    = $hl;
-		$this->Template->text  = $objChapter->text;
-
+		$this->Template->title   = $headline;
+		$this->Template->hl      = $hl;
+		$this->Template->text    = $objChapter->text;
 		$this->Template->bookUrl = $this->getBookUrl();
-		$bookId                  = $objChapter->pid;
-		$chapterSorting          = $objChapter->sorting;
-		$objChapters             = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting<? ORDER BY sorting DESC LIMIT 1')->execute($this->objBook->id, $chapterSorting);
-		if ($objChapters->next())
-		{
-			$objChapter                  = (object)$objChapters->row();
-			$this->Template->previousUrl = $this->getChapterUrl($objChapter);
-		}
 
-		$objChapters = $this->Database->prepare('SELECT id, alias FROM tl_book_chapter WHERE pid=? AND published=1 AND sorting>? ORDER BY sorting LIMIT 1')->execute($this->objBook->id, $chapterSorting);
-		if ($objChapters->next())
-		{
-			$objChapter              = (object)$objChapters->row();
-			$this->Template->nextUrl = $this->getChapterUrl($objChapter);
-		}
+		$objPreviousChapter = ChapterModel::findPreviousPublishedFor($objChapter);
+		if ($objPreviousChapter !== null) $this->Template->previousUrl = $this->getChapterUrl($objPreviousChapter);
+
+		$objNextChapter = ChapterModel::findNextPublishedFor($objChapter);
+		if ($objNextChapter !== null) $this->Template->nextUrl = $this->getChapterUrl($objNextChapter);
 	}
 
 

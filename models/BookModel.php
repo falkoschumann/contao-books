@@ -42,6 +42,17 @@ namespace Muspellheim\Books;
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Models
+ * @property int     id
+ * @property int     tstamp
+ * @property string  title
+ * @property string  alias
+ * @property string  subtitle
+ * @property string  author
+ * @property string  category
+ * @property string  language
+ * @property boolean published
+ * @property string  note  TODO Check if note is needed.
+ * @property string  text
  */
 class BookModel extends \Model
 {
@@ -54,7 +65,11 @@ class BookModel extends \Model
 	protected static $strTable = 'tl_book';
 
 
-	public static function findPublishedById($intId)
+	/**
+	 * @param int id
+	 * @return BookModel|null
+	 */
+	public static function findPublishedById($id)
 	{
 		$t          = static::$strTable;
 		$arrColumns = array("$t.id=?");
@@ -63,7 +78,7 @@ class BookModel extends \Model
 		{
 			$arrColumns[] = "$t.published=1";
 		}
-		return static::findOneBy($arrColumns, $intId);
+		return static::findOneBy($arrColumns, $id);
 	}
 
 }
