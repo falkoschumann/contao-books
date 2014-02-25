@@ -127,9 +127,9 @@ class ChapterModel extends \Model
 		}
 		$options = array
 		(
-			'order' => 'sorting'
+			'order' => 'sorting DESC'
 		);
-		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting . ' DESC'), $options);
+		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
 
 	}
 
