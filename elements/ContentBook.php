@@ -128,21 +128,21 @@ class ContentBook extends \ContentElement
 		$this->Template->author   = $this->objBook->author;
 		$this->Template->text     = $this->objBook->text;
 
-		$objChapters = ChapterModel::findPublishedByPid($this->objBook->id);
-		$chapters    = array();
+		$chapters    = ChapterModel::findPublishedByPid($this->objBook->id);
+		$arrChapters = array();
 		if (TL_MODE == 'FE')
 		{
-			while ($objChapters->next())
+			foreach ($chapters as $chapter)
 			{
-				$arrHeadline = deserialize($objChapters->title);
-				$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-				$url         = $this->getChapterUrl($objChapters);
-				$level       = $this->getChapterLevel($objChapters);
-				$show_in_toc = $objChapters->show_in_toc;
-				$chapters[]  = array('title' => $headline, 'url' => $url, 'level' => $level, 'show_in_toc' => $show_in_toc);
+				$arrHeadline   = deserialize($chapter->title);
+				$headline      = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+				$url           = $this->getChapterUrl($chapter);
+				$level         = $this->getChapterLevel($chapter);
+				$show_in_toc   = $chapter->show_in_toc;
+				$arrChapters[] = array('title' => $headline, 'url' => $url, 'level' => $level, 'show_in_toc' => $show_in_toc);
 			}
 		}
-		$this->Template->chapters = $chapters;
+		$this->Template->chapters = $arrChapters;
 	}
 
 
