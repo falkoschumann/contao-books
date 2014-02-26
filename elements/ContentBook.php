@@ -87,12 +87,9 @@ class ContentBook extends \ContentElement
 		{
 			$chapter = \Input::get('items');
 		}
-		else
+		elseif ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
 		{
-			if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
-			{
-				$chapter = \Input::get('auto_item');
-			}
+			$chapter = \Input::get('auto_item');
 		}
 
 		if ($chapter === null)

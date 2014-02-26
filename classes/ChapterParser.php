@@ -43,7 +43,7 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class ChapterParser extends \Frontend
+class ChapterParser extends Books
 {
 
 	/**
@@ -93,28 +93,6 @@ class ChapterParser extends \Frontend
 	private function getBookUrl()
 	{
 		return $this->generateFrontendUrl($GLOBALS['objPage']->row());
-	}
-
-
-	/**
-	 * @param ChapterModel $chapter
-	 * @return string
-	 */
-	private function getChapterUrl($chapter)
-	{
-		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
-		$item       = $this->isAliasSetAndEnabled($chapter) ? $chapter->alias : $chapter->id;
-		return $this->generateFrontendUrl($GLOBALS['objPage']->row(), $itemPrefix . $item);
-	}
-
-
-	/**
-	 * @param ChapterModel $chapter
-	 * @return bool
-	 */
-	private function isAliasSetAndEnabled($chapter)
-	{
-		return $chapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
 
 }

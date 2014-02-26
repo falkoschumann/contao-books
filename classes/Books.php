@@ -33,41 +33,38 @@
  */
 
 
-/**
- * Register the namespaces
- */
-ClassLoader::addNamespaces(array
-(
-	'Muspellheim\Books',
-));
+namespace Muspellheim\Books;
 
 
 /**
- * Register the classes
+ * Base class for frontend classes.
+ *
+ * @copyright  Falko Schumann 2014
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Books
  */
-ClassLoader::addClasses(array
-(
-	// Classes
-	'Muspellheim\Books\Books'          => 'system/modules/books/classes/Books.php',
-	'Muspellheim\Books\BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
-	'Muspellheim\Books\BookParser'     => 'system/modules/books/classes/BookParser.php',
-	'Muspellheim\Books\ChapterParser'  => 'system/modules/books/classes/ChapterParser.php',
+class Books extends \Frontend
+{
 
-	// Elements
-	'Muspellheim\Books\ContentBook'    => 'system/modules/books/elements/ContentBook.php',
-
-	// Models
-	'Muspellheim\Books\BookModel'      => 'system/modules/books/models/BookModel.php',
-	'Muspellheim\Books\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
-));
+	/**
+	 * @param ChapterModel $chapter
+	 * @return string
+	 */
+	public static function getChapterUrl($chapter)
+	{
+		$prefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
+		$item   = static::isAliasSetAndEnabled($chapter) ? $chapter->alias : $chapter->id;
+		return static::generateFrontendUrl($GLOBALS['objPage']->row(), $prefix . $item);
+	}
 
 
-/**
- * Register the templates
- */
-TemplateLoader::addFiles(array
-(
-	'ce_book'       => 'system/modules/books/templates',
-	'books_book'    => 'system/modules/books/templates',
-	'books_chapter' => 'system/modules/books/templates',
-));
+	/**
+	 * @param ChapterModel $chapter
+	 * @return bool
+	 */
+	private static function isAliasSetAndEnabled($chapter)
+	{
+		return $chapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
+	}
+
+}
