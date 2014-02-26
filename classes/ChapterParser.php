@@ -37,77 +37,84 @@ namespace Muspellheim\Books;
 
 
 /**
- * The content element book.
+ * Renders a chapter of book.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class ContentBook extends \ContentElement
+class ChapterParser extends \Frontend
 {
 
-	protected $strTemplate = 'ce_book';
+	/**
+	 * @var ChapterModel $book
+	 */
+	private $chapter;
+
 
 	/**
-	 * @var BookModel
+	 * @param ChapterModel $chapter
 	 */
-	var $objBook;
-
-
-	public function generate()
+	public function __construct($chapter)
 	{
-		$this->objBook = BookModel::findPublishedById($this->book);
-		// TODO Check if book exists
-
-		if (TL_MODE == 'BE') return $this->displayWildcard();
-		return parent::generate();
+		parent::__construct();
+		$this->chapter = $chapter;
 	}
 
 
 	/**
 	 * @return string
 	 */
-	private function displayWildcard()
+	public function parse()
 	{
-		$objTemplate           = new \BackendTemplate('be_wildcard');
-		$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
-		$objTemplate->title    = $this->objBook->title;
-		$objTemplate->title    = $this->objBook->subtitle ? $objTemplate->title . ' - ' . $this->objBook->subtitle : $objTemplate->title;
-		$objTemplate->title    = $this->objBook->author ? $objTemplate->title . ' (' . $this->objBook->author . ')' : $objTemplate->title;
-		$objTemplate->id       = $this->objBook->id;
-		$objTemplate->link     = $this->objBook->title;
-		$objTemplate->href     = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $this->objBook->id;
-		return $objTemplate->parse();
+		$arrHeadline = deserialize($this->chapter->title);
+		$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+
+		$template          = new \FrontendTemplate('books_chapter');
+		$template->title   = $headline;
+		$template->hl      = $hl;
+		$template->text    = $this->chapter->text;
+		$template->bookUrl = $this->getBookUrl();
+
+		$objPreviousChapter = ChapterModel::findPreviousPublishedFor($this->chapter);
+		if ($objPreviousChapter !== null) $template->previousUrl = $this->getChapterUrl($objPreviousChapter);
+
+		$objNextChapter = ChapterModel::findNextPublishedFor($this->chapter);
+		if ($objNextChapter !== null) $template->nextUrl = $this->getChapterUrl($objNextChapter);
+
+		return $template->parse();
 	}
 
 
-	protected function compile()
+	/**
+	 * @return string
+	 */
+	private function getBookUrl()
 	{
-		if (isset($_GET['items']))
-		{
-			$chapter = \Input::get('items');
-		}
-		else
-		{
-			if ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
-			{
-				$chapter = \Input::get('auto_item');
-			}
-		}
+		return $this->generateFrontendUrl($GLOBALS['objPage']->row());
+	}
 
-		if ($chapter === null)
-		{
-			$bookParser              = new BookParser($this->objBook);
-			$this->Template->content = $bookParser->parse();
-		}
-		else
-		{
-			$objChapter = ChapterModel::findByIdOrAlias($chapter);
-			// TODO Check if chapter exists
 
-			$chapterParser           = new ChapterParser($objChapter);
-			$this->Template->content = $chapterParser->parse();
-		}
+	/**
+	 * @param ChapterModel $chapter
+	 * @return string
+	 */
+	private function getChapterUrl($chapter)
+	{
+		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
+		$item       = $this->isAliasSetAndEnabled($chapter) ? $chapter->alias : $chapter->id;
+		return $this->generateFrontendUrl($GLOBALS['objPage']->row(), $itemPrefix . $item);
+	}
+
+
+	/**
+	 * @param ChapterModel $chapter
+	 * @return bool
+	 */
+	private function isAliasSetAndEnabled($chapter)
+	{
+		return $chapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
 
 }

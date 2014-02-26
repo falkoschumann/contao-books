@@ -1,5 +1,4 @@
-<div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
-<div class="inside">
+<div class="chapter">
 <<?php echo $this->hl; ?> class="chaptertitle"><?php echo $this->title; ?></<?php echo $this->hl; ?>>
 <?php echo $this->text; ?>
 </div>
@@ -16,4 +15,3 @@
 </ul>
 </nav>
 <!-- indexer::continue -->
-</div>

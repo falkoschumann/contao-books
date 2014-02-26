@@ -1,0 +1,47 @@
+<?php if ($this->author): ?><p class="author"><?php echo $this->author; ?></p><?php endif;  ?>
+<h1 class="title"><?php echo $this->title; ?></h1>
+<?php if ($this->subtitle): ?><h2 class="subtitle"><?php echo $this->subtitle; ?></h2><?php endif;  ?>
+<?php echo $this->text; ?>
+<!-- indexer::stop -->
+<nav class="toc">
+<?php
+$chapterCount = count($this->chapters);
+for ($current = 0; $current < $chapterCount; $current++)
+{
+	$chapter = $this->chapters[$current];
+	if (!$chapter['show_in_toc'])
+		continue;
+
+	$lastLevel = ($current == 0) ? 0 : $this->chapters[$current-1]['level'];
+	$currentLevel = $chapter['level'];
+	$nextLevel = (($current + 1) < $chapterCount) ? $this->chapters[$current+1]['level'] : 0;
+
+	if ($lastLevel == $currentLevel)
+	{
+		echo "<li>";
+	}
+
+	// lastLevel < currentLevel 
+	for ($i = $lastLevel; $i < $currentLevel; $i++)
+	{
+		echo "<ul>\n";
+		echo "<li>";
+	}
+
+	echo '<a href="' . $chapter['url'] . '">' . $chapter['title'] . '</a>';
+
+	if ($nextLevel == $currentLevel)
+	{
+		echo "</li>\n";
+	}
+
+	// currentLevel < nextLevel
+	for ($i = $currentLevel; $i > $nextLevel; $i--)
+	{
+		echo "</li>\n";
+		echo "</ul>\n";
+	}
+}
+?>
+</nav>
+<!-- indexer::continue -->

@@ -49,6 +49,8 @@ ClassLoader::addClasses(array
 (
 	// Classes
 	'Muspellheim\Books\BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
+	'Muspellheim\Books\BookParser'     => 'system/modules/books/classes/BookParser.php',
+	'Muspellheim\Books\ChapterParser'  => 'system/modules/books/classes/ChapterParser.php',
 
 	// Elements
 	'Muspellheim\Books\ContentBook'    => 'system/modules/books/elements/ContentBook.php',
@@ -64,6 +66,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'ce_book'         => 'system/modules/books/templates',
-	'ce_book_chapter' => 'system/modules/books/templates',
+	'ce_book'       => 'system/modules/books/templates',
+	'books_book'    => 'system/modules/books/templates',
+	'books_chapter' => 'system/modules/books/templates',
 ));
