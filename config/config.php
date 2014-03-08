@@ -45,15 +45,18 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 	)
 ));
 
+
 /**
  * Content elements
  */
 array_insert($GLOBALS['TL_CTE']['includes'], 0, array('book' => 'ContentBook'));
 
+
 /**
  * Insert tags
  */
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('BookInsertTags', 'replaceInsertTags');
+
 
 /**
  * Model mappings

@@ -53,14 +53,37 @@ class ContentBook extends \ContentElement
 	 */
 	var $objBook;
 
+	/**
+	 * @var ChapterModel
+	 */
+	var $objChapter;
+
 
 	public function generate()
 	{
 		$this->objBook = BookModel::findPublishedById($this->book);
 		// TODO Check if book exists
+		$this->objChapter = ChapterModel::findByIdOrAlias($this->getChapterIdOrAliasFromHttpParameter());
+		// TODO Check if chapter exists
 
 		if (TL_MODE == 'BE') return $this->displayWildcard();
 		return parent::generate();
+	}
+
+
+	/**
+	 * @return int|string|null
+	 */
+	private function getChapterIdOrAliasFromHttpParameter()
+	{
+		if (isset($_GET['items']))
+		{
+			return \Input::get('items');
+		}
+		elseif ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
+		{
+			return \Input::get('auto_item');
+		}
 	}
 
 
@@ -71,9 +94,7 @@ class ContentBook extends \ContentElement
 	{
 		$objTemplate           = new \BackendTemplate('be_wildcard');
 		$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
-		$objTemplate->title    = $this->objBook->title;
-		$objTemplate->title    = $this->objBook->subtitle ? $objTemplate->title . ' - ' . $this->objBook->subtitle : $objTemplate->title;
-		$objTemplate->title    = $this->objBook->author ? $objTemplate->title . ' (' . $this->objBook->author . ')' : $objTemplate->title;
+		$objTemplate->title    = $this->generateWildcardTitle();
 		$objTemplate->id       = $this->objBook->id;
 		$objTemplate->link     = $this->objBook->title;
 		$objTemplate->href     = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $this->objBook->id;
@@ -81,28 +102,28 @@ class ContentBook extends \ContentElement
 	}
 
 
+	/**
+	 * @return string
+	 */
+	private function generateWildcardTitle()
+	{
+		$result = $this->objBook->title;
+		$result .= $this->objBook->subtitle ? ' - ' . $this->objBook->subtitle : '';
+		$result .= $this->objBook->author ? ' (' . $this->objBook->author . ')' : '';
+		return $result;
+	}
+
+
 	protected function compile()
 	{
-		if (isset($_GET['items']))
-		{
-			$chapter = \Input::get('items');
-		}
-		elseif ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item']))
-		{
-			$chapter = \Input::get('auto_item');
-		}
-
-		if ($chapter === null)
+		if ($this->objChapter === null)
 		{
 			$bookParser              = new BookParser($this->objBook);
 			$this->Template->content = $bookParser->parse();
 		}
 		else
 		{
-			$objChapter = ChapterModel::findByIdOrAlias($chapter);
-			// TODO Check if chapter exists
-
-			$chapterParser           = new ChapterParser($objChapter);
+			$chapterParser           = new ChapterParser($this->objChapter);
 			$this->Template->content = $chapterParser->parse();
 		}
 	}

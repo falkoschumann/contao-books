@@ -344,7 +344,7 @@ class tl_book_chapter extends Backend
 			$autoAlias = true;
 			$arrHeadline = deserialize($dc->activeRecord->title);
 			$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-			$varValue = standardize($this->restoreBasicEntities($headline));
+			$varValue = standardize(String::restoreBasicEntities($headline));
 		}
 	
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=? AND pid=? AND id<>?")->execute($varValue, $dc->activeRecord->pid, $dc->activeRecord->id);
