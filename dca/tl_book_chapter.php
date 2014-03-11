@@ -44,7 +44,14 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 	(
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_book',
-		'enableVersioning'            => true
+		'enableVersioning'            => true,
+		'sql' => array
+		(
+			'keys' => array
+			(
+				'id' => 'primary'
+			)
+		)
 	),
 
 	// List
@@ -111,12 +118,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 	(
 		'__selector__'                => array(''),
 		'default'                     => '{chapter_legend},title,alias;{meta_legend:hide},note;{text_legend},text;{publish_legend},published,show_in_toc'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		''                            => ''
 	),
 
 	// Fields
@@ -303,29 +304,14 @@ class tl_book_chapter extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible)
 	{
-		// Check permissions to publish
-		// if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book_chapter::published', 'alexf'))
-		// {
-		// 		$this->log('Not enough permissions to publish/unpublish Book ID "'.$intId.'"', 'tl_book_chapter toggleVisibility', TL_ERROR);
-		// 		$this->redirect('contao/main.php?act=error');
-		// }
-
-		$this->createInitialVersion('tl_book_chapter', $intId);
-
-		// Trigger the save_callback
-		// if (is_array($GLOBALS['TL_DCA']['tl_book_chapter']['fields']['published']['save_callback']))
-		// {
-		// 		foreach ($GLOBALS['TL_DCA']['tl_book_chapter']['fields']['published']['save_callback'] as $callback)
-		// 		{
-		// 			$this->import($callback[0]);
-		// 			$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
-		// 		}
-		// }
+		$objVersions = new Versions('tl_book_chapter', $intId);
+		$objVersions->initialize();
 
 		// Update the database
 		$this->Database->prepare("UPDATE tl_book_chapter SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
 
-		$this->createNewVersion('tl_book_chapter', $intId);
+		$objVersions->create();
+		$this->log('A new version of record "tl_book_chapter.id='.$intId.'" has been created'.$this->getParentEntries('tl_book_chapter', $intId), __METHOD__, TL_GENERAL);
 	}
 
 	/**

@@ -45,7 +45,14 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		'dataContainer'               => 'Table',
 		'ctable'                      => array('tl_book_chapter'),
 		'switchToEdit'                => true,
-		'enableVersioning'            => true
+		'enableVersioning'            => true,
+		'sql' => array
+		(
+			'keys' => array
+			(
+				'id' => 'primary'
+			)
+		)
 	),
 
 	// List
@@ -123,12 +130,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	(
 		'__selector__'                => array(''),
 		'default'                     => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},language,category,note;{text_legend},text;{publish_legend},published'
-	),
-
-	// Subpalettes
-	'subpalettes' => array
-	(
-		''                            => ''
 	),
 
 	// Fields
@@ -281,12 +282,6 @@ class tl_book extends Backend
 			$this->redirect($this->getReferer());
 		}
 
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		// 		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book::published', 'alexf'))
-		// 		{
-		// 			return '';
-		// 		}
-
 		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
 
 		if (!$row['published'])
@@ -304,30 +299,14 @@ class tl_book extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible)
 	{
-		// Check permissions to publish
-		// if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book::published', 'alexf'))
-		// {
-		// 		$this->log('Not enough permissions to publish/unpublish Book ID "'.$intId.'"', 'tl_book toggleVisibility', TL_ERROR);
-		// 		$this->redirect('contao/main.php?act=error');
-		// }
-
-		$this->createInitialVersion('tl_book', $intId);
-
-		// Trigger the save_callback
-		// if (is_array($GLOBALS['TL_DCA']['tl_book']['fields']['published']['save_callback']))
-		// {
-		//	foreach ($GLOBALS['TL_DCA']['tl_book']['fields']['published']['save_callback'] as $callback)
-		//	{
-		//		this->import($callback[0]);
-		//		$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
-		//	}
-		// }
+		$objVersions = new Versions('tl_book', $intId);
+		$objVersions->initialize();
 
 		// Update the database
 		$this->Database->prepare("UPDATE tl_book SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
 
-		$this->createNewVersion('tl_book', $intId);
-
+		$objVersions->create();
+		$this->log('A new version of record "tl_book.id='.$intId.'" has been created', __METHOD__, TL_GENERAL);
 	}
 
 	/**
@@ -339,29 +318,29 @@ class tl_book extends Backend
 	public function generateAlias($varValue, DataContainer $dc)
 	{
 		$autoAlias = false;
-	
+
 		// Generate alias if there is none
 		if (!strlen($varValue))
 		{
 			$autoAlias = true;
 			$varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
 		}
-	
+
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($varValue);
-	
+
 		// Check whether the news alias exists
 		if ($objAlias->numRows > 1 && !$autoAlias)
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
-	
+
 		// Add ID to alias
 		if ($objAlias->numRows && $autoAlias)
 		{
 			$varValue .= '-' . $dc->id;
 		}
-	
+
 		return $varValue;
 	}
-	
+
 }
