@@ -2,6 +2,7 @@
 <h1 class="title"><?php echo $this->title; ?></h1>
 <?php if ($this->subtitle): ?><h2 class="subtitle"><?php echo $this->subtitle; ?></h2><?php endif;  ?>
 <?php echo $this->text; ?>
+<?php if ($this->chapters): ?>
 <!-- indexer::stop -->
 <nav class="toc">
 <?php
@@ -45,3 +46,4 @@ for ($current = 0; $current < $chapterCount; $current++)
 ?>
 </nav>
 <!-- indexer::continue -->
+<?php endif ?>

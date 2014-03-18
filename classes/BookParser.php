@@ -75,22 +75,24 @@ class BookParser extends Books
 
 		$chapters    = ChapterModel::findPublishedByPid($this->book->id);
 		$arrChapters = array();
-		foreach ($chapters as $chapter)
+		if ($chapters)
 		{
-			$arrHeadline   = deserialize($chapter->title);
-			$headline      = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-			$url           = $this->getChapterUrl($chapter);
-			$level         = $this->getChapterLevel($chapter);
-			$show_in_toc   = $chapter->show_in_toc;
-			$arrChapters[] = array(
-				'title'       => $headline,
-				'url'         => $url,
-				'level'       => $level,
-				'show_in_toc' => $show_in_toc
-			);
+			foreach ($chapters as $chapter)
+			{
+				$arrHeadline   = deserialize($chapter->title);
+				$headline      = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+				$url           = $this->getChapterUrl($chapter);
+				$level         = $this->getChapterLevel($chapter);
+				$show_in_toc   = $chapter->show_in_toc;
+				$arrChapters[] = array(
+					'title'       => $headline,
+					'url'         => $url,
+					'level'       => $level,
+					'show_in_toc' => $show_in_toc
+				);
+			}
+			$template->chapters = $arrChapters;
 		}
-		$template->chapters = $arrChapters;
-
 		return $template->parse();
 	}
 
