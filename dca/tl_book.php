@@ -246,9 +246,22 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 
 if (Input::get('do') == 'books') {
 	/* TODO Change structure and language if switch to editing chapters */
-	if (Input::get('book_id')) {
+	$book_id = Input::get('book_id');
+	if ($book_id) {
+		$GLOBALS['TL_DCA']['tl_book']['config']['label'] = BookModel::findByPk($book_id)->title;
+		$GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array
+		(
+			array('tl_book', 'setParent')
+		);
+
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode'] = 5;
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root'] = Input::get('book_id');
+		// FIXME Set first level chapters ids instead of book id
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root'] = array($book_id);
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste'] = true;
+	} else {
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['filter'] = array(
+			array('pid=?', 0)
+		);
 	}
 }
 
@@ -341,6 +354,32 @@ class tl_book extends Backend
 		}
 
 		return $varValue;
+	}
+
+
+	/**
+	 * @param \DataContainer
+	 */
+	public function setParent(DataContainer $dc)
+	{
+		$this->log('Scheissdreck', __METHOD__, TL_ACCESS);
+
+		// Return if there is no active record (override all)
+		if (!$dc->activeRecord) {
+			return;
+		}
+
+		$this->log('Foo', __METHOD__, TL_ACCESS);
+
+		// Existing book
+		if ($dc->activeRecord->tstamp > 0) {
+			return;
+		}
+
+		$this->log('Bar', __METHOD__, TL_ACCESS);
+
+		$book_id = Input::get('book_id');
+		$this->Database->prepare("UPDATE tl_book SET pid=? WHERE id=?")->execute($book_id, $dc->id);
 	}
 
 
