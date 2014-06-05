@@ -43,16 +43,18 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Models
  * @property int     id
+ * @property int     pid
+ * @property int     sortimg
  * @property int     tstamp
  * @property string  title
  * @property string  alias
  * @property string  subtitle
  * @property string  author
- * @property string  category
  * @property string  language
+ * @property string  tags
+ * @property string  abstract
  * @property boolean published
- * @property string  note  TODO Check if note is needed.
- * @property string  text
+ * @property boolean show_in_toc
  */
 class BookModel extends \Model
 {
@@ -79,6 +81,22 @@ class BookModel extends \Model
 			$arrColumns[] = "$t.published=1";
 		}
 		return static::findOneBy($arrColumns, $id);
+	}
+
+
+	/**
+	 * @param int pid
+	 * @return array
+	 */
+	public static function findChildIds($pid)
+	{
+		$books  = static::findBy('pid', $pid);
+		$arrIds = array();
+		foreach ($books as $book)
+		{
+			$arrIds[] = $book->id;
+		}
+		return $arrIds;
 	}
 
 }

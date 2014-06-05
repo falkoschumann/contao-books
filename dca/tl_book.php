@@ -244,21 +244,23 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	)
 );
 
-if (Input::get('do') == 'books') {
+if (Input::get('do') == 'books')
+{
 	/* TODO Change structure and language if switch to editing chapters */
 	$book_id = Input::get('book_id');
-	if ($book_id) {
-		$GLOBALS['TL_DCA']['tl_book']['config']['label'] = BookModel::findByPk($book_id)->title;
+	if ($book_id)
+	{
+		$GLOBALS['TL_DCA']['tl_book']['config']['label']             = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
 		$GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array
 		(
 			array('tl_book', 'setParent')
 		);
 
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode'] = 5;
-		// FIXME Set first level chapters ids instead of book id
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root'] = array($book_id);
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']      = 5;
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']      = \Muspellheim\Books\BookModel::findChildIds($book_id);
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste'] = true;
-	} else {
+	} else
+	{
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['filter'] = array(
 			array('pid=?', 0)
 		);
@@ -290,14 +292,16 @@ class tl_book extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen($this->Input->get('tid'))) {
+		if (strlen($this->Input->get('tid')))
+		{
 			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
 			$this->redirect($this->getReferer());
 		}
 
 		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-		if (!$row['published']) {
+		if (!$row['published'])
+		{
 			$icon = 'invisible.gif';
 		}
 
@@ -336,20 +340,23 @@ class tl_book extends Backend
 		$autoAlias = false;
 
 		// Generate alias if there is none
-		if (!strlen($varValue)) {
+		if (!strlen($varValue))
+		{
 			$autoAlias = true;
-			$varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
+			$varValue  = standardize(String::restoreBasicEntities($dc->activeRecord->title));
 		}
 
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($varValue);
 
 		// Check whether the news alias exists
-		if ($objAlias->numRows > 1 && !$autoAlias) {
+		if ($objAlias->numRows > 1 && !$autoAlias)
+		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
 		// Add ID to alias
-		if ($objAlias->numRows && $autoAlias) {
+		if ($objAlias->numRows && $autoAlias)
+		{
 			$varValue .= '-' . $dc->id;
 		}
 
@@ -365,14 +372,16 @@ class tl_book extends Backend
 		$this->log('Scheissdreck', __METHOD__, TL_ACCESS);
 
 		// Return if there is no active record (override all)
-		if (!$dc->activeRecord) {
+		if (!$dc->activeRecord)
+		{
 			return;
 		}
 
 		$this->log('Foo', __METHOD__, TL_ACCESS);
 
 		// Existing book
-		if ($dc->activeRecord->tstamp > 0) {
+		if ($dc->activeRecord->tstamp > 0)
+		{
 			return;
 		}
 
