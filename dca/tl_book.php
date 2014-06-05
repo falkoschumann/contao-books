@@ -74,7 +74,13 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		'global_operations' => array
 		(
 			/* TODO What global operations exists? */
-			'all' => array
+			'toggleNodes' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
+				'href'  => 'ptg=all',
+				'class' => 'header_toggle'
+			),
+			'all'         => array
 			(
 				'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'       => 'act=select',
@@ -85,40 +91,33 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		'operations'        => array
 		(
 			/* TODO What local operations exists? */
-			'edit'       => array
+			'edit'   => array
 			(
-				'label'           => &$GLOBALS['TL_LANG']['tl_book']['edit'],
-				'href'            => 'do=books',
-				'icon'            => 'edit.gif',
-				'button_callback' => array('tl_book', 'editChapters')
+				'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
+				'href'  => 'do=books',
+				'icon'  => 'edit.gif',
 			),
-			'editheader' => array
-			(
-				'label' => &$GLOBALS['TL_LANG']['tl_book']['editheader'],
-				'href'  => 'act=edit',
-				'icon'  => 'header.gif'
-			),
-			'copy'       => array
+			'copy'   => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['copy'],
 				'href'  => 'act=copy',
 				'icon'  => 'copy.gif'
 			),
-			'delete'     => array
+			'delete' => array
 			(
 				'label'      => &$GLOBALS['TL_LANG']['tl_book']['delete'],
 				'href'       => 'act=delete',
 				'icon'       => 'delete.gif',
 				'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
-			'toggle'     => array
+			'toggle' => array
 			(
 				'label'           => &$GLOBALS['TL_LANG']['tl_book']['toggle'],
 				'icon'            => 'visible.gif',
 				'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback' => array('tl_book', 'toggleIcon')
 			),
-			'show'       => array
+			'show'   => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['show'],
 				'href'  => 'act=show',
@@ -214,9 +213,9 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'search'    => true,
 			'sql'       => "varchar(255) NOT NULL default ''"
 		),
-		'abstract'    => array
+		'text'        => array
 		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['abstract'],
+			'label'     => &$GLOBALS['TL_LANG']['tl_book']['text'],
 			'exclude'   => true,
 			'inputType' => 'textarea',
 			'eval'      => array('allowHtml' => true, 'rte' => 'tinyMCE', 'doNotShow' => true),
@@ -256,14 +255,35 @@ if (Input::get('do') == 'books')
 			array('tl_book', 'setParent')
 		);
 
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']      = 5;
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']      = \Muspellheim\Books\BookModel::findChildIds($book_id);
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste'] = true;
-	} else
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']            = 5;
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']            = \Muspellheim\Books\BookModel::findChildIds($book_id);
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']       = true;
+		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['href'] = 'act=edit';
+
+		$this->loadLanguageFile('tl_book_chapter');
+		$GLOBALS['TL_LANG']['tl_book']['new']    = $GLOBALS['TL_LANG']['tl_book_chapter']['new'];
+		$GLOBALS['TL_LANG']['tl_book']['edit']   = $GLOBALS['TL_LANG']['tl_book_chapter']['edit'];
+		$GLOBALS['TL_LANG']['tl_book']['copy']   = $GLOBALS['TL_LANG']['tl_book_chapter']['copy'];
+		$GLOBALS['TL_LANG']['tl_book']['delete'] = $GLOBALS['TL_LANG']['tl_book_chapter']['delete'];
+		$GLOBALS['TL_LANG']['tl_book']['toggle'] = $GLOBALS['TL_LANG']['tl_book_chapter']['toggle'];
+		$GLOBALS['TL_LANG']['tl_book']['show']   = $GLOBALS['TL_LANG']['tl_book_chapter']['show'];
+	}
+	else
 	{
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['filter'] = array(
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['filter']                     = array
+		(
 			array('pid=?', 0)
 		);
+		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['button_callback'] = array('tl_book', 'editChapters');
+		array_insert($GLOBALS['TL_DCA']['tl_book']['list']['operations'], 1, array
+		(
+			'editheaders' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_book']['editheader'],
+				'href'  => 'act=edit',
+				'icon'  => 'header.gif'
+			)
+		));
 	}
 }
 
