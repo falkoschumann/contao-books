@@ -213,9 +213,9 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'search'    => true,
 			'sql'       => "varchar(255) NOT NULL default ''"
 		),
-		'text'        => array
+		'abstract'    => array
 		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['text'],
+			'label'     => &$GLOBALS['TL_LANG']['tl_book']['abstract'],
 			'exclude'   => true,
 			'inputType' => 'textarea',
 			'eval'      => array('allowHtml' => true, 'rte' => 'tinyMCE', 'doNotShow' => true),
@@ -250,16 +250,17 @@ if (Input::get('do') == 'books')
 	if ($book_id)
 	{
 		$GLOBALS['TL_DCA']['tl_book']['config']['label']             = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
+		$GLOBALS['TL_DCA']['tl_book']['config']['backlink']          = "do=books";
 		$GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array
 		(
 			array('tl_book', 'setParent')
 		);
 
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']            = 5;
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']            = \Muspellheim\Books\BookModel::findChildIds($book_id);
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']       = true;
-		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['href'] = 'act=edit';
 
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']                   = 5;
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']                   = \Muspellheim\Books\BookModel::findChildIds($book_id);
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']              = true;
+		$GLOBALS['TL_DCA']['tl_book']['list']['global_operations']['edit']['href'] = 'act=edit';
 		$this->loadLanguageFile('tl_book_chapter');
 		$GLOBALS['TL_LANG']['tl_book']['new']    = $GLOBALS['TL_LANG']['tl_book_chapter']['new'];
 		$GLOBALS['TL_LANG']['tl_book']['edit']   = $GLOBALS['TL_LANG']['tl_book_chapter']['edit'];
