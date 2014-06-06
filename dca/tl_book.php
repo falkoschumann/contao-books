@@ -73,7 +73,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'global_operations' => array
 		(
-			/* TODO What global operations exists? */
 			'toggleNodes' => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
@@ -90,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'operations'        => array
 		(
-			/* TODO What local operations exists? */
 			'edit'   => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
@@ -245,7 +243,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 
 if (Input::get('do') == 'books')
 {
-	/* TODO Change structure and language if switch to editing chapters */
 	$book_id = Input::get('book_id');
 	if ($book_id)
 	{
@@ -257,17 +254,23 @@ if (Input::get('do') == 'books')
 		);
 
 
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']                   = 5;
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']                   = \Muspellheim\Books\BookModel::findChildIds($book_id);
-		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']              = true;
-		$GLOBALS['TL_DCA']['tl_book']['list']['global_operations']['edit']['href'] = 'act=edit';
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']            = 5;
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']            = \Muspellheim\Books\BookModel::findChildIds($book_id);
+		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']       = true;
+		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['href'] = 'act=edit';
+
+		$GLOBALS['TL_DCA']['tl_book']['palettes']['default'] = '{book_legend},title,alias;{publish_legend},published,show_in_toc';
+
 		$this->loadLanguageFile('tl_book_chapter');
-		$GLOBALS['TL_LANG']['tl_book']['new']    = $GLOBALS['TL_LANG']['tl_book_chapter']['new'];
-		$GLOBALS['TL_LANG']['tl_book']['edit']   = $GLOBALS['TL_LANG']['tl_book_chapter']['edit'];
-		$GLOBALS['TL_LANG']['tl_book']['copy']   = $GLOBALS['TL_LANG']['tl_book_chapter']['copy'];
-		$GLOBALS['TL_LANG']['tl_book']['delete'] = $GLOBALS['TL_LANG']['tl_book_chapter']['delete'];
-		$GLOBALS['TL_LANG']['tl_book']['toggle'] = $GLOBALS['TL_LANG']['tl_book_chapter']['toggle'];
-		$GLOBALS['TL_LANG']['tl_book']['show']   = $GLOBALS['TL_LANG']['tl_book_chapter']['show'];
+		$GLOBALS['TL_LANG']['tl_book']['new']       = $GLOBALS['TL_LANG']['tl_book_chapter']['new'];
+		$GLOBALS['TL_LANG']['tl_book']['edit']      = $GLOBALS['TL_LANG']['tl_book_chapter']['edit'];
+		$GLOBALS['TL_LANG']['tl_book']['copy']      = $GLOBALS['TL_LANG']['tl_book_chapter']['copy'];
+		$GLOBALS['TL_LANG']['tl_book']['delete']    = $GLOBALS['TL_LANG']['tl_book_chapter']['delete'];
+		$GLOBALS['TL_LANG']['tl_book']['toggle']    = $GLOBALS['TL_LANG']['tl_book_chapter']['toggle'];
+		$GLOBALS['TL_LANG']['tl_book']['show']      = $GLOBALS['TL_LANG']['tl_book_chapter']['show'];
+		$GLOBALS['TL_LANG']['tl_book']['title']     = $GLOBALS['TL_LANG']['tl_book_chapter']['title'];
+		$GLOBALS['TL_LANG']['tl_book']['alias']     = $GLOBALS['TL_LANG']['tl_book_chapter']['alias'];
+		$GLOBALS['TL_LANG']['tl_book']['published'] = $GLOBALS['TL_LANG']['tl_book_chapter']['published'];
 	}
 	else
 	{
