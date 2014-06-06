@@ -43,6 +43,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	'config'   => array
 	(
 		'dataContainer'    => 'Table',
+		'ctable'           => array('tl_content'),
 		'enableVersioning' => true,
 		'sql'              => array
 		(
@@ -89,33 +90,39 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'operations'        => array
 		(
-			'edit'   => array
+			'edit'        => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
 				'href'  => 'do=books',
 				'icon'  => 'edit.gif',
 			),
-			'copy'   => array
+			'editheaders' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_book']['editheader'],
+				'href'  => 'act=edit',
+				'icon'  => 'header.gif'
+			),
+			'copy'        => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['copy'],
 				'href'  => 'act=copy',
 				'icon'  => 'copy.gif'
 			),
-			'delete' => array
+			'delete'      => array
 			(
 				'label'      => &$GLOBALS['TL_LANG']['tl_book']['delete'],
 				'href'       => 'act=delete',
 				'icon'       => 'delete.gif',
 				'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
-			'toggle' => array
+			'toggle'      => array
 			(
 				'label'           => &$GLOBALS['TL_LANG']['tl_book']['toggle'],
 				'icon'            => 'visible.gif',
 				'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback' => array('tl_book', 'toggleIcon')
 			),
-			'show'   => array
+			'show'        => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['show'],
 				'href'  => 'act=show',
@@ -247,17 +254,16 @@ if (Input::get('do') == 'books')
 	if ($book_id)
 	{
 		$GLOBALS['TL_DCA']['tl_book']['config']['label']             = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
-		$GLOBALS['TL_DCA']['tl_book']['config']['backlink']          = "do=books";
+		$GLOBALS['TL_DCA']['tl_book']['config']['backlink']          = 'do=books';
 		$GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array
 		(
 			array('tl_book', 'setParent')
 		);
 
-
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode']            = 5;
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root']            = \Muspellheim\Books\BookModel::findChildIds($book_id);
 		$GLOBALS['TL_DCA']['tl_book']['list']['sorting']['rootPaste']       = true;
-		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['href'] = 'act=edit';
+		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['href'] = 'table=tl_content';
 
 		$GLOBALS['TL_DCA']['tl_book']['palettes']['default'] = '{book_legend},title,alias;{publish_legend},published,show_in_toc';
 
@@ -279,15 +285,6 @@ if (Input::get('do') == 'books')
 			array('pid=?', 0)
 		);
 		$GLOBALS['TL_DCA']['tl_book']['list']['operations']['edit']['button_callback'] = array('tl_book', 'editChapters');
-		array_insert($GLOBALS['TL_DCA']['tl_book']['list']['operations'], 1, array
-		(
-			'editheaders' => array
-			(
-				'label' => &$GLOBALS['TL_LANG']['tl_book']['editheader'],
-				'href'  => 'act=edit',
-				'icon'  => 'header.gif'
-			)
-		));
 	}
 }
 

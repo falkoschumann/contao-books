@@ -32,6 +32,14 @@
  * @license    BSD-2-clause
  */
 
+/**
+ * Dynamically add the parent table
+ */
+if (\Input::get('do') == 'books')
+{
+	$GLOBALS['TL_DCA']['tl_content']['config']['ptable']   = 'tl_book';
+	$GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'do=books&book_id=' . Input::get('book_id');
+}
 
 /**
  * Add palettes to tl_content
@@ -44,12 +52,12 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['book'] = '{type_legend},type;{incl
  */
 $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
 (
-		'label' => &$GLOBALS['TL_LANG']['tl_content']['book'],
-		'exclude' => true,
-		'inputType' => 'select',
-		'options_callback' => array('tl_content_book', 'getBooks'),
-		'eval' => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'long'),
-        'sql' => "int(10) unsigned NOT NULL default '0'"
+	'label'            => &$GLOBALS['TL_LANG']['tl_content']['book'],
+	'exclude'          => true,
+	'inputType'        => 'select',
+	'options_callback' => array('tl_content_book', 'getBooks'),
+	'eval'             => array('mandatory' => true, 'chosen' => true, 'submitOnChange' => true, 'tl_class' => 'long'),
+	'sql'              => "int(10) unsigned NOT NULL default '0'"
 );
 
 /**
@@ -58,12 +66,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
  * @copyright  Falko Schumann 2012
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
-*/
+ */
 class tl_content_book extends Backend
 {
 
 	/**
 	 * Get all books and return them as array
+	 *
 	 * @return array
 	 */
 	public function getBooks()

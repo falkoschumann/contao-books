@@ -40,7 +40,7 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 (
 	'books' => array
 	(
-		'tables' => array('tl_book', 'tl_book_chapter'),
+		'tables' => array('tl_book', 'tl_book_chapter', 'tl_content'),
 		'icon'   => 'system/modules/books/assets/icon.png'
 	)
 ));
@@ -61,5 +61,5 @@ $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('BookInsertTags', 'replaceIn
 /**
  * Model mappings
  */
-$GLOBALS['TL_MODELS'][\Muspellheim\Books\BookModel::getTable()] = '\Muspellheim\Books\BookModel';
+$GLOBALS['TL_MODELS'][\Muspellheim\Books\BookModel::getTable()]    = '\Muspellheim\Books\BookModel';
 $GLOBALS['TL_MODELS'][\Muspellheim\Books\ChapterModel::getTable()] = '\Muspellheim\Books\ChapterModel';
