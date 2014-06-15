@@ -48,13 +48,8 @@ namespace Muspellheim\Books;
  * @property int     tstamp
  * @property string  title
  * @property string  alias
- * @property string  subtitle
  * @property string  author
- * @property string  language
- * @property string  tags
- * @property string  abstract
  * @property boolean published
- * @property boolean show_in_toc
  */
 class BookModel extends \Model
 {
@@ -92,10 +87,12 @@ class BookModel extends \Model
 	{
 		$books  = static::findBy('pid', $pid);
 		$arrIds = array();
-		foreach ($books as $book)
-		{
-			$arrIds[] = $book->id;
-		}
+        if ($books)
+        {
+            foreach ($books as $book) {
+                $arrIds[] = $book->id;
+            }
+        }
 		return $arrIds;
 	}
 

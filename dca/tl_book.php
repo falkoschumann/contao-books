@@ -68,9 +68,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		),
 		'label'             => array
 		(
-			/* TODO subtitle and author are optional fields, rewrite to use label_callback */
-			'fields' => array('title', 'subtitle', 'author'),
-			'format' => '%s: %s <span style="color:#b3b3b3;padding-left:3px">[%s]</span>'
+			'fields' => array('title', 'author'),
+			'format' => '%s <span style="color:#b3b3b3;padding-left:3px">[%s]</span>'
 		),
 		'global_operations' => array
 		(
@@ -135,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 	'palettes' => array
 	(
 		'__selector__' => array(''),
-		'default'      => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},language,tags;{abstract_legend},abstract;{publish_legend},published'
+		'default'      => '{book_legend},title,alias,author;{publish_legend},published'
 	),
 
 	// Fields
@@ -180,53 +179,16 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			),
 			'sql'           => "varbinary(128) NOT NULL default ''"
 		),
-		'subtitle'    => array
-		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
-			'exclude'   => true,
-			'inputType' => 'text',
-			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
-			'search'    => true,
-			'sql'       => "varchar(255) NOT NULL default ''"
-		),
 		'author'      => array
 		(
 			'label'     => &$GLOBALS['TL_LANG']['tl_book']['author'],
 			'exclude'   => true,
 			'inputType' => 'text',
-			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
 			'filter'    => true,
 			'search'    => true,
 			'sorting'   => true,
 			'sql'       => "varchar(255) NOT NULL default ''"
-		),
-		'language'    => array
-		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['language'],
-			'exclude'   => true,
-			'inputType' => 'text',
-			'eval'      => array('minlength' => 2, 'maxlength' => 2, 'rgxp' => 'alpha', 'tl_class' => 'w50'),
-			'filter'    => true,
-			'sql'       => "varchar(2) NOT NULL default ''"
-		),
-		'tags'        => array
-		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['tags'],
-			'exclude'   => true,
-			'inputType' => 'text',
-			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
-			'search'    => true,
-			'sql'       => "varchar(255) NOT NULL default ''"
-		),
-		'abstract'    => array
-		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['abstract'],
-			'exclude'   => true,
-			'inputType' => 'textarea',
-			'eval'      => array('allowHtml' => true, 'rte' => 'tinyMCE', 'doNotShow' => true),
-			'search'    => true,
-			'sql'       => "mediumtext NOT NULL"
-
 		),
 		'published'   => array
 		(
@@ -236,16 +198,8 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'eval'      => array('tl_class' => 'w50'),
 			'filter'    => true,
 			'sql'       => "char(1) NOT NULL default ''"
-		),
-		'show_in_toc' => array
-		(
-			'label'     => &$GLOBALS['TL_LANG']['tl_book']['show_in_toc'],
-			'exclude'   => true,
-			'inputType' => 'checkbox',
-			'eval'      => array('tl_class' => 'w50'),
-			'sql'       => "char(1) NOT NULL default '1'"
 		)
-	)
+    )
 );
 
 if (Input::get('do') == 'books')
@@ -386,27 +340,23 @@ class tl_book extends Backend
 
 
 	/**
+     * Set book as parent of chapter.
+     *
 	 * @param \DataContainer
 	 */
 	public function setParent(DataContainer $dc)
 	{
-		$this->log('Scheissdreck', __METHOD__, TL_ACCESS);
-
 		// Return if there is no active record (override all)
 		if (!$dc->activeRecord)
 		{
 			return;
 		}
 
-		$this->log('Foo', __METHOD__, TL_ACCESS);
-
 		// Existing book
 		if ($dc->activeRecord->tstamp > 0)
 		{
 			return;
 		}
-
-		$this->log('Bar', __METHOD__, TL_ACCESS);
 
 		$book_id = Input::get('book_id');
 		$this->Database->prepare("UPDATE tl_book SET pid=? WHERE id=?")->execute($book_id, $dc->id);
