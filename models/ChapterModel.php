@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Books Extension for Contao
  * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
@@ -25,11 +25,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @copyright  Falko Schumann 2014
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Books
- * @license    BSD-2-clause
  */
 
 
@@ -39,119 +34,112 @@ namespace Muspellheim\Books;
 /**
  * The model for chapter.
  *
- * @copyright Falko Schumann 2014
- * @author    Falko Schumann <http://www.muspellheim.de>
- * @package   Models
- * @property int            id
- * @property int            pid   reference BookModel
- * @property int            sorting
- * @property int            tstamp
- * @property string         title
- * @property string         alias
- * @property boolean        published
- * @property string         note  TODO Check if note is needed.
- * @property string         text
- * @property boolean        show_in_toc
- * @property-read BookModel relatedBook
+ * @copyright  Falko Schumann 2014
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Models
+ * @license    BSD-2-clause http://opensource.org/licenses/BSD-2-Clause
+ * @property int     $id             Die ID des Kapitels
+ * @property int     $pid            Die ID des Buches oder des übergeordneten Kapitels
+ * @property int     $sorting        Der Sortierindex des Kapitels
+ * @property int     $tstamp         Das Änderungsdatum der Metainformationen des Kapitels
+ * @property string  $title          Der Titel des Kapitels
+ * @property string  $alias          Der Kapitelalias
+ * @property boolean $published      Flag ob das Kapitel veröffentlicht ist
+ * @property boolean $show_in_toc    Das Kapitel im Inhaltsverzeichnis anzeigen
  */
 class ChapterModel extends \Model
 {
 
-	/**
-	 * Table name
-	 *
-	 * @var string
-	 */
-	protected static $strTable = 'tl_book_chapter';
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected static $strTable = 'tl_book_chapter';
 
 
-	public function __get($key)
-	{
-		switch ($key)
-		{
-			case 'relatedBook':
-				return $this->getRelated('pid');
-			default:
-				return parent::__get($key);
-		}
-	}
+    public function __get($key)
+    {
+        switch ($key) {
+            case 'relatedBook':
+                return $this->getRelated('pid');
+            default:
+                return parent::__get($key);
+        }
+    }
 
 
-	/**
-	 * @param int $pid
-	 * @return ChapterModel|Collection|null
-	 */
-	public static function findPublishedByPid($pid)
-	{
-		$t                = static::$strTable;
-		$columns          = array("$t.pid=?");
-		$options['order'] = "$t.pid, $t.sorting";
+    /**
+     * @param int $pid
+     * @return ChapterModel|Collection|null
+     */
+    public static function findPublishedByPid($pid)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?");
+        $options['order'] = "$t.pid, $t.sorting";
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		return static::findBy($columns, $pid, $options);
-	}
-
-
-	/**
-	 * @param int $id
-	 * @return ChapterModel|null
-	 */
-	public static function findPublishedById($id)
-	{
-		$t       = static::$strTable;
-		$columns = array("$t.id=?");
-
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		return static::findOneBy($columns, $id);
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        return static::findBy($columns, $pid, $options);
+    }
 
 
-	/**
-	 * @param ChapterModel $chapter
-	 * @return ChapterModel|null
-	 */
-	public static function findPreviousPublishedFor($chapter)
-	{
-		$t       = static::$strTable;
-		$columns = array("$t.pid=?", "$t.sorting<?");
+    /**
+     * @param int $id
+     * @return ChapterModel|null
+     */
+    public static function findPublishedById($id)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		$options = array
-		(
-			'order' => 'sorting DESC'
-		);
-		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
-
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        return static::findOneBy($columns, $id);
+    }
 
 
-	/**
-	 * @param ChapterModel $chapter
-	 * @return ChapterModel|null
-	 */
-	public static function findNextPublishedFor($chapter)
-	{
-		$t       = static::$strTable;
-		$columns = array("$t.pid=?", "$t.sorting>?");
+    /**
+     * @param ChapterModel $chapter
+     * @return ChapterModel|null
+     */
+    public static function findPreviousPublishedFor($chapter)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?", "$t.sorting<?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		$options = array
-		(
-			'order' => 'sorting'
-		);
-		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        $options = array
+        (
+            'order' => 'sorting DESC'
+        );
+        return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
+
+    }
+
+
+    /**
+     * @param ChapterModel $chapter
+     * @return ChapterModel|null
+     */
+    public static function findNextPublishedFor($chapter)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?", "$t.sorting>?");
+
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        $options = array
+        (
+            'order' => 'sorting'
+        );
+        return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
+    }
 
 }

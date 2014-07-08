@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Books Extension for Contao
  * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
@@ -25,20 +25,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/**
+ * Extension of Data Container Array for table `tl_content`
+ *
+ * Es gibt zwei Erweiterungen. Inhaltselemente werden in Kapiteln zur Definition
+ * des Kapitelinhalts verwendet. Es wird ein neues Inhaltselement durch
+ * Darstellung eines Buches eingeführt.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
- * @license    BSD-2-clause
+ * @license    BSD-2-clause http://opensource.org/licenses/BSD-2-Clause
  */
 
 /**
  * Dynamically add the parent table
  */
-if (\Input::get('do') == 'books')
-{
-	$GLOBALS['TL_DCA']['tl_content']['config']['ptable']   = 'tl_book';
-	$GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'do=books&book_id=' . Input::get('book_id');
+if (\Input::get('do') == 'books') {
+    $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_book';
+    $GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'do=books&book_id=' . Input::get('book_id');
 }
 
 /**
@@ -52,12 +59,12 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['book'] = '{type_legend},type;{incl
  */
 $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
 (
-	'label'            => &$GLOBALS['TL_LANG']['tl_content']['book'],
-	'exclude'          => true,
-	'inputType'        => 'select',
-	'options_callback' => array('tl_content_book', 'getBooks'),
-	'eval'             => array('mandatory' => true, 'chosen' => true, 'submitOnChange' => true, 'tl_class' => 'long'),
-	'sql'              => "int(10) unsigned NOT NULL default '0'"
+    'label' => &$GLOBALS['TL_LANG']['tl_content']['book'],
+    'exclude' => true,
+    'inputType' => 'select',
+    'options_callback' => array('tl_content_book', 'getBooks'),
+    'eval' => array('mandatory' => true, 'chosen' => true, 'submitOnChange' => true, 'tl_class' => 'long'),
+    'sql' => "int(10) unsigned NOT NULL default '0'"
 );
 
 /**
@@ -70,32 +77,29 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
 class tl_content_book extends Backend
 {
 
-	/**
-	 * Get all books and return them as array
-	 *
-	 * @return array
-	 */
-	public function getBooks()
-	{
-		$arrBooks = array();
-		$objBooks = $this->Database->execute("SELECT id, title, author, category, language FROM tl_book ORDER BY title");
+    /**
+     * Get all books and return them as array
+     *
+     * @return array
+     */
+    public function getBooks()
+    {
+        $arrBooks = array();
+        $objBooks = $this->Database->execute("SELECT id, title, author, category, language FROM tl_book ORDER BY title");
 
-		while ($objBooks->next())
-		{
-			$item = $objBooks->title . ' (ID ' . $objBooks->id;
-			if (strlen($objBooks->category) > 0)
-			{
-				$item .= ', ' . $objBooks->category;
-			}
-			if (strlen($objBooks->language) > 0)
-			{
-				$item .= ', ' . $objBooks->language;
-			}
-			$item .= ')';
-			$arrBooks[$objBooks->author][$objBooks->id] = $item;
-		}
+        while ($objBooks->next()) {
+            $item = $objBooks->title . ' (ID ' . $objBooks->id;
+            if (strlen($objBooks->category) > 0) {
+                $item .= ', ' . $objBooks->category;
+            }
+            if (strlen($objBooks->language) > 0) {
+                $item .= ', ' . $objBooks->language;
+            }
+            $item .= ')';
+            $arrBooks[$objBooks->author][$objBooks->id] = $item;
+        }
 
-		return $arrBooks;
-	}
+        return $arrBooks;
+    }
 
 }
