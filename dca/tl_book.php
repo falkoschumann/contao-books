@@ -38,7 +38,7 @@
  * Kapitels verwaltet werden.
  *
  * Für die unterschiedliche Darstellung der Bücher und Kapitel wird der DCA mit
- * den gemeinsamen Einstellungen beider Darstelungen initialisiert und im
+ * den gemeinsamen Einstellungen beider Darstellungen initialisiert und im
  * Anschluss mit einer if-else-Klausel die Unterschiede konfiguriert.
  * Unterschieden werden die beiden Darstellungen durch den URL-Parameter
  * `book_id`. Ist der Parameter gesetzt, enhält er die ID des Buches, deren
@@ -50,7 +50,7 @@
  * ------------|-------|--------
  * id          |   X   |   X
  * pid         |   -   |   X
- * sorting     |   X   |   X
+ * sorting     |   -   |   X
  * tstamp      |   X   |   X
  * title       |   X   |   X
  * alias       |   X   |   X
@@ -76,18 +76,18 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 (
 
     // Config
-    'config' => array
+    'config'   => array
     (
-        'dataContainer' => 'Table',
-        'ctable' => array('tl_content'),
+        'dataContainer'    => 'Table',
         'enableVersioning' => true,
-        'sql' => array
+        'sql'              => array
         (
             'keys' => array
             (
-                'id' => 'primary',
-                'pid' => 'index',
-                'alias' => 'index',
+                'id'      => 'primary',
+                'pid'     => 'index',
+                'sorting' => 'index',
+                'alias'   => 'index',
             )
         )
     ),
@@ -287,12 +287,11 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 if (Input::get('do') == 'books') {
     $book_id = Input::get('book_id');
     if ($book_id) {
+        // Config
         $GLOBALS['TL_DCA']['tl_book']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
+        $GLOBALS['TL_DCA']['tl_book']['config']['ctable'] = array('tl_content');
         $GLOBALS['TL_DCA']['tl_book']['config']['backlink'] = 'do=books';
-        $GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array
-        (
-            array('tl_book', 'setParent')
-        );
+        $GLOBALS['TL_DCA']['tl_book']['config']['onsubmit_callback'] = array(array('tl_book', 'setParent'));
 
         $GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode'] = 5;
         $GLOBALS['TL_DCA']['tl_book']['list']['sorting']['root'] = \Muspellheim\Books\BookModel::findChildIds($book_id);
@@ -416,21 +415,15 @@ class tl_book extends Backend
      */
     public function setParent(DataContainer $dc)
     {
-        $this->log('Scheissdreck', __METHOD__, TL_ACCESS);
-
         // Return if there is no active record (override all)
         if (!$dc->activeRecord) {
             return;
         }
 
-        $this->log('Foo', __METHOD__, TL_ACCESS);
-
         // Existing book
         if ($dc->activeRecord->tstamp > 0) {
             return;
         }
-
-        $this->log('Bar', __METHOD__, TL_ACCESS);
 
         $book_id = Input::get('book_id');
         $this->Database->prepare("UPDATE tl_book SET pid=? WHERE id=?")->execute($book_id, $dc->id);
