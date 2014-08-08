@@ -262,9 +262,11 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     )
 );
 
-if (Input::get('do') == 'books') {
+if (Input::get('do') == 'books')
+{
     $book_id = Input::get('book_id');
-    if ($book_id) {
+    if ($book_id)
+    {
         // Config
         $GLOBALS['TL_DCA']['tl_book']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
         $GLOBALS['TL_DCA']['tl_book']['config']['ctable'] = array('tl_content');
@@ -302,7 +304,8 @@ if (Input::get('do') == 'books') {
         $GLOBALS['TL_LANG']['tl_book']['new'] = & $GLOBALS['TL_LANG']['tl_book_chapter']['new'];
         $GLOBALS['TL_LANG']['tl_book']['pasteafter'] = $GLOBALS['TL_LANG']['tl_book_chapter']['pasteafter'];
         $GLOBALS['TL_LANG']['tl_book']['pasteinto'] = $GLOBALS['TL_LANG']['tl_book_chapter']['pasteinto'];
-    } else {
+    } else
+    {
         // List
         // List View, show only root elements (books)
         $GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode'] = 2;
@@ -342,8 +345,6 @@ class tl_book extends Backend
 {
 
     /**
-     * Return the "toggle visibility" button
-     *
      * @param array
      * @param string
      * @param string
@@ -354,14 +355,16 @@ class tl_book extends Backend
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
-        if (strlen($this->Input->get('tid'))) {
+        if (strlen($this->Input->get('tid')))
+        {
             $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
             $this->redirect($this->getReferer());
         }
 
         $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-        if (!$row['published']) {
+        if (!$row['published'])
+        {
             $icon = 'invisible.gif';
         }
 
@@ -370,8 +373,6 @@ class tl_book extends Backend
 
 
     /**
-     * Disable/enable a user group
-     *
      * @param integer
      * @param boolean
      */
@@ -389,8 +390,6 @@ class tl_book extends Backend
 
 
     /**
-     * Auto-generate the Book alias if it has not been set yet
-     *
      * @param mixed
      * @param DataContainer
      * @return mixed
@@ -400,7 +399,8 @@ class tl_book extends Backend
         $autoAlias = false;
 
         // Generate alias if there is none
-        if (!strlen($varValue)) {
+        if (!strlen($varValue))
+        {
             $autoAlias = true;
             $varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
         }
@@ -408,12 +408,14 @@ class tl_book extends Backend
         $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($varValue);
 
         // Check whether the news alias exists
-        if ($objAlias->numRows > 1 && !$autoAlias) {
+        if ($objAlias->numRows > 1 && !$autoAlias)
+        {
             throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
         }
 
         // Add ID to alias
-        if ($objAlias->numRows && $autoAlias) {
+        if ($objAlias->numRows && $autoAlias)
+        {
             $varValue .= '-' . $dc->id;
         }
 
@@ -427,12 +429,14 @@ class tl_book extends Backend
     public function setParent(DataContainer $dc)
     {
         // Return if there is no active record (override all)
-        if (!$dc->activeRecord) {
+        if (!$dc->activeRecord)
+        {
             return;
         }
 
         // Existing book
-        if ($dc->activeRecord->tstamp > 0) {
+        if ($dc->activeRecord->tstamp > 0)
+        {
             return;
         }
 
@@ -442,8 +446,6 @@ class tl_book extends Backend
 
 
     /**
-     * Callback for edit button.
-     *
      * @param array
      * @param string
      * @param string
@@ -466,11 +468,14 @@ class tl_book extends Backend
     {
         $result = $label;
         $book_id = Input::get('book_id');
-        if (!$book_id) {
-            if ($row['subtitle']) {
+        if (!$book_id)
+        {
+            if ($row['subtitle'])
+            {
                 $result .= '. ' . $row['subtitle'];
             }
-            if ($row['author']) {
+            if ($row['author'])
+            {
                 $result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $row['author'] . ']</span>';
             }
         }

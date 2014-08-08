@@ -70,7 +70,8 @@ class BookModel extends \Model
         $t = static::$strTable;
         $arrColumns = array("$t.id=?");
 
-        if (!BE_USER_LOGGED_IN) {
+        if (!BE_USER_LOGGED_IN)
+        {
             $arrColumns[] = "$t.published=1";
         }
         return static::findOneBy($arrColumns, $id);
@@ -85,8 +86,12 @@ class BookModel extends \Model
     {
         $books = static::findBy('pid', $pid);
         $arrIds = array();
-        foreach ($books as $book) {
-            $arrIds[] = $book->id;
+        if ($books)
+        {
+            foreach ($books as $book)
+            {
+                $arrIds[] = $book->id;
+            }
         }
         return $arrIds;
     }
