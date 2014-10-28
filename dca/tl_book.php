@@ -41,7 +41,7 @@
  * den gemeinsamen Einstellungen beider Darstellungen initialisiert und im
  * Anschluss mit einer if-else-Klausel die Unterschiede konfiguriert.
  * Unterschieden werden die beiden Darstellungen durch den URL-Parameter
- * `book_id`. Ist der Parameter gesetzt, enhält er die ID des Buches, dessen
+ * `book_id`. Ist der Parameter gesetzt, enthält er die ID des Buches, dessen
  * Kapitel angezeigt werden sollen.
  *
  * Die folgende Tabelle zeigt die Verwendung der Spalten bei der Darstellung:
@@ -267,6 +267,8 @@ if (Input::get('do') == 'books')
     $book_id = Input::get('book_id');
     if ($book_id)
     {
+        // show chapters of a book
+
         // Config
         $GLOBALS['TL_DCA']['tl_book']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
         $GLOBALS['TL_DCA']['tl_book']['config']['ctable'] = array('tl_content');
@@ -306,6 +308,8 @@ if (Input::get('do') == 'books')
         $GLOBALS['TL_LANG']['tl_book']['pasteinto'] = $GLOBALS['TL_LANG']['tl_book_chapter']['pasteinto'];
     } else
     {
+        // show books
+
         // List
         // List View, show only root elements (books)
         $GLOBALS['TL_DCA']['tl_book']['list']['sorting']['mode'] = 2;
@@ -440,8 +444,12 @@ class tl_book extends Backend
             return;
         }
 
-        $book_id = Input::get('book_id');
-        $this->Database->prepare("UPDATE tl_book SET pid=? WHERE id=?")->execute($book_id, $dc->id);
+        // Set book as parent if insert as root element
+        if ($dc->activeRecord->pid == 0)
+        {
+            $book_id = Input::get('book_id');
+            $this->Database->prepare("UPDATE tl_book SET pid=? WHERE id=?")->execute($book_id, $dc->id);
+        }
     }
 
 
