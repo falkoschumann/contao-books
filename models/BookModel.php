@@ -77,23 +77,4 @@ class BookModel extends \Model
         return static::findOneBy($arrColumns, $id);
     }
 
-
-    /**
-     * @param int pid
-     * @return array
-     */
-    public static function findChildIds($pid)
-    {
-        $books = static::findBy('pid', $pid);
-        $arrIds = array();
-        if ($books)
-        {
-            foreach ($books as $book)
-            {
-                $arrIds[] = $book->id;
-            }
-        }
-        return $arrIds;
-    }
-
 }

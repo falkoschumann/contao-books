@@ -142,4 +142,22 @@ class ChapterModel extends \Model
         return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
     }
 
+    /**
+     * @param int book_id
+     * @return array
+     */
+    public static function findChaptersByBookIds($book_id)
+    {
+        $books = static::findBy('book_id', $book_id);
+        $arrIds = array();
+        if ($books)
+        {
+            foreach ($books as $book)
+            {
+                $arrIds[] = $book->id;
+            }
+        }
+        return $arrIds;
+    }
+
 }

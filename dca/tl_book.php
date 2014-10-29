@@ -277,7 +277,7 @@ class tl_book extends Backend
      */
     public function editChapters($row, $href, $label, $title, $icon)
     {
-        return '<a href="' . $this->addToUrl($href . '&amp;book_id=' . $row['id']) . '" title="' . specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
+        return '<a href="' . $this->addToUrl($href . '&amp;table=tl_book_chapter&amp;book_id=' . $row['id']) . '" title="' . specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
     }
 
 

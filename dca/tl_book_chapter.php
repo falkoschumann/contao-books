@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         'ctable'            => array('tl_content'),
         'dataContainer'     => 'Table',
         'enableVersioning'  => true,
-        'onsubmit_callback' => array(array('tl_book', 'setBook')),
+        'onsubmit_callback' => array(array('tl_book_chapter', 'setBook')),
         'sql'               => array
         (
             'keys' => array
@@ -213,7 +213,7 @@ if (Input::get('book_id'))
 {
     $book_id = Input::get('book_id');
     $GLOBALS['TL_DCA']['tl_book_chapter']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
-    $GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\BookModel::findChildIds($book_id);
+    $GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\ChapterModel::findChaptersByBookIds($book_id);
 }
 
 /**
@@ -250,7 +250,7 @@ class tl_book_chapter extends Backend
         if ($dc->activeRecord->pid == 0)
         {
             $book_id = Input::get('book_id');
-            $this->Database->prepare("UPDATE tl_book_chapter SET pid=? WHERE id=?")->execute($book_id, $dc->id);
+            $this->Database->prepare("UPDATE tl_book_chapter SET book_id=? WHERE id=?")->execute($book_id, $dc->id);
         }
     }
 
