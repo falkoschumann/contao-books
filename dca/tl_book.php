@@ -29,7 +29,13 @@
 
 
 /**
- * Data Container Array for table `tl_book`
+ * Data container array for table `tl_book`.
+ *
+ * Store books meta data like title and author. The books chapters are stored in
+ * `tl_book_chapter`. The chapter table is not a child table because pid column
+ * is used for the chapter tree.
+ *
+ * The books are shown as list view.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
@@ -72,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         'label'             => array
         (
             'fields'         => array('title'),
-            'label_callback' => array('tl_book', 'getBookLabel')
+            'label_callback' => array('tl_book', 'bookLabel')
         ),
         'global_operations' => array
         (
@@ -131,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array(''),
-        'default'      => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},language,tags;{abstract_legend},abstract;{publish_legend},published'
+        'default'      => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},year,place,language,tags;{abstract_legend},abstract;{publish_legend},published'
     ),
 
     // Fields
@@ -188,6 +194,27 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
+        'year'      => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['year'],
+            'exclude'   => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => array('minlength' => 4, 'maxlength' => 4, 'rgxp' => 'digit', 'tl_class' => 'w50'),
+            'sql'       => "varchar(4) NOT NULL default ''"
+        ),
+        'place'     => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['place'],
+            'exclude'   => true,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ),
         'language'  => array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_book']['language'],
@@ -230,24 +257,25 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 
 
 /**
- * Class tl_book.
+ * Provide miscellaneous methods that are used by the data container array of
+ * table `tl_book`.
  *
- * Provide miscellaneous methods that are used by the data configuration array
- * like callback methods.
- *
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Controller
+ * @package    Books
  */
 class tl_book extends Backend
 {
 
     /**
-     * @param array
-     * @param string
-     * @return string
+     * This `label_callback` add subtitle and author if present to the default
+     * label.
+     *
+     * @param array  $row   a books data row.
+     * @param string $label the default label, usually the books title.
+     * @return string the new label.
      */
-    public function getBookLabel($row, $label)
+    public function bookLabel($row, $label)
     {
         $result = $label;
         $book_id = Input::get('book_id');
@@ -268,12 +296,14 @@ class tl_book extends Backend
 
 
     /**
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @return string
+     * This `button_callback` returns the link to edit the chapters of an book.
+     *
+     * @param array  $row   a books data row.
+     * @param string $href  the base URL for the link.
+     * @param string $label the link label.
+     * @param string $title the link title.
+     * @param string $icon  the link icon.
+     * @return string the HTML link to edit chapters of selected book.
      */
     public function editChapters($row, $href, $label, $title, $icon)
     {
@@ -282,13 +312,15 @@ class tl_book extends Backend
 
 
     /**
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @return string
+     * This `button_callback` returns the link to toggle book visibility.
+     *
+     * @param array  $row        a books data row.
+     * @param string $href       the base URL for the link.
+     * @param string $label      the link label.
+     * @param string $title      the link title.
+     * @param string $icon       the link icon.
+     * @param string $attributes additional anchor attributes.
+     * @return string the HTML link to toggle books visibility.
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
@@ -305,58 +337,60 @@ class tl_book extends Backend
             $icon = 'invisible.gif';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
     }
 
 
     /**
-     * @param integer
-     * @param boolean
+     * Toggle the visibility of the book with given id.
+     *
+     * @param integer the books id.
+     * @param boolean the current visibility.
      */
-    public function toggleVisibility($intId, $blnVisible)
+    public function toggleVisibility($id, $visible)
     {
-        $objVersions = new Versions('tl_book', $intId);
+        $objVersions = new Versions('tl_book', $id);
         $objVersions->initialize();
-
-        // Update the database
-        $this->Database->prepare("UPDATE tl_book SET tstamp=" . time() . ", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
-
+        $this->Database->prepare("UPDATE tl_book SET tstamp=" . time() . ", published='" . ($visible ? 1 : '') . "' WHERE id=?")->execute($id);
         $objVersions->create();
-        $this->log('A new version of record "tl_book.id=' . $intId . '" has been created', __METHOD__, TL_GENERAL);
+        $this->log('A new version of record "tl_book.id=' . $id . '" has been created', __METHOD__, TL_GENERAL);
     }
 
 
     /**
-     * @param mixed
-     * @param DataContainer
-     * @return mixed
+     * This `save_callback` generate the book alias if it does not exist.
+     *
+     * @param mixed         $value current alias, can maybe be empty.
+     * @param DataContainer $dc    the current data container.
+     * @return mixed the new alias.
+     * @throws Exception if alias ist not auto generated and already exists.
      */
-    public function generateAlias($varValue, DataContainer $dc)
+    public function generateAlias($value, DataContainer $dc)
     {
         $autoAlias = false;
 
         // Generate alias if there is none
-        if (!strlen($varValue))
+        if (!strlen($value))
         {
             $autoAlias = true;
-            $varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
+            $value = standardize(String::restoreBasicEntities($dc->activeRecord->title));
         }
 
-        $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($varValue);
+        $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($value);
 
-        // Check whether the news alias exists
+        // Check whether the books alias exists
         if ($objAlias->numRows > 1 && !$autoAlias)
         {
-            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
         }
 
         // Add ID to alias
         if ($objAlias->numRows && $autoAlias)
         {
-            $varValue .= '-' . $dc->id;
+            $value .= '-' . $dc->id;
         }
 
-        return $varValue;
+        return $value;
     }
 
 }

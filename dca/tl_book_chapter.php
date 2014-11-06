@@ -29,7 +29,12 @@
 
 
 /**
- * Data Container Array for table `tl_book_chapter`
+ * Data container array for table `tl_book_chapter`.
+ *
+ * Store chapters meta data like title and publishing state. The chapters text
+ * is stored in child table `tl_content`.
+ *
+ * The chapters are shown as tree view.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
@@ -50,6 +55,11 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         'ctable'            => array('tl_content'),
         'dataContainer'     => 'Table',
         'enableVersioning'  => true,
+        'onload_callback'   => array
+        (
+            array('tl_book_chapter', 'addBreadcrumb'),
+        ),
+
         'onsubmit_callback' => array(array('tl_book_chapter', 'setBook')),
         'sql'               => array
         (
@@ -70,12 +80,14 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         'sorting'           => array
         (
             'mode'        => 5,
-            'panelLayout' => 'filter;search,limit',
+            'panelLayout' => 'search,limit',
+            'icon'        => 'system/modules/books/assets/book.png',
             'rootPaste'   => true
         ),
         'label'             => array
         (
-            'fields' => array('title')
+            'fields'         => array('title'),
+            'label_callback' => array('tl_book_chapter', 'addIcon')
         ),
         'global_operations' => array
         (
@@ -188,7 +200,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
             'exclude'   => true,
-            'filter'    => true,
             'inputType' => 'checkbox',
             'eval'      => array('tl_class' => 'w50'),
             'sql'       => "char(1) NOT NULL default ''"
@@ -217,12 +228,10 @@ if (Input::get('book_id'))
 }
 
 /**
- * Class tl_book_chapter.
+ * Provide miscellaneous methods that are used by the data container array of
+ * table `tl_book_chapter`.
  *
- * Provide miscellaneous methods that are used by the data configuration array
- * like callback methods.
- *
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
@@ -230,7 +239,9 @@ class tl_book_chapter extends Backend
 {
 
     /**
-     * @param \DataContainer
+     * Set the book id for the chapter if chapter is created on books root.
+     *
+     * @param DataContainer $dc the current data container.
      */
     public function setBook(DataContainer $dc)
     {
@@ -240,7 +251,7 @@ class tl_book_chapter extends Backend
             return;
         }
 
-        // Existing book
+        // Return if chapter already exists
         if ($dc->activeRecord->tstamp > 0)
         {
             return;
@@ -256,14 +267,17 @@ class tl_book_chapter extends Backend
 
 
     /**
-     * @param array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @param string
-     * @return string
+     * This `button_callback` returns the link to toggle chapter visibility.
+     *
+     * @param array  $row        a books data row.
+     * @param string $href       the base URL for the link.
+     * @param string $label      the link label.
+     * @param string $title      the link title.
+     * @param string $icon       the link icon.
+     * @param string $attributes additional anchor attributes.
+     * @return string the HTML link to toggle chapters visibility.
      */
+
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
         if (strlen($this->Input->get('tid')))
@@ -279,58 +293,113 @@ class tl_book_chapter extends Backend
             $icon = 'invisible.gif';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
     }
 
 
     /**
-     * @param integer
-     * @param boolean
+     * Toggle the visibility of the chapter with given id.
+     *
+     * @param integer the chapter id.
+     * @param boolean the current visibility.
      */
-    public function toggleVisibility($intId, $blnVisible)
+    public function toggleVisibility($id, $visible)
     {
-        $objVersions = new Versions('tl_book_chapter', $intId);
+        $objVersions = new Versions('tl_book_chapter', $id);
         $objVersions->initialize();
 
         // Update the database
-        $this->Database->prepare("UPDATE tl_book_chapter SET tstamp=" . time() . ", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+        $this->Database->prepare("UPDATE tl_book_chapter SET tstamp=" . time() . ", published='" . ($visible ? 1 : '') . "' WHERE id=?")->execute($id);
 
         $objVersions->create();
-        $this->log('A new version of record "tl_book_chapter.id=' . $intId . '" has been created', __METHOD__, TL_GENERAL);
+        $this->log('A new version of record "tl_book_chapter.id=' . $id . '" has been created', __METHOD__, TL_GENERAL);
     }
 
 
     /**
-     * @param mixed
-     * @param DataContainer
-     * @return mixed
+     * This `save_callback` generate the chapter alias if it does not exist.
+     *
+     * @param mixed         $value current alias, can maybe be empty.
+     * @param DataContainer $dc    the current data container.
+     * @return mixed the new alias.
+     * @throws Exception if alias ist not auto generated and already exists.
      */
-    public function generateAlias($varValue, DataContainer $dc)
+    public function generateAlias($value, DataContainer $dc)
     {
         $autoAlias = false;
 
         // Generate alias if there is none
-        if (!strlen($varValue))
+        if (!strlen($value))
         {
             $autoAlias = true;
-            $varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
+            $value = standardize(String::restoreBasicEntities($dc->activeRecord->title));
         }
 
-        $objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=?")->execute($varValue);
+        $objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=?")->execute($value);
 
         // Check whether the news alias exists
         if ($objAlias->numRows > 1 && !$autoAlias)
         {
-            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
         }
 
         // Add ID to alias
         if ($objAlias->numRows && $autoAlias)
         {
-            $varValue .= '-' . $dc->id;
+            $value .= '-' . $dc->id;
         }
 
-        return $varValue;
+        return $value;
+    }
+
+
+    /**
+     * Add the breadcrumb menu.
+     */
+    public function addBreadcrumb()
+    {
+        Backend::addPagesBreadcrumb();
+    }
+
+
+    /**
+     * Add an image to each chapter in the tree.
+     *
+     * @param array         $row            a books data row.
+     * @param string        $label          the chapters label.
+     * @param DataContainer $dc             the current data container.
+     * @param string        $imageAttribute additional image attributes.
+     * @param boolean       $blnReturnImage return the image only?
+     * @param boolean       $blnProtected   this parameter is ignored.
+     * @return string the HTML image link and text link.
+     */
+    public function addIcon($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false)
+    {
+        if ($blnProtected)
+        {
+            $row['protected'] = true;
+        }
+
+        $image = 'system/modules/books/assets/chapter.png';
+
+        // Return the image only
+        if ($blnReturnImage)
+        {
+            return \Image::getHtml($image, '', $imageAttribute);
+        }
+
+        // Mark root pages
+        if ($row['type'] == 'root' || Input::get('do') == 'article')
+        {
+            $label = '<strong>' . $label . '</strong>';
+        }
+
+        // Add the breadcrumb link
+        $label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+
+        // Return the image
+        return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" class="tl_gray" target="_blank">' . \Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+
     }
 
 }
