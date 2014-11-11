@@ -27,12 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 /**
- * Extension of Data Container Array for table `tl_content`
+ * Extension of data container array for table `tl_content`
  *
- * Es gibt zwei Erweiterungen. Inhaltselemente werden in Kapiteln zur Definition
- * des Kapitelinhalts verwendet. Es wird ein neues Inhaltselement durch
- * Darstellung eines Buches eingeführt.
+ * There are two extensions. Content elements used to define chapters content.
+ * Introduce a new content element to insert a book.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
@@ -43,9 +43,9 @@
 /**
  * Dynamically add the parent table
  */
-if (\Input::get('do') == 'books') {
-    $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_book';
-    $GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'do=books&book_id=' . Input::get('book_id');
+if (\Input::get('do') == 'books')
+{
+    $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_book_chapter';
 }
 
 /**
@@ -59,12 +59,12 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['book'] = '{type_legend},type;{incl
  */
 $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['book'],
-    'exclude' => true,
-    'inputType' => 'select',
+    'label'            => &$GLOBALS['TL_LANG']['tl_content']['book'],
+    'exclude'          => true,
+    'inputType'        => 'select',
     'options_callback' => array('tl_content_book', 'getBooks'),
-    'eval' => array('mandatory' => true, 'chosen' => true, 'submitOnChange' => true, 'tl_class' => 'long'),
-    'sql' => "int(10) unsigned NOT NULL default '0'"
+    'eval'             => array('mandatory' => true, 'chosen' => true, 'submitOnChange' => true, 'tl_class' => 'long'),
+    'sql'              => "int(10) unsigned NOT NULL default '0'"
 );
 
 /**
@@ -87,12 +87,15 @@ class tl_content_book extends Backend
         $arrBooks = array();
         $objBooks = $this->Database->execute("SELECT id, title, author, category, language FROM tl_book ORDER BY title");
 
-        while ($objBooks->next()) {
+        while ($objBooks->next())
+        {
             $item = $objBooks->title . ' (ID ' . $objBooks->id;
-            if (strlen($objBooks->category) > 0) {
+            if (strlen($objBooks->category) > 0)
+            {
                 $item .= ', ' . $objBooks->category;
             }
-            if (strlen($objBooks->language) > 0) {
+            if (strlen($objBooks->language) > 0)
+            {
                 $item .= ', ' . $objBooks->language;
             }
             $item .= ')';
