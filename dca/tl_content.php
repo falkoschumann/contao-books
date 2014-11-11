@@ -46,7 +46,6 @@
 if (\Input::get('do') == 'books')
 {
     $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_book_chapter';
-    $GLOBALS['TL_DCA']['tl_content']['config']['backlink'] = 'do=books&table=tl_book_chapter&book_id=' . Input::get('book_id');
 }
 
 /**

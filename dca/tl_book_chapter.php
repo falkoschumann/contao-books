@@ -206,7 +206,8 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         ),
         'book_id'     => array
         (
-            'sql' => "int(10) unsigned NOT NULL default '0'"
+            'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['book_id'],
+            'sql'   => "int(10) unsigned NOT NULL default '0'"
         ),
         'show_in_toc' => array
         (

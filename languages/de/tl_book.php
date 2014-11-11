@@ -63,7 +63,7 @@ $GLOBALS['TL_LANG']['tl_book']['publish_legend'] = 'Veröffentlichung';
  */
 $GLOBALS['TL_LANG']['tl_book']['new'] = array('Neues Buch', 'Ein neues Buch anlegen');
 $GLOBALS['TL_LANG']['tl_book']['edit'] = array('Buch bearbeiten', 'Buch ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_book']['editheader'] = array('Buch-Einstellungen bearbeiten', 'Einstellungen des Buches ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_book']['editheader'] = array('Bucheinstellungen bearbeiten', 'Einstellungen des Buches ID %s bearbeiten');
 $GLOBALS['TL_LANG']['tl_book']['copy'] = array('Buch duplizieren', 'Buch ID %s duplizieren');
 $GLOBALS['TL_LANG']['tl_book']['delete'] = array('Buch löschen', 'Buch ID %s löschen');
 $GLOBALS['TL_LANG']['tl_book']['toggle'] = array('Buch veröffentlichen/unveröffentlichen', 'Buch ID %s veröffentlichen/unveröffentlichen');
