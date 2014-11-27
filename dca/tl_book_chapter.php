@@ -376,12 +376,14 @@ class tl_book_chapter extends Backend
      */
     public function addIcon($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false)
     {
-        if ($blnProtected)
+        if ($row['published'])
         {
-            $row['protected'] = true;
+            $image = 'system/modules/books/assets/chapter.png';
         }
-
-        $image = 'system/modules/books/assets/chapter.png';
+        else
+        {
+            $image = 'system/modules/books/assets/chapter_1.png';
+        }
 
         // Return the image only
         if ($blnReturnImage)
@@ -389,17 +391,11 @@ class tl_book_chapter extends Backend
             return \Image::getHtml($image, '', $imageAttribute);
         }
 
-        // Mark root pages
-        if ($row['type'] == 'root' || Input::get('do') == 'article')
-        {
-            $label = '<strong>' . $label . '</strong>';
-        }
-
         // Add the breadcrumb link
         $label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 
         // Return the image
-        return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" class="tl_gray" target="_blank">' . \Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+        return \Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
 
     }
 
