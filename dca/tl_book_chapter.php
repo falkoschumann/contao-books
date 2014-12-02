@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Books Extension for Contao
  * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
@@ -25,11 +25,21 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+/**
+ * Data container array for table `tl_book_chapter`.
+ *
+ * Store chapters meta data like title and publishing state. The chapters text
+ * is stored in child table `tl_content`.
+ *
+ * The chapters are shown as tree view.
  *
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
- * @license    BSD-2-clause
+ * @license    BSD-2-clause http://opensource.org/licenses/BSD-2-Clause
  */
 
 
@@ -40,75 +50,115 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 (
 
 	// Config
-	'config' => array
+	'config'   => array
 	(
-		'dataContainer'               => 'Table',
-		'ptable'                      => 'tl_book',
-		'enableVersioning'            => true,
-		'sql' => array
+		'ctable'            => array('tl_content'),
+		'dataContainer'     => 'Table',
+		'enableVersioning'  => true,
+		'onload_callback'   => array
+		(
+			array('tl_book_chapter', 'addBreadcrumb'),
+		),
+
+		'onsubmit_callback' => array(array('tl_book_chapter', 'setBook')),
+		'sql'               => array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id'      => 'primary',
+				'pid'     => 'index',
+				'alias'   => 'index',
+				'book_id' => 'index'
 			)
-		)
+		),
+		'backlink'          => 'do=books'
 	),
 
 	// List
-	'list' => array
+	'list'     => array
 	(
-		'sorting' => array
+		'sorting'           => array
 		(
-			'mode'                    => 4,
-			'flag'                    => 10,
-			'fields'                  => array('sorting'),
-			'headerFields'            => array('title', 'subtitle', 'author', 'category', 'language', 'published'),
-			'panelLayout'             => 'filter;search,limit',
-			'child_record_callback'   => array('tl_book_chapter', 'listChapters')
+			'mode'        => 5,
+			'panelLayout' => 'search,limit',
+			'icon'        => 'system/modules/books/assets/book.png',
+			'rootPaste'   => true
+		),
+		'label'             => array
+		(
+			'fields'         => array('title'),
+			'label_callback' => array('tl_book_chapter', 'addIcon')
 		),
 		'global_operations' => array
 		(
-			'all' => array
+			'all'         => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset();" accesskey="e"'
+				'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
+				'href'       => 'act=select',
+				'class'      => 'header_edit_all',
+				'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
+			),
+			'toggleNodes' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
+				'href'  => 'ptg=all',
+				'class' => 'header_toggle'
 			)
 		),
-		'operations' => array
+		'operations'        => array
 		(
-			'edit' => array
+			'edit'        => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['edit'],
-				'href'                => 'act=edit',
-				'icon'                => 'edit.gif'
+				'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['edit'],
+				'href'  => 'table=tl_content',
+				'icon'  => 'edit.gif'
 			),
-			'copy' => array
+			'editheaders' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['copy'],
-				'href'                => 'act=copy',
-				'icon'                => 'copy.gif'
+				'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['editheader'],
+				'href'  => 'act=edit',
+				'icon'  => 'header.gif'
 			),
-			'delete' => array
+			'copy'        => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['delete'],
-				'href'                => 'act=delete',
-				'icon'                => 'delete.gif',
-				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+				'label'      => &$GLOBALS['TL_LANG']['tl_book_chapter']['copy'],
+				'href'       => 'act=paste&amp;mode=copy',
+				'icon'       => 'copy.gif',
+				'attributes' => 'onclick="Backend.getScrollOffset()"'
 			),
-			'toggle' => array
+			'copyChilds'  => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'],
-				'icon'                => 'visible.gif',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback'     => array('tl_book_chapter', 'toggleIcon')
+				'label'      => &$GLOBALS['TL_LANG']['tl_book_chapter']['copyChilds'],
+				'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
+				'icon'       => 'copychilds.gif',
+				'attributes' => 'onclick="Backend.getScrollOffset()"'
 			),
-			'show' => array
+			'cut'         => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_book_chapter']['show'],
-				'href'                => 'act=show',
-				'icon'                => 'show.gif'
+				'label'      => &$GLOBALS['TL_LANG']['tl_book_chapter']['cut'],
+				'href'       => 'act=paste&amp;mode=cut',
+				'icon'       => 'cut.gif',
+				'attributes' => 'onclick="Backend.getScrollOffset()"'
+			),
+			'delete'      => array
+			(
+				'label'      => &$GLOBALS['TL_LANG']['tl_book_chapter']['delete'],
+				'href'       => 'act=delete',
+				'icon'       => 'delete.gif',
+				'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+			),
+			'toggle'      => array
+			(
+				'label'           => &$GLOBALS['TL_LANG']['tl_book_chapter']['toggle'],
+				'icon'            => 'visible.gif',
+				'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback' => array('tl_book_chapter', 'toggleIcon')
+			),
+			'show'        => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['show'],
+				'href'  => 'act=show',
+				'icon'  => 'show.gif'
 			)
 		)
 	),
@@ -116,104 +166,87 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array(''),
-		'default'                     => '{chapter_legend},title,alias;{meta_legend:hide},note;{text_legend},text;{publish_legend},published,show_in_toc'
+		'__selector__' => array(''),
+		'default'      => '{chapter_legend},title,alias;{publish_legend},published,show_in_toc'
 	),
 
 	// Fields
-	'fields' => array
+	'fields'   => array
 	(
-        'id' => array
-        (
-            'sql'                     => "int(10) unsigned NOT NULL auto_increment"
-        ),
-        'pid' => array
-        (
-            'sql'                     => "int(10) unsigned NOT NULL default '0'"
-        ),
-        'sorting' => array
-        (
-            'sql'                     => "int(10) unsigned NOT NULL default '0'"
-        ),
-        'tstamp' => array
-        (
-            'sql'                     => "int(10) unsigned NOT NULL default '0'"
-        ),
-		'title' => array
+		'id'          => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['title'],
-			'exclude'                 => true,
-			'inputType'               => 'inputUnit',
-			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'search'                  => true,
-            'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql' => "int(10) unsigned NOT NULL auto_increment"
 		),
-		'alias' => array
+		'pid'         => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['alias'],
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alnum', 'doNotCopy'=>true, 'spaceToUnderscore'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'search'                  => true,
+			'sql' => "int(10) unsigned NOT NULL default '0'"
+		),
+		'sorting'     => array
+		(
+			'sql' => "int(10) unsigned NOT NULL default '0'"
+		),
+		'tstamp'      => array
+		(
+			'sql' => "int(10) unsigned NOT NULL default '0'"
+		),
+		'title'       => array
+		(
+			'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['title'],
+			'exclude'   => true,
+			'search'    => true,
+			'inputType' => 'text',
+			'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'       => "varchar(255) NOT NULL default ''"
+		),
+		'alias'       => array
+		(
+			'label'         => $GLOBALS['TL_LANG']['tl_book_chapter']['alias'],
+			'exclude'       => true,
+			'search'        => true,
+			'inputType'     => 'text',
+			'eval'          => array('rgxp' => 'alnum', 'unique' => true, 'doNotCopy' => true, 'spaceToUnderscore' => true, 'maxlength' => 128, 'tl_class' => 'w50'),
+			'sql'           => "varbinary(128) NOT NULL default ''",
 			'save_callback' => array
 			(
 				array('tl_book_chapter', 'generateAlias')
-			),
-            'sql'                     => "varbinary(128) NOT NULL default ''"
+			)
 		),
-		'note' => array
+		'published'   => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['note'],
-			'exclude'                 => true,
-			'inputType'               => 'textarea',
-			'eval'                    => array('wrap'=>'soft'),
-			'search'                  => true,
-            'sql'                     => "varchar(255) NOT NULL default ''"
+			'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
+			'exclude'   => true,
+			'inputType' => 'checkbox',
+			'eval'      => array('tl_class' => 'w50'),
+			'sql'       => "char(1) NOT NULL default ''"
 		),
-
-		'text' => array
-
+		'book_id'     => array
 		(
-
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['text'],
-
-			'exclude'                 => true,
-
-			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'rte'=>'tinyMCE', 'doNotShow'=>true, 'helpwizard'=>true),
-			'explanation'             => 'bookchapter_text',
-
-			'search'                  => true,
-            'sql'                     => "mediumtext NOT NULL"
-		),
-		'published' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'filter'                  => true,
-            'sql'                     => "char(1) NOT NULL default ''"
+			'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['book_id'],
+			'sql'   => "int(10) unsigned NOT NULL default '0'"
 		),
 		'show_in_toc' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'],
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'filter'                  => true,
-            'sql'                     => "char(1) NOT NULL default '1'"
+			'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'],
+			'exclude'   => true,
+			'inputType' => 'checkbox',
+			'eval'      => array('tl_class' => 'w50'),
+			'sql'       => "char(1) NOT NULL default '1'"
 		)
 	)
 );
 
 
+if (Input::get('book_id')) {
+	$book_id = Input::get('book_id');
+	$GLOBALS['TL_DCA']['tl_book_chapter']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
+	$GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\ChapterModel::findChaptersByBookIds($book_id);
+}
+
 /**
- * Class tl_book_chapter
+ * Provide miscellaneous methods that are used by the data container array of
+ * table `tl_book_chapter`.
  *
- * Provide miscellaneous methods that are used by the data configuration array.
- * @copyright  Falko Schumann 2012
+ * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Controller
  */
@@ -221,133 +254,151 @@ class tl_book_chapter extends Backend
 {
 
 	/**
-	 * Add the title of chapter
-	 * @param array
-	 * @return string
+	 * Set the book id for the chapter if chapter is created on books root.
+	 *
+	 * @param DataContainer $dc the current data container.
 	 */
-	public function listChapters($arrRow)
+	public function setBook(DataContainer $dc)
 	{
-		$key = $arrRow['published'] ? 'published' : 'unpublished';
-		$title = $arrRow['title'];
-		$arrHeadline = deserialize($title);
-		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-		switch ($hl) {
-			case 'h6':
-				$offset = " . . . . . . . . . . . . . . . ";
-				$level = 6; 
-				break;
-			case 'h5':
-				$offset = " . . . . . . . . . . . . ";
-				$level = 5;
-				break;
-			case 'h4':
-				$offset = " . . . . . . . . . ";
-				$level = 4;
-				break;
-			case 'h3':
-				$offset = " . . . . . . ";
-				$level = 3;
-				break;
-			case 'h2':
-				$offset = " . . . ";
-				$level = 2;
-				break;
-			case 'h1':
-				$offset = "";
-				$level = 1;
-				break;
-		}		
-		
-		return '<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] . ' #' . $level . '</div>' .
-			'<div style="font-size: 12px' . ($arrRow['show_in_toc'] ? '' : '; color: #AAA; font-style: italic') . ';">' . $offset . $headline . '</div>';
+		// Return if there is no active record (override all)
+		if (!$dc->activeRecord) {
+			return;
+		}
+
+		// Return if chapter already exists
+		if ($dc->activeRecord->tstamp > 0) {
+			return;
+		}
+
+		// Set book as parent if insert as root element
+		if ($dc->activeRecord->pid == 0) {
+			$book_id = Input::get('book_id');
+			$this->Database->prepare("UPDATE tl_book_chapter SET book_id=? WHERE id=?")->execute($book_id, $dc->id);
+		}
 	}
 
+
 	/**
-	 * Return the "toggle visibility" button
-	 * @param array
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @return string
+	 * This `button_callback` returns the link to toggle chapter visibility.
+	 *
+	 * @param array  $row        a books data row.
+	 * @param string $href       the base URL for the link.
+	 * @param string $label      the link label.
+	 * @param string $title      the link title.
+	 * @param string $icon       the link icon.
+	 * @param string $attributes additional anchor attributes.
+	 * @return string the HTML link to toggle chapters visibility.
 	 */
+
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen($this->Input->get('tid')))
-		{
+		if (strlen($this->Input->get('tid'))) {
 			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
 			$this->redirect($this->getReferer());
 		}
 
-		//  Check permissions AFTER checking the tid, so hacking attempts are logged
-		// if (!$this->User->isAdmin && !$this->User->hasAccess('tl_book_chapter::published', 'alexf'))
-		// {
-		// 		return '';
-		// }
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
-
-		if (!$row['published'])
-		{
+		if (!$row['published']) {
 			$icon = 'invisible.gif';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
+
 	/**
-	 * Disable/enable a user group
-	 * @param integer
-	 * @param boolean
+	 * Toggle the visibility of the chapter with given id.
+	 *
+	 * @param integer the chapter id.
+	 * @param boolean the current visibility.
 	 */
-	public function toggleVisibility($intId, $blnVisible)
+	public function toggleVisibility($id, $visible)
 	{
-		$objVersions = new Versions('tl_book_chapter', $intId);
+		$objVersions = new Versions('tl_book_chapter', $id);
 		$objVersions->initialize();
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_book_chapter SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+		$this->Database->prepare("UPDATE tl_book_chapter SET tstamp=" . time() . ", published='" . ($visible ? 1 : '') . "' WHERE id=?")->execute($id);
 
 		$objVersions->create();
-		$this->log('A new version of record "tl_book_chapter.id='.$intId.'" has been created'.$this->getParentEntries('tl_book_chapter', $intId), __METHOD__, TL_GENERAL);
+		$this->log('A new version of record "tl_book_chapter.id=' . $id . '" has been created', __METHOD__, TL_GENERAL);
 	}
 
+
 	/**
-	 * Auto-generate the Chapter alias if it has not been set yet
-	 * @param mixed
-	 * @param DataContainer
-	 * @return mixed
+	 * This `save_callback` generate the chapter alias if it does not exist.
+	 *
+	 * @param mixed         $value current alias, can maybe be empty.
+	 * @param DataContainer $dc    the current data container.
+	 * @return mixed the new alias.
+	 * @throws Exception if alias ist not auto generated and already exists.
 	 */
-	public function generateAlias($varValue, DataContainer $dc)
+	public function generateAlias($value, DataContainer $dc)
 	{
 		$autoAlias = false;
-	
+
 		// Generate alias if there is none
-		if (!strlen($varValue))
-		{
+		if (!strlen($value)) {
 			$autoAlias = true;
-			$arrHeadline = deserialize($dc->activeRecord->title);
-			$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-			$varValue = standardize(String::restoreBasicEntities($headline));
+			$value = standardize(String::restoreBasicEntities($dc->activeRecord->title));
 		}
-	
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=? AND pid=? AND id<>?")->execute($varValue, $dc->activeRecord->pid, $dc->activeRecord->id);
-	
+
+		$objAlias = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE alias=?")->execute($value);
+
 		// Check whether the news alias exists
- 		if ($objAlias->numRows > 0 && !$autoAlias)
- 		{
- 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
- 		}
-	
-		// Add ID to alias
-		if ($objAlias->numRows && $autoAlias)
-		{
-			$varValue .= '-' . $dc->id;
+		if ($objAlias->numRows > 1 && !$autoAlias) {
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
 		}
-	
-		return $varValue;
+
+		// Add ID to alias
+		if ($objAlias->numRows && $autoAlias) {
+			$value .= '-' . $dc->id;
+		}
+
+		return $value;
 	}
-	
+
+
+	/**
+	 * Add the breadcrumb menu.
+	 */
+	public function addBreadcrumb()
+	{
+		Backend::addPagesBreadcrumb();
+	}
+
+
+	/**
+	 * Add an image to each chapter in the tree.
+	 *
+	 * @param array         $row            a books data row.
+	 * @param string        $label          the chapters label.
+	 * @param DataContainer $dc             the current data container.
+	 * @param string        $imageAttribute additional image attributes.
+	 * @param boolean       $blnReturnImage return the image only?
+	 * @param boolean       $blnProtected   this parameter is ignored.
+	 * @return string the HTML image link and text link.
+	 */
+	public function addIcon($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false)
+	{
+		if ($row['published']) {
+			$image = 'system/modules/books/assets/chapter.png';
+		} else {
+			$image = 'system/modules/books/assets/chapter_1.png';
+		}
+
+		// Return the image only
+		if ($blnReturnImage) {
+			return \Image::getHtml($image, '', $imageAttribute);
+		}
+
+		// Add the breadcrumb link
+		$label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+
+		// Return the image
+		return \Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
+
+	}
+
 }

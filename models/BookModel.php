@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Books Extension for Contao
  * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
@@ -25,11 +25,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @copyright  Falko Schumann 2014
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Books
- * @license    BSD-2-clause
  */
 
 
@@ -42,43 +37,44 @@ namespace Muspellheim\Books;
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Models
- * @property int     id
- * @property int     tstamp
- * @property string  title
- * @property string  alias
- * @property string  subtitle
- * @property string  author
- * @property string  category
- * @property string  language
- * @property boolean published
- * @property string  note  TODO Check if note is needed.
- * @property string  text
+ * @license    BSD-2-clause http://opensource.org/licenses/BSD-2-Clause
+ * @property int     $id             Die ID des Buches
+ * @property int     $sorting        Der Sortierindex des Buches
+ * @property int     $tstamp         Das Änderungsdatum der Metainformationen des Buches
+ * @property string  $title          Der Titel des Buches
+ * @property string  $alias          Der Buchalias
+ * @property string  $subtitle       Der Untertitel des Buches
+ * @property string  $author         Der Autor des Buches
+ * @property string  $language       Die Sprache des Buches
+ * @property string  $tags           Kommagetrennte Liste von Tags zur Katalogisierung von Büchern
+ * @property string  $abstract       Abstract oder Einleitung zum Buch
+ * @property boolean $published      Flag ob das Buch veröffentlicht ist
  */
 class BookModel extends \Model
 {
 
-	/**
-	 * Table name
-	 *
-	 * @var string
-	 */
-	protected static $strTable = 'tl_book';
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected static $strTable = 'tl_book';
 
 
-	/**
-	 * @param int id
-	 * @return BookModel|null
-	 */
-	public static function findPublishedById($id)
-	{
-		$t          = static::$strTable;
-		$arrColumns = array("$t.id=?");
+    /**
+     * @param int id
+     * @return BookModel|null
+     */
+    public static function findPublishedById($id)
+    {
+        $t = static::$strTable;
+        $arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$arrColumns[] = "$t.published=1";
-		}
-		return static::findOneBy($arrColumns, $id);
-	}
+        if (!BE_USER_LOGGED_IN)
+        {
+            $arrColumns[] = "$t.published=1";
+        }
+        return static::findOneBy($arrColumns, $id);
+    }
 
 }
