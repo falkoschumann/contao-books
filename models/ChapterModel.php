@@ -39,12 +39,13 @@ namespace Muspellheim\Books;
  * @package    Models
  * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
  * @property int     $id             Die ID des Kapitels
- * @property int     $pid            Die ID des Buches oder des übergeordneten Kapitels
+ * @property int     $pid            Die ID des übergeordneten Kapitels
  * @property int     $sorting        Der Sortierindex des Kapitels
  * @property int     $tstamp         Das Änderungsdatum der Metainformationen des Kapitels
  * @property string  $title          Der Titel des Kapitels
  * @property string  $alias          Der Kapitelalias
  * @property boolean $published      Flag ob das Kapitel veröffentlicht ist
+ * @property boolean $book_id        Die ID des Buches zu dem das Kapitel gehört
  * @property boolean $show_in_toc    Das Kapitel im Inhaltsverzeichnis anzeigen
  */
 class ChapterModel extends \Model

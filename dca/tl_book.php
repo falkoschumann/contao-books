@@ -66,6 +66,10 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 		'ondelete_callback' => array
 		(
 			array('tl_book', 'deleteChapters')
+		),
+		'oncopy_callback'   => array
+		(
+			array('tl_book', 'copyChapters')
 		)
 	),
 
@@ -111,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 			'copy'        => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['tl_book']['copy'],
-				'href'  => 'act=copy',
+				'href'  => 'act=copy&amp;childs=1',
 				'icon'  => 'copy.gif'
 			),
 			'delete'      => array
@@ -393,7 +397,7 @@ class tl_book extends Backend
 	/**
 	 * Delete chapters from book.
 	 *
-	 * @param $dc \DataContainer
+	 * @param \DataContainer $dc
 	 */
 	public function deleteChapters(DataContainer $dc)
 	{
@@ -406,6 +410,28 @@ class tl_book extends Backend
 		foreach ($chapterIds as $id) {
 			$chapterTable->intId = $id;
 			$chapterTable->delete(true);
+		}
+	}
+
+
+	/**
+	 * Copy chapters from book.
+	 *
+	 * @param integer   $newBookId
+	 * @param \DC_Table $table
+	 */
+	public function copyChapters($newBookId, DC_Table $bookTable)
+	{
+		$this->log('Copy ' . $bookTable->table . ' ' . $bookTable->id . ' to ' . $newBookId, __METHOD__, TL_GENERAL);
+		$chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($bookTable->id);
+		$chapterTable = new DC_Table('tl_book_chapter');
+		foreach ($chapterIds as $id) {
+			$this->log('Copy chapter ' . $id, __METHOD__, TL_GENERAL);
+			$chapterTable->intId = $id;
+			$newChapterId = $chapterTable->copy(true);
+			$chapter = \Muspellheim\Books\ChapterModel::findByPk($newChapterId);
+			$chapter->book_id = $newBookId;
+			$chapter->save();
 		}
 	}
 
