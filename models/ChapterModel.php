@@ -37,7 +37,7 @@ namespace Muspellheim\Books;
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Models
- * @license    BSD-2-clause http://opensource.org/licenses/BSD-2-Clause
+ * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
  * @property int     $id             Die ID des Kapitels
  * @property int     $pid            Die ID des Buches oder des übergeordneten Kapitels
  * @property int     $sorting        Der Sortierindex des Kapitels

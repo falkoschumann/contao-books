@@ -29,7 +29,7 @@
  * @copyright  Falko Schumann 2014
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
- * @license    BSD-2-clause
+ * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
  */
 
 
