@@ -70,31 +70,6 @@ class ChapterModel extends \Model
 
 
 	/**
-	 * @param int $book_id
-	 */
-	public static function deleteChaptersByBook($book_id)
-	{
-		$rootChapters = static::findChaptersByBookIds($book_id);
-		if (!$rootChapters) return;
-
-		$chapters = $rootChapters;
-		foreach ($rootChapters as $rootChapter) {
-			$chapters = array_merge($chapters, \Database::getInstance()->getChildRecords($rootChapter, 'tl_book_chapter'));
-		}
-
-		// Delete content of chapters
-		$sql = "DELETE FROM tl_content WHERE ptable like '" . static::$strTable . "' AND pid IN(" . implode(',', $chapters) . ')';
-		\Contao\System::log('Delete chapters: ' . $sql, __METHOD__, TL_GENERAL);
-		\Database::getInstance()->execute($sql);
-
-		// Delete chapters of book
-		$sql = 'DELETE FROM ' . static::$strTable . ' WHERE id IN(' . implode(',', $chapters) . ')';
-		\Contao\System::log('Delete chapters: ' . $sql, __METHOD__, TL_GENERAL);
-		\Database::getInstance()->execute($sql);
-	}
-
-
-	/**
 	 * @param int $pid
 	 * @return ChapterModel|Collection|null
 	 */
@@ -172,7 +147,7 @@ class ChapterModel extends \Model
 	 * @param int book_id
 	 * @return array
 	 */
-	public static function findChaptersByBookIds($book_id)
+	public static function findChapterIdsByBookIds($book_id)
 	{
 		$books = static::findBy('book_id', $book_id);
 		$arrIds = array();

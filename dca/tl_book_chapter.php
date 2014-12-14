@@ -239,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 if (Input::get('book_id')) {
 	$book_id = Input::get('book_id');
 	$GLOBALS['TL_DCA']['tl_book_chapter']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
-	$GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\ChapterModel::findChaptersByBookIds($book_id);
+	$GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($book_id);
 }
 
 /**

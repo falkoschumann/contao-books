@@ -401,7 +401,12 @@ class tl_book extends Backend
 			return;
 		}
 
-		\Muspellheim\Books\ChapterModel::deleteChaptersByBook($dc->id);
+		$chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($dc->id);
+		$chapterTable = new DC_Table('tl_book_chapter');
+		foreach ($chapterIds as $id) {
+			$chapterTable->intId = $id;
+			$chapterTable->delete(true);
+		}
 	}
 
 }
