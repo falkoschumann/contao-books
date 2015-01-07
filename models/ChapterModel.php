@@ -2,7 +2,7 @@
 
 /*
  * Books Extension for Contao
- * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
+ * Copyright (c) 2015, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@ namespace Muspellheim\Books;
 /**
  * The model for chapter.
  *
- * @copyright  Falko Schumann 2014
+ * @copyright  Falko Schumann 2015
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Models
  * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause

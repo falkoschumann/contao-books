@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * Books Extension for Contao
- * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
+ * Copyright (c) 2015, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,11 +25,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @copyright  Falko Schumann 2014
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Books
- * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
  */
 
 

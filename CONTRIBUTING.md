@@ -11,7 +11,7 @@ Code Style
 
     /*
      * Books Extension for Contao
-     * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
+     * Copyright (c) 2015, Falko Schumann <http://www.muspellheim.de>
      * All rights reserved.
      *
      * Redistribution and use in source and binary forms, with or without

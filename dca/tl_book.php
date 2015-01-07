@@ -2,7 +2,7 @@
 
 /*
  * Books Extension for Contao
- * Copyright (c) 2014, Falko Schumann <http://www.muspellheim.de>
+ * Copyright (c) 2015, Falko Schumann <http://www.muspellheim.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  *
  * The books are shown as list view.
  *
- * @copyright  Falko Schumann 2014
+ * @copyright  Falko Schumann 2015
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
@@ -268,7 +268,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
  * Provide miscellaneous methods that are used by the data container array of
  * table `tl_book`.
  *
- * @copyright  Falko Schumann 2014
+ * @copyright  Falko Schumann 2015
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
