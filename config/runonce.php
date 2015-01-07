@@ -60,6 +60,14 @@ class BooksRunonceJob extends \Controller
 }
 
 
+/**
+ * Convert table tl_book from v1.x to v2.x table format.
+ *
+ * @copyright  Falko Schumann 2014
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Models
+ * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
+ */
 class BookRunonce extends \Controller
 {
 
@@ -70,7 +78,7 @@ class BookRunonce extends \Controller
 	}
 
 
-	public function  run()
+	public function run()
 	{
 		if ($this->Database->tableExists('tl_book'))
 		{
@@ -100,12 +108,20 @@ class BookRunonce extends \Controller
 }
 
 
+/**
+ * Convert table tl_book_chapter from v1.x to v2.x table format.
+ *
+ * @copyright  Falko Schumann 2014
+ * @author     Falko Schumann <http://www.muspellheim.de>
+ * @package    Models
+ * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
+ */
 class ChapterRunonce extends \Controller
 {
 
-	private $pidPath = array();
+	private $chapterTreePath = array();
 
-	private $chapter;
+	private $currentChapter;
 
 
 	public function __construct()
@@ -121,9 +137,10 @@ class ChapterRunonce extends \Controller
 		{
 			if ($this->addFieldBookId())
 			{
-				$this->chapter = $this->Database->execute("SELECT * FROM tl_book_chapter ORDER BY pid, sorting");
-				while ($this->chapter->next())
+				$this->currentChapter = $this->Database->execute("SELECT * FROM tl_book_chapter ORDER BY pid, sorting");
+				while ($this->currentChapter->next())
 				{
+					$this->updateChapterTreePath();
 					$this->updateChapter();
 					$this->createContentElement();
 				}
@@ -149,17 +166,49 @@ class ChapterRunonce extends \Controller
 	}
 
 
+	/**
+	 * Update the path of the current chapter in the table of content tree. Each path element is a chapter id. The first
+	 * path element is a top level chapter. The last path element is the current chapter.
+	 */
+	private function updateChapterTreePath()
+	{
+		$level = static::getChapterTreeLevel($this->currentChapter);
+		$pathLength = count($this->chapterTreePath);
+		if ($level > $pathLength)
+		{
+			$this->chapterTreePath[] = $this->currentChapter->id;
+		}
+		else if ($level < $pathLength)
+		{
+			while ($level < $pathLength)
+			{
+				array_pop($this->chapterTreePath);
+				$pathLength--;
+				$this->chapterTreePath[$pathLength - 1] = $this->currentChapter->id;
+			}
+		}
+		else if ($level == $pathLength)
+		{
+			$this->chapterTreePath[$pathLength - 1] = $this->currentChapter->id;
+		}
+		else
+		{
+			throw new \LogicException("unreachable code");
+		}
+	}
+
+
 	private function updateChapter()
 	{
 		$this->Database->prepare("UPDATE tl_book_chapter SET title=?, book_id=?, pid=? WHERE id=?")
-			->execute($this->getChapterTitle(), $this->chapter->pid, $this->updatePathAndGetPid(), $this->chapter->id);
+			->execute($this->getChapterTitle(), $this->currentChapter->pid, $this->getPid(), $this->currentChapter->id);
 	}
 
 
 	private function createContentElement()
 	{
 		$this->Database->prepare("INSERT INTO tl_content (pid, ptable, tstamp, type, headline, text) VALUES (?, ?, ?, ?, ?, ?)")
-			->execute($this->chapter->id, 'tl_book_chapter', $this->chapter->tstamp, 'text', $this->chapter->title, $this->chapter->text);
+			->execute($this->currentChapter->id, 'tl_book_chapter', $this->currentChapter->tstamp, 'text', $this->currentChapter->title, $this->currentChapter->text);
 	}
 
 
@@ -168,7 +217,7 @@ class ChapterRunonce extends \Controller
 	 */
 	private function getChapterTitle()
 	{
-		$arrHeadline = deserialize($this->chapter->title);
+		$arrHeadline = deserialize($this->currentChapter->title);
 		$headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		return $headline;
 	}
@@ -177,39 +226,12 @@ class ChapterRunonce extends \Controller
 	/**
 	 * @return int
 	 */
-	private function updatePathAndGetPid()
-	{
-		$level = static::getChapterLevel($this->chapter);
-		$pathLength = count($this->pidPath);
-		if ($level > $pathLength)
-		{
-			$action = 'increment';
-			$this->pidPath[] = $this->chapter->id;
-		}
-		else if ($level < $pathLength)
-		{
-			$action = 'decrement';
-			array_pop($this->pidPath);
-			$this->pidPath[$pathLength - 2] = $this->chapter->id;
-		}
-		else // $level == $pathLength
-		{
-			$action = 'none';
-			$this->pidPath[$pathLength - 1] = $this->chapter->id;
-		}
-		return $this->getPid();
-	}
-
-
-	/**
-	 * @return int
-	 */
 	private function getPid()
 	{
-		$pathLength = count($this->pidPath);
+		$pathLength = count($this->chapterTreePath);
 		if ($pathLength > 1)
 		{
-			return $this->pidPath[$pathLength - 2];
+			return $this->chapterTreePath[$pathLength - 2];
 		}
 		else
 		{
@@ -221,9 +243,9 @@ class ChapterRunonce extends \Controller
 	/**
 	 * @return int
 	 */
-	private function getChapterLevel()
+	private function getChapterTreeLevel()
 	{
-		$arrHeadline = deserialize($this->chapter->title);
+		$arrHeadline = deserialize($this->currentChapter->title);
 		$hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		switch ($hl)
 		{
@@ -239,9 +261,10 @@ class ChapterRunonce extends \Controller
 				return 5;
 			case 'h6':
 				return 6;
+			default:
+				throw new \LogicException("unreachable code");
 		}
 	}
-
 
 }
 
