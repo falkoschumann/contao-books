@@ -9,7 +9,7 @@
         "content"
     ],
     "homepage": "https://github.com/falkoschumann/contao-books",
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "Falko Schumann",
