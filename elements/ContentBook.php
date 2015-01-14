@@ -91,7 +91,7 @@ class ContentBook extends \ContentElement
 		$objTemplate->title    = $this->generateWildcardTitle();
 		$objTemplate->id       = $this->objBook->id;
 		$objTemplate->link     = $this->objBook->title;
-		$objTemplate->href     = 'contao/main.php?do=books&table=tl_book_chapter&amp;id=' . $this->objBook->id;
+		$objTemplate->href     = 'contao/main.php?do=books&table=tl_book_chapter&book_id=' . $this->objBook->id;
 		return $objTemplate->parse();
 	}
 
@@ -102,7 +102,7 @@ class ContentBook extends \ContentElement
 	private function generateWildcardTitle()
 	{
 		$result = $this->objBook->title;
-		$result .= $this->objBook->subtitle ? ' - ' . $this->objBook->subtitle : '';
+		$result .= $this->objBook->subtitle ? '. ' . $this->objBook->subtitle : '';
 		$result .= $this->objBook->author ? ' (' . $this->objBook->author . ')' : '';
 		return $result;
 	}
