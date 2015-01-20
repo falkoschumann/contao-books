@@ -65,6 +65,21 @@ class ContentBook extends \ContentElement
 	}
 
 
+	protected function compile()
+	{
+		if ($this->objChapter === null)
+		{
+			$bookParser              = new BookParser($this->objBook);
+			$this->Template->content = $bookParser->parse();
+		}
+		else
+		{
+			$chapterParser           = new ChapterParser($this->objChapter);
+			$this->Template->content = $chapterParser->parse();
+		}
+	}
+
+
 	/**
 	 * @return int|string|null
 	 */
@@ -105,21 +120,6 @@ class ContentBook extends \ContentElement
 		$result .= $this->objBook->subtitle ? '. ' . $this->objBook->subtitle : '';
 		$result .= $this->objBook->author ? ' (' . $this->objBook->author . ')' : '';
 		return $result;
-	}
-
-
-	protected function compile()
-	{
-		if ($this->objChapter === null)
-		{
-			$bookParser              = new BookParser($this->objBook);
-			$this->Template->content = $bookParser->parse();
-		}
-		else
-		{
-			$chapterParser           = new ChapterParser($this->objChapter);
-			$this->Template->content = $chapterParser->parse();
-		}
 	}
 
 }

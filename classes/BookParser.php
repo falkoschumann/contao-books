@@ -49,10 +49,10 @@ class BookParser extends Books
 	/**
 	 * @param BookModel $chapter
 	 */
-	public function __construct($chapter)
+	public function __construct($book)
 	{
 		parent::__construct();
-		$this->book = $chapter;
+		$this->book = $book;
 	}
 
 
@@ -61,59 +61,31 @@ class BookParser extends Books
 	 */
 	public function parse()
 	{
-		$template           = new \FrontendTemplate('books_book');
-		$template->title    = $this->book->title;
+		$template = new \FrontendTemplate('books_book');
+		$template->title = $this->book->title;
 		$template->subtitle = $this->book->subtitle;
-		$template->author   = $this->book->author;
-		$template->text     = $this->book->text;
+		$template->author = $this->book->author;
+		$template->abstract = $this->book->abstract;
 
-		$chapters    = ChapterModel::findPublishedByPid($this->book->id);
-		$arrChapters = array();
+		$chapters = ChapterModel::findPublishedByPid(0, $this->book->id);
 		if ($chapters)
 		{
+			$arrChapters = array();
 			foreach ($chapters as $chapter)
 			{
-				$arrHeadline   = deserialize($chapter->title);
-				$headline      = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-				$url           = $this->getChapterUrl($chapter);
-				$level         = $this->getChapterLevel($chapter);
-				$show_in_toc   = $chapter->show_in_toc;
-				$arrChapters[] = array(
-					'title'       => $headline,
-					'url'         => $url,
-					'level'       => $level,
-					'show_in_toc' => $show_in_toc
-				);
+				if ($chapter->show_in_toc)
+				{
+					$headline = $chapter->title;
+					$url = $this->getChapterUrl($chapter);
+					$arrChapters[] = array(
+						'title' => $headline,
+						'url'   => $url
+					);
+				}
 			}
 			$template->chapters = $arrChapters;
 		}
 		return $template->parse();
-	}
-
-
-	/**
-	 * @param ChapterModel $chapter
-	 * @return int
-	 */
-	private function getChapterLevel($chapter)
-	{
-		$arrHeadline = deserialize($chapter->title);
-		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-		switch ($hl)
-		{
-			case 'h1':
-				return 1;
-			case 'h2':
-				return 2;
-			case 'h3':
-				return 3;
-			case 'h4':
-				return 4;
-			case 'h5':
-				return 5;
-			case 'h6':
-				return 6;
-		}
 	}
 
 }

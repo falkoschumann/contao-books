@@ -71,19 +71,24 @@ class ChapterModel extends \Model
 
 	/**
 	 * @param int $pid
+	 * @param int $book_id
 	 * @return ChapterModel|Collection|null
 	 */
-	public static function findPublishedByPid($pid)
+	public static function findPublishedByPid($pid, $book_id=0)
 	{
 		$t = static::$strTable;
 		$columns = array("$t.pid=?");
+		if ($book_id)
+			$columns[] = "$t.book_id=?";
 		$options['order'] = "$t.pid, $t.sorting";
 
 		if (!BE_USER_LOGGED_IN)
 		{
 			$columns[] = "$t.published=1";
 		}
-		return static::findBy($columns, $pid, $options);
+
+		$values = array($pid, $book_id);
+		return static::findBy($columns, $values, $options);
 	}
 
 
