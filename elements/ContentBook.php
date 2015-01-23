@@ -53,12 +53,15 @@ class ContentBook extends \ContentElement
 	var $objChapter;
 
 
+	/**
+	 * Display a wildcard in the backend and nothing if book does not exist.
+	 *
+	 * @return string
+	 */
 	public function generate()
 	{
 		$this->objBook = BookModel::findPublishedById($this->book);
 		// TODO Check if book exists
-		$this->objChapter = ChapterModel::findByIdOrAlias($this->getChapterIdOrAliasFromHttpParameter());
-		// TODO Check if chapter exists
 
 		if (TL_MODE == 'BE') return $this->displayWildcard();
 		return parent::generate();
@@ -67,6 +70,9 @@ class ContentBook extends \ContentElement
 
 	protected function compile()
 	{
+		$this->objChapter = ChapterModel::findByIdOrAlias($this->getChapterIdOrAliasFromHttpParameter());
+		// TODO Check if chapter exists
+
 		if ($this->objChapter === null)
 		{
 			$bookParser              = new BookParser($this->objBook);

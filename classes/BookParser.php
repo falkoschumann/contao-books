@@ -66,26 +66,37 @@ class BookParser extends Books
 		$template->subtitle = $this->book->subtitle;
 		$template->author = $this->book->author;
 		$template->abstract = $this->book->abstract;
+		$template->toc = $this->getChapterList(ChapterModel::findPublishedByPid(0, $this->book->id));
+		return $template->parse();
+	}
 
-		$chapters = ChapterModel::findPublishedByPid(0, $this->book->id);
+
+	/**
+	 * Get HTML list of chapters and sub chapters.
+	 *
+	 * @param ChapterModel $chapters chapter list as model.
+	 * @return string chapters as HTML list.
+	 */
+	private function getChapterList($chapters)
+	{
 		if ($chapters)
 		{
-			$arrChapters = array();
+			$html = "<ul>\n";
 			foreach ($chapters as $chapter)
 			{
 				if ($chapter->show_in_toc)
 				{
-					$headline = $chapter->title;
-					$url = $this->getChapterUrl($chapter);
-					$arrChapters[] = array(
-						'title' => $headline,
-						'url'   => $url
-					);
+					$html .= '<li><a href="' . $this->getChapterUrl($chapter) . '">' . $chapter->title . '</a>';
+					$html .= $this->getChapterList(ChapterModel::findPublishedByPid($chapter->id));
+					$html .="</li>\n";
 				}
 			}
-			$template->chapters = $arrChapters;
+			$html .= "</ul>\n";
+			return $html;
 		}
-		return $template->parse();
+
+		// fallback: empty chapter list
+		return '';
 	}
 
 }
