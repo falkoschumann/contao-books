@@ -61,14 +61,8 @@ class ChapterParser extends Books
 	 */
 	public function parse()
 	{
-		$arrHeadline = deserialize($this->chapter->title);
-		$headline    = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$hl          = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
-
-		$template          = new \FrontendTemplate('books_chapter');
-		$template->title   = $headline;
-		$template->hl      = $hl;
-		$template->text    = $this->chapter->text;
+		$template = new \FrontendTemplate('books_chapter');
+		$template->content = $this->getContent();
 		$template->bookUrl = $this->getBookUrl();
 
 		$objPreviousChapter = ChapterModel::findPreviousPublishedFor($this->chapter);
@@ -78,6 +72,24 @@ class ChapterParser extends Books
 		if ($objNextChapter !== null) $template->nextUrl = $this->getChapterUrl($objNextChapter);
 
 		return $template->parse();
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getContent()
+	{
+		$result = '';
+		$objElements = \ContentModel::findPublishedByPidAndTable($this->chapter->id, 'tl_book_chapter');
+		if ($objElements !== null)
+		{
+			while ($objElements->next())
+			{
+				$result .= $this->getContentElement($objElements->id);
+			}
+		}
+		return $result;
 	}
 
 
