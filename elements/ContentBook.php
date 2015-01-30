@@ -2,28 +2,12 @@
 
 /**
  * Books Extension for Contao
- * Copyright (c) 2015 Falko Schumann
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @license MIT
+ * @link https://github.com/falkoschumann/contao-books
+ * @license http://opensource.org/licenses/MIT MIT
  */
 
 
@@ -40,23 +24,26 @@ namespace Muspellheim\Books;
 class ContentBook extends \ContentElement
 {
 
+	/**
+	 * @var string the name of the template to be parsed.
+	 */
 	protected $strTemplate = 'ce_book';
 
 	/**
-	 * @var BookModel
+	 * @var BookModel the book to display.
 	 */
-	var $objBook;
+	private $objBook;
 
 	/**
-	 * @var ChapterModel
+	 * @var ChapterModel the chapter to display or null when display table of contents.
 	 */
-	var $objChapter;
+	private $objChapter;
 
 
 	/**
 	 * Display a wildcard in the backend and nothing if book does not exist.
 	 *
-	 * @return string
+	 * @return string a wildcard at backend and the book or chapter at frontend.
 	 */
 	public function generate()
 	{
@@ -68,6 +55,9 @@ class ContentBook extends \ContentElement
 	}
 
 
+	/**
+	 * Parse the template.
+	 */
 	protected function compile()
 	{
 		$this->objChapter = ChapterModel::findByIdOrAlias($this->getChapterIdOrAliasFromHttpParameter());
@@ -75,19 +65,21 @@ class ContentBook extends \ContentElement
 
 		if ($this->objChapter === null)
 		{
-			$bookParser              = new BookParser($this->objBook);
+			$bookParser = new BookParser($this->objBook);
 			$this->Template->content = $bookParser->parse();
 		}
 		else
 		{
-			$chapterParser           = new ChapterParser($this->objChapter);
+			$chapterParser = new ChapterParser($this->objChapter);
 			$this->Template->content = $chapterParser->parse();
 		}
 	}
 
 
 	/**
-	 * @return int|string|null
+	 * Get the ID or chapter given as HTTP parameter.
+	 *
+	 * @return int|string|null the ID as int, the alias as string or null if no chapter is specified.
 	 */
 	private function getChapterIdOrAliasFromHttpParameter()
 	{
@@ -103,22 +95,26 @@ class ContentBook extends \ContentElement
 
 
 	/**
-	 * @return string
+	 * Create an wildcard for the book dislaying in the backend.
+	 *
+	 * @return string the books wildcard.
 	 */
 	private function displayWildcard()
 	{
-		$objTemplate           = new \BackendTemplate('be_wildcard');
+		$objTemplate = new \BackendTemplate('be_wildcard');
 		$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
-		$objTemplate->title    = $this->generateWildcardTitle();
-		$objTemplate->id       = $this->objBook->id;
-		$objTemplate->link     = $this->objBook->title;
-		$objTemplate->href     = 'contao/main.php?do=books&table=tl_book_chapter&book_id=' . $this->objBook->id;
+		$objTemplate->title = $this->generateWildcardTitle();
+		$objTemplate->id = $this->objBook->id;
+		$objTemplate->link = $this->objBook->title;
+		$objTemplate->href = 'contao/main.php?do=books&table=tl_book_chapter&book_id=' . $this->objBook->id;
 		return $objTemplate->parse();
 	}
 
 
 	/**
-	 * @return string
+	 * Create the title of the wildcard displaying in the backend.
+	 *
+	 * @return string the wildcard title.
 	 */
 	private function generateWildcardTitle()
 	{

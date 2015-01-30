@@ -2,28 +2,12 @@
 
 /**
  * Books Extension for Contao
- * Copyright (c) 2015 Falko Schumann
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @license MIT
+ * @link https://github.com/falkoschumann/contao-books
+ * @license http://opensource.org/licenses/MIT MIT
  */
 
 
@@ -37,17 +21,19 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class ChapterParser extends Books
+class ChapterParser extends BaseBooks
 {
 
 	/**
-	 * @var ChapterModel $book
+	 * @var ChapterModel $chapter the chapter to render.
 	 */
 	private $chapter;
 
 
 	/**
-	 * @param ChapterModel $chapter
+	 * Initialize the chapter to render.
+	 *
+	 * @param ChapterModel $chapter the chapter to render.
 	 */
 	public function __construct($chapter)
 	{
@@ -57,7 +43,9 @@ class ChapterParser extends Books
 
 
 	/**
-	 * @return string
+	 * Parse the chapter template and and return the rendered HTML.
+	 *
+	 * @return string the rendered HTML.
 	 */
 	public function parse()
 	{
@@ -65,10 +53,10 @@ class ChapterParser extends Books
 		$template->content = $this->getContent();
 		$template->bookUrl = $this->getBookUrl();
 
-		$objPreviousChapter = ChapterModel::findPreviousPublishedFor($this->chapter);
+		$objPreviousChapter = $this->findPreviousPublishedFor($this->chapter);
 		if ($objPreviousChapter !== null) $template->previousUrl = $this->getChapterUrl($objPreviousChapter);
 
-		$objNextChapter = ChapterModel::findNextPublishedFor($this->chapter);
+		$objNextChapter = $this->findNextPublishedFor($this->chapter);
 		if ($objNextChapter !== null) $template->nextUrl = $this->getChapterUrl($objNextChapter);
 
 		return $template->parse();
@@ -76,7 +64,9 @@ class ChapterParser extends Books
 
 
 	/**
-	 * @return string
+	 * Get the rendered content elements of the chapters.
+	 *
+	 * @return string HTML of content elements.
 	 */
 	private function getContent()
 	{
@@ -94,11 +84,46 @@ class ChapterParser extends Books
 
 
 	/**
-	 * @return string
+	 * Get the URL of the book page.
+	 *
+	 * @return string the URL as string.
 	 */
 	private function getBookUrl()
 	{
 		return $this->generateFrontendUrl($GLOBALS['objPage']->row());
+	}
+
+
+	/**
+	 * Try to find the previous published chapter to an given chapter.
+	 *
+	 * @param ChapterModel $chapter a chapter.
+	 * @return ChapterModel|null the previous chapter or null if there is none.
+	 */
+	private function findPreviousPublishedFor($chapter)
+	{
+	}
+
+
+	/**
+	 * Try to find the next published chapter to an given chapter.
+	 *
+	 * @param ChapterModel $chapter a chapter.
+	 * @return ChapterModel|null the next chapter or null if there is none.
+	 */
+	private function findNextPublishedFor($chapter)
+	{
+	}
+
+
+	/**
+	 * Get the list of chapters in sequence in sequence in the book.
+	 *
+	 * @return array array of ChapterModel.
+	 */
+	private function getChapters()
+	{
+
 	}
 
 }
