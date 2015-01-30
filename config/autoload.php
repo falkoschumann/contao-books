@@ -6,7 +6,7 @@
  * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @link https://github.com/falkoschumann/contao-books
+ * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -26,17 +26,18 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	// Classes
-	'Muspellheim\Books\BaseBooks'      => 'system/modules/books/classes/BaseBooks.php',
-	'Muspellheim\Books\BookInsertTags' => 'system/modules/books/classes/BookInsertTags.php',
-	'Muspellheim\Books\BookParser'     => 'system/modules/books/classes/BookParser.php',
-	'Muspellheim\Books\ChapterParser'  => 'system/modules/books/classes/ChapterParser.php',
+	'Muspellheim\Books\BaseBooks'       => 'system/modules/books/classes/BaseBooks.php',
+	'Muspellheim\Books\BaseRenderer'    => 'system/modules/books/classes/BaseRenderer.php',
+	'Muspellheim\Books\BookRenderer'    => 'system/modules/books/classes/BookRenderer.php',
+	'Muspellheim\Books\ChapterRenderer' => 'system/modules/books/classes/ChapterRenderer.php',
+	'Muspellheim\Books\BookInsertTags'  => 'system/modules/books/classes/BookInsertTags.php',
 
 	// Elements
-	'Muspellheim\Books\ContentBook'    => 'system/modules/books/elements/ContentBook.php',
+	'Muspellheim\Books\ContentBook'     => 'system/modules/books/elements/ContentBook.php',
 
 	// Models
-	'Muspellheim\Books\BookModel'      => 'system/modules/books/models/BookModel.php',
-	'Muspellheim\Books\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
+	'Muspellheim\Books\BookModel'       => 'system/modules/books/models/BookModel.php',
+	'Muspellheim\Books\ChapterModel'    => 'system/modules/books/models/ChapterModel.php',
 ));
 
 

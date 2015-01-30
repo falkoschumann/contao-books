@@ -65,13 +65,13 @@ class ContentBook extends \ContentElement
 
 		if ($this->objChapter === null)
 		{
-			$bookParser = new BookParser($this->objBook);
-			$this->Template->content = $bookParser->parse();
+			$bookParser = new BookRenderer($this->objBook);
+			$this->Template->content = $bookParser->generateHtml();
 		}
 		else
 		{
-			$chapterParser = new ChapterParser($this->objChapter);
-			$this->Template->content = $chapterParser->parse();
+			$chapterParser = new ChapterRenderer($this->objChapter);
+			$this->Template->content = $chapterParser->generateHtml();
 		}
 	}
 

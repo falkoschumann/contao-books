@@ -6,7 +6,7 @@
  * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @link https://github.com/falkoschumann/contao-books
+ * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -21,45 +21,25 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class ChapterParser extends BaseBooks
+class ChapterRenderer extends BaseRenderer
 {
 
 	/**
-	 * @var ChapterModel $chapter the chapter to render.
+	 * @var string
 	 */
-	private $chapter;
+	protected $strTemplate = 'books_chapter';
 
 
-	/**
-	 * Initialize the chapter to render.
-	 *
-	 * @param ChapterModel $chapter the chapter to render.
-	 */
-	public function __construct($chapter)
+	protected function compileTemplate()
 	{
-		parent::__construct();
-		$this->chapter = $chapter;
-	}
-
-
-	/**
-	 * Parse the chapter template and and return the rendered HTML.
-	 *
-	 * @return string the rendered HTML.
-	 */
-	public function parse()
-	{
-		$template = new \FrontendTemplate('books_chapter');
-		$template->content = $this->getContent();
-		$template->bookUrl = $this->getBookUrl();
+		$this->Template->content = $this->getContent();
+		$this->Template->bookUrl = $this->getBookUrl();
 
 		$objPreviousChapter = $this->findPreviousPublishedFor($this->chapter);
-		if ($objPreviousChapter !== null) $template->previousUrl = $this->getChapterUrl($objPreviousChapter);
+		if ($objPreviousChapter !== null) $this->Template->previousUrl = $this->getUrlForChapter($objPreviousChapter);
 
 		$objNextChapter = $this->findNextPublishedFor($this->chapter);
-		if ($objNextChapter !== null) $template->nextUrl = $this->getChapterUrl($objNextChapter);
-
-		return $template->parse();
+		if ($objNextChapter !== null) $this->Template->nextUrl = $this->getUrlForChapter($objNextChapter);
 	}
 
 
@@ -71,7 +51,7 @@ class ChapterParser extends BaseBooks
 	private function getContent()
 	{
 		$result = '';
-		$objElements = \ContentModel::findPublishedByPidAndTable($this->chapter->id, 'tl_book_chapter');
+		$objElements = \ContentModel::findPublishedByPidAndTable($this->id, 'tl_book_chapter');
 		if ($objElements !== null)
 		{
 			while ($objElements->next())
@@ -123,7 +103,6 @@ class ChapterParser extends BaseBooks
 	 */
 	private function getChapters()
 	{
-
 	}
 
 }
