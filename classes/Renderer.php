@@ -17,11 +17,13 @@ namespace Muspellheim\Books;
 /**
  * Base class with common functionality for rendering templates.
  *
+ * This renderer based on \Module and \ContentElement.
+ *
  * @copyright  Falko Schumann 2012-2015
  * @author     Falko Schumann <falko.schumann@muspellheim.de>
  * @package    Books
  */
-abstract class BaseRenderer extends BaseBooks
+abstract class Renderer extends BaseBooks
 {
 
 	/**

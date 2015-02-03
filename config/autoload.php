@@ -27,7 +27,7 @@ ClassLoader::addClasses(array
 (
 	// Classes
 	'Muspellheim\Books\BaseBooks'       => 'system/modules/books/classes/BaseBooks.php',
-	'Muspellheim\Books\BaseRenderer'    => 'system/modules/books/classes/BaseRenderer.php',
+	'Muspellheim\Books\Renderer'        => 'system/modules/books/classes/Renderer.php',
 	'Muspellheim\Books\BookRenderer'    => 'system/modules/books/classes/BookRenderer.php',
 	'Muspellheim\Books\ChapterRenderer' => 'system/modules/books/classes/ChapterRenderer.php',
 	'Muspellheim\Books\BookInsertTags'  => 'system/modules/books/classes/BookInsertTags.php',
