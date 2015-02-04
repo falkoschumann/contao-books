@@ -29,26 +29,29 @@ class ChapterRenderer extends Renderer
 	 */
 	protected $strTemplate = 'books_chapter';
 
+	/**
+	 * @var array
+	 */
+	private $chapterList = null;
+
 
 	protected function compileTemplate()
 	{
-		$this->Template->content = $this->getContent();
+		$this->Template->content = $this->getHtmlForContentElements();
 		$this->Template->bookUrl = $this->getBookUrl();
 
-		$objPreviousChapter = $this->findPreviousPublishedFor($this->chapter);
+		$objPreviousChapter = $this->findPreviousChapterFor(ChapterModel::findPublishedById($this->id));
 		if ($objPreviousChapter !== null) $this->Template->previousUrl = $this->getUrlForChapter($objPreviousChapter);
 
-		$objNextChapter = $this->findNextPublishedFor($this->chapter);
+		$objNextChapter = $this->findNextChapterFor(ChapterModel::findPublishedById($this->id));
 		if ($objNextChapter !== null) $this->Template->nextUrl = $this->getUrlForChapter($objNextChapter);
 	}
 
 
 	/**
-	 * Get the rendered content elements of the chapters.
-	 *
-	 * @return string HTML of content elements.
+	 * @return string
 	 */
-	private function getContent()
+	private function getHtmlForContentElements()
 	{
 		$result = '';
 		$objElements = \ContentModel::findPublishedByPidAndTable($this->id, 'tl_book_chapter');
@@ -64,9 +67,7 @@ class ChapterRenderer extends Renderer
 
 
 	/**
-	 * Get the URL of the book page.
-	 *
-	 * @return string the URL as string.
+	 * @return string
 	 */
 	private function getBookUrl()
 	{
@@ -75,34 +76,84 @@ class ChapterRenderer extends Renderer
 
 
 	/**
-	 * Try to find the previous published chapter to an given chapter.
-	 *
-	 * @param ChapterModel $chapter a chapter.
-	 * @return ChapterModel|null the previous chapter or null if there is none.
+	 * @param ChapterModel
+	 * @return ChapterModel|null
 	 */
-	private function findPreviousPublishedFor($chapter)
+	private function findPreviousChapterFor($chapter)
 	{
+		$chapterList = $this->getChapterList();
+		$chapterCount = count($chapterList);
+		for ($i = 0; $i < $chapterCount; $i++)
+		{
+			if ($chapterList[$i]->id == $chapter->id)
+			{
+				if ($i > 0)
+					return $chapterList[$i - 1];
+			}
+		}
+
+		// fallback
+		return null;
 	}
 
 
 	/**
-	 * Try to find the next published chapter to an given chapter.
-	 *
-	 * @param ChapterModel $chapter a chapter.
-	 * @return ChapterModel|null the next chapter or null if there is none.
+	 * @param ChapterModel
+	 * @return ChapterModel|null
 	 */
-	private function findNextPublishedFor($chapter)
+	private function findNextChapterFor($chapter)
 	{
+		$chapterList = $this->getChapterList();
+		$chapterCount = count($chapterList);
+		for ($i = 0; $i < $chapterCount; $i++)
+		{
+			if ($chapterList[$i]->id == $chapter->id)
+			{
+				if ($i < $chapterCount - 2)
+					return $chapterList[$i + 1];
+			}
+		}
+
+		// fallback
+		return null;
 	}
 
 
 	/**
-	 * Get the list of chapters in sequence in sequence in the book.
-	 *
-	 * @return array array of ChapterModel.
+	 * @param ChapterModel
+	 * @return array
 	 */
-	private function getChapters()
+	private function getChapterList()
 	{
+		if ($this->chapterList === null)
+		{
+			$this->chapterList = static::getChapterListFor(ChapterModel::findPublishedByPid(0, $this->book_id));
+		}
+		return $this->chapterList;
+	}
+
+
+	/**
+	 * @param ChapterModel
+	 * @return array
+	 */
+	private static function getChapterListFor($chapters)
+	{
+		if ($chapters === null)
+		{
+			return array();
+		}
+
+		$chapterList = array();
+		foreach ($chapters as $e)
+		{
+			if ($e->show_in_toc)
+			{
+				$chapterList[] = $e;
+				$chapterList = array_merge($chapterList, static::getChapterListFor(ChapterModel::findPublishedByPid($e->id)));
+			}
+		}
+		return $chapterList;
 	}
 
 }

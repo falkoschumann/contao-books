@@ -41,7 +41,7 @@ class BookRenderer extends Renderer
 	 */
 	private function getTableOfContents()
 	{
-		return $this->getHtmlListForChapters(ChapterModel::findPublishedByPid(0, $this->id));
+		return static::getHtmlListForChapters(ChapterModel::findPublishedByPid(0, $this->id));
 	}
 
 
@@ -49,7 +49,7 @@ class BookRenderer extends Renderer
 	 * @param ChapterModel
 	 * @return string
 	 */
-	private function getHtmlListForChapters($chapters)
+	private static function getHtmlListForChapters($chapters)
 	{
 		if ($chapters === null)
 		{
@@ -57,12 +57,12 @@ class BookRenderer extends Renderer
 		}
 
 		$html = "<ul>\n";
-		foreach ($chapters as $chapter)
+		foreach ($chapters as $e)
 		{
-			if ($chapter->show_in_toc)
+			if ($e->show_in_toc)
 			{
-				$html .= '<li><a href="' . $this->getUrlForChapter($chapter) . '">' . $chapter->title . '</a>';
-				$html .= $this->getHtmlListForChapters(ChapterModel::findPublishedByPid($chapter->id));
+				$html .= '<li><a href="' . static::getUrlForChapter($e) . '">' . $e->title . '</a>';
+				$html .= static::getHtmlListForChapters(ChapterModel::findPublishedByPid($e->id));
 				$html .= "</li>\n";
 			}
 		}
