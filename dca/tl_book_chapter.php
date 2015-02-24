@@ -53,7 +53,7 @@
 		'sorting'           => array
 		(
 			'mode'        => 5,
-			'panelLayout' => 'search,limit',
+			'panelLayout' => 'search',
 			'icon'        => 'system/modules/books/assets/book.png',
 			'rootPaste'   => true
 		),
