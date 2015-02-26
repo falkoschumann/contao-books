@@ -259,16 +259,15 @@ class tl_book extends Backend
 	public function bookLabel($row, $label)
 	{
 		$result = $label;
-		$book_id = Input::get('book_id');
-		if (!$book_id) {
-			if ($row['subtitle']) {
-				$result .= '. ' . $row['subtitle'];
-			}
-			if ($row['author']) {
-				$result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $row['author'] . ']</span>';
-			}
+		if ($row['subtitle']) {
+			$result .= '. ' . $row['subtitle'];
 		}
-
+		if ($row['author']) {
+			$result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $row['author'] . ']</span>';
+		}
+		if ($row['tags']) {
+			$result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">[' . implode('] [', preg_split('/\s*,\s*/', $row['tags'])) . ']</span>';
+		}
 		return $result;
 	}
 
