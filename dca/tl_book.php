@@ -6,7 +6,7 @@
  * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @link https://github.com/falkoschumann/contao-books
+ * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -249,8 +249,8 @@ class tl_book extends Backend
 {
 
 	/**
-	 * This `label_callback` add subtitle and author if present to the default
-	 * label.
+	 * This `label_callback` add subtitle, author and tags if present to the
+	 * default label.
 	 *
 	 * @param array  $row   a books data row.
 	 * @param string $label the default label, usually the books title.
@@ -259,13 +259,16 @@ class tl_book extends Backend
 	public function bookLabel($row, $label)
 	{
 		$result = $label;
-		if ($row['subtitle']) {
+		if ($row['subtitle'])
+		{
 			$result .= '. ' . $row['subtitle'];
 		}
-		if ($row['author']) {
+		if ($row['author'])
+		{
 			$result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $row['author'] . ']</span>';
 		}
-		if ($row['tags']) {
+		if ($row['tags'])
+		{
 			$result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">[' . implode('] [', preg_split('/\s*,\s*/', $row['tags'])) . ']</span>';
 		}
 		return $result;
@@ -301,14 +304,16 @@ class tl_book extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen($this->Input->get('tid'))) {
+		if (strlen($this->Input->get('tid')))
+		{
 			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
 			$this->redirect($this->getReferer());
 		}
 
 		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
-		if (!$row['published']) {
+		if (!$row['published'])
+		{
 			$icon = 'invisible.gif';
 		}
 
@@ -345,7 +350,8 @@ class tl_book extends Backend
 		$autoAlias = false;
 
 		// Generate alias if there is none
-		if (!strlen($value)) {
+		if (!strlen($value))
+		{
 			$autoAlias = true;
 			$value = standardize(String::restoreBasicEntities($dc->activeRecord->title));
 		}
@@ -353,12 +359,14 @@ class tl_book extends Backend
 		$objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($value);
 
 		// Check whether the books alias exists
-		if ($objAlias->numRows > 1 && !$autoAlias) {
+		if ($objAlias->numRows > 1 && !$autoAlias)
+		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
 		}
 
 		// Add ID to alias
-		if ($objAlias->numRows && $autoAlias) {
+		if ($objAlias->numRows && $autoAlias)
+		{
 			$value .= '-' . $dc->id;
 		}
 
@@ -373,13 +381,15 @@ class tl_book extends Backend
 	 */
 	public function deleteChapters(DataContainer $dc)
 	{
-		if (!$dc->id) {
+		if (!$dc->id)
+		{
 			return;
 		}
 
 		$chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($dc->id);
 		$chapterTable = new DC_Table('tl_book_chapter');
-		foreach ($chapterIds as $id) {
+		foreach ($chapterIds as $id)
+		{
 			$chapterTable->intId = $id;
 			$chapterTable->delete(true);
 		}
@@ -397,7 +407,8 @@ class tl_book extends Backend
 		$this->log('Copy ' . $bookTable->table . ' ' . $bookTable->id . ' to ' . $newBookId, __METHOD__, TL_GENERAL);
 		$chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($bookTable->id);
 		$chapterTable = new DC_Table('tl_book_chapter');
-		foreach ($chapterIds as $id) {
+		foreach ($chapterIds as $id)
+		{
 			$this->log('Copy chapter ' . $id, __METHOD__, TL_GENERAL);
 			$chapterTable->intId = $id;
 			$newChapterId = $chapterTable->copy(true);

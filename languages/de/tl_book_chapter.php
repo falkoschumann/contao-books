@@ -18,15 +18,16 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['tstamp'] = array('Änderungsdatum', 'Dat
 $GLOBALS['TL_LANG']['tl_book_chapter']['title'] = array('Titel', 'Bitte geben Sie den Kapiteltitel ein.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['alias'] = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['published'] = array('Kapitel veröffentlichen', 'Das Kapitel auf der Webseite anzeigen.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['tags'] = array('Tags', 'Kommagetrennte Liste von Tags für das Kapitel; z.B. "Geprüft", "Unvollständig" oder "in Bearbeitung"');
 $GLOBALS['TL_LANG']['tl_book_chapter']['book_id'] = array('Buch', 'Das Kapitel gehört zu diesem Buch.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'] = array('Kapitel im Inhaltsverzeichnis anzeigen', 'Ist das Häckchen nicht gesetzt, erscheint kein Link zum Kapitel im Inhaltsverzeichnis.');
-
 
 
 /**
  * Reference
  */
 $GLOBALS['TL_LANG']['tl_book_chapter']['chapter_legend'] = 'Kapitel';
+$GLOBALS['TL_LANG']['tl_book_chapter']['meta_legend'] = 'Meta-Informationen';
 $GLOBALS['TL_LANG']['tl_book_chapter']['publish_legend'] = 'Veröffentlichung';
 
 
