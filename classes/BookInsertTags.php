@@ -6,7 +6,7 @@
  * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Books
- * @link https://github.com/falkoschumann/contao-books
+ * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -24,11 +24,11 @@ namespace Muspellheim\Books;
 class BookInsertTags extends \Frontend
 {
 
-	public function replaceInsertTags($strTag)
+	public function replaceBookInsertTags($strTag)
 	{
 		$arrSplit = explode('::', $strTag);
 		$insertTag = $arrSplit[0];
-		
+
 		if ($this->beginsWith($insertTag, 'bookchapter'))
 		{
 			$idOrAlias = $arrSplit[1];
@@ -63,42 +63,48 @@ class BookInsertTags extends \Frontend
 				return '{Unbekanntens Kapitel: ' . $idOrAlias . '}';
 			}
 		}
-		
+
 		return false;
 	}
 
-	function beginsWith($str, $sub) {
+
+	function beginsWith($str, $sub)
+	{
 		return (substr($str, 0, strlen($sub)) == $sub);
 	}
-	
+
+
 	private function getChapter($idOrAlias)
 	{
 		$objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_book_chapter WHERE (id=? || alias=?) AND published=1')->execute($idOrAlias, $idOrAlias);
 		return $objChapters->next();
 	}
-	
+
+
 	private function getChapterTitle($objChapter)
 	{
 		$arrHeadline = deserialize($objChapter->title);
 		return is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 	}
-	
+
+
 	private function getChapterUrl($objChapter)
 	{
 		global $objPage;
 		$page = array(
-				'id' => $objPage->id,
-				'alias' => $objPage->alias
+			'id'    => $objPage->id,
+			'alias' => $objPage->alias
 		);
-		
-		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ?  '/' : '/items/';
+
+		$itemPrefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
 		$item = $this->isAliasSetAndEnabled($objChapter) ? $objChapter->alias : $objChapter->id;
 		return $this->generateFrontendUrl($page, $itemPrefix . $item);
 	}
-	
+
+
 	private function isAliasSetAndEnabled($objChapter)
 	{
 		return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
 	}
-	
+
 }

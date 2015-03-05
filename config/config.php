@@ -33,7 +33,7 @@ array_insert($GLOBALS['TL_CTE']['includes'], 0, array('book' => '\Muspellheim\Bo
 /**
  * Insert tags
  */
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\Muspellheim\Books\BookInsertTags', 'replaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\Muspellheim\Books\BookInsertTags', 'replaceBookInsertTags');
 
 
 /**
