@@ -34,6 +34,7 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['publish_legend'] = 'Veröffentlichung';
 /**
  * Buttons
  */
+$GLOBALS['TL_LANG']['tl_book_chapter']['editbookheader'] = array('Bucheinstellungen bearbeiten', 'Einstellungen des Buches ID %s bearbeiten');
 $GLOBALS['TL_LANG']['tl_book_chapter']['new'] = array('Neues Kapitel', 'Ein neues Kapitel anlegen');
 $GLOBALS['TL_LANG']['tl_book_chapter']['edit'] = array('Kapitel bearbeiten', 'Kapitel ID %s bearbeiten');
 $GLOBALS['TL_LANG']['tl_book_chapter']['editheader'] = array('Kapiteleinstellungen bearbeiten', 'Einstellungen des Kapitels ID %s bearbeiten');

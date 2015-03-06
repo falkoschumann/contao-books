@@ -76,6 +76,12 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 				'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'  => 'ptg=all',
 				'class' => 'header_toggle'
+			),
+			'editbookheaders' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['editbookheader'],
+				'href'  => 'act=edit&amp;table=tl_book&amp;id=' . $_GET['book_id'],
+				'icon'  => 'header.gif'
 			)
 		),
 		'operations'        => array
