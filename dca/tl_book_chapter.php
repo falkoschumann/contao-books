@@ -38,10 +38,12 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		(
 			'keys' => array
 			(
-				'id'      => 'primary',
-				'pid'     => 'index',
-				'alias'   => 'index',
-				'book_id' => 'index'
+				'id'          => 'primary',
+				'pid'         => 'index',
+				'sorting'     => 'index',
+				'show_in_toc' => 'index',
+				'alias'       => 'index',
+				'book_id'     => 'index'
 			)
 		),
 		'backlink'          => 'do=books'
@@ -64,14 +66,14 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		),
 		'global_operations' => array
 		(
-			'all'         => array
+			'all'             => array
 			(
 				'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'       => 'act=select',
 				'class'      => 'header_edit_all',
 				'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
 			),
-			'toggleNodes' => array
+			'toggleNodes'     => array
 			(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'  => 'ptg=all',
