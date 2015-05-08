@@ -155,6 +155,10 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 				array('tl_book', 'generateAlias')
 			)
 		),
+		'root_chapter' => array
+		(
+			'sql' => "int(10) unsigned NOT NULL default '0'"
+		),
 		'subtitle'  => array
 		(
 			'label'     => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
@@ -327,7 +331,7 @@ class tl_book extends Backend
 	 * @param integer the books id.
 	 * @param boolean the current visibility.
 	 */
-	public function toggleVisibility($id, $visible)
+	private function toggleVisibility($id, $visible)
 	{
 		$objVersions = new Versions('tl_book', $id);
 		$objVersions->initialize();
@@ -375,7 +379,7 @@ class tl_book extends Backend
 
 
 	/**
-	 * Delete chapters from book.
+	 * This `ondelete_callback` delete all chapters from a book.
 	 *
 	 * @param \DataContainer $dc
 	 */
@@ -386,18 +390,20 @@ class tl_book extends Backend
 			return;
 		}
 
-		$chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($dc->id);
-		$chapterTable = new DC_Table('tl_book_chapter');
-		foreach ($chapterIds as $id)
+
+		$rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->root_chapter);
+		if ($rootChapter !== null)
 		{
-			$chapterTable->intId = $id;
-			$chapterTable->delete(true);
+			$rootChapter->delete();
+//			$chapterTable = new DC_Table('tl_book_chapter');
+//			$chapterTable->intId = $rootChapter->id;
+//			$chapterTable->delete(true);
 		}
 	}
 
 
 	/**
-	 * Copy chapters from book.
+	 * This `oncopy_callback` copy all chapters from a book.
 	 *
 	 * @param integer   $newBookId
 	 * @param \DC_Table $table

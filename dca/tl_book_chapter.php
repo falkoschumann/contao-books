@@ -32,8 +32,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		(
 			array('tl_book_chapter', 'addBreadcrumb'),
 		),
-
-		'onsubmit_callback' => array(array('tl_book_chapter', 'setBook')),
 		'sql'               => array
 		(
 			'keys' => array
@@ -42,8 +40,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 				'pid'         => 'index',
 				'sorting'     => 'index',
 				'show_in_toc' => 'index',
-				'alias'       => 'index',
-				'book_id'     => 'index'
+				'alias'       => 'index'
 			)
 		),
 		'backlink'          => 'do=books'
@@ -57,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'mode'        => 5,
 			'panelLayout' => 'search',
 			'icon'        => 'system/modules/books/assets/book.png',
-			'rootPaste'   => true
+//			'rootPaste'   => true
 		),
 		'label'             => array
 		(
@@ -209,11 +206,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
 			'sql'       => "varchar(255) NOT NULL default ''"
 		),
-		'book_id'     => array
-		(
-			'label' => &$GLOBALS['TL_LANG']['tl_book_chapter']['book_id'],
-			'sql'   => "int(10) unsigned NOT NULL default '0'"
-		),
 		'show_in_toc' => array
 		(
 			'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'],
@@ -284,34 +276,6 @@ class tl_book_chapter extends Backend
 
 		// Return the image
 		return $result;
-	}
-
-
-	/**
-	 * Set the book id for the chapter if chapter is created on books root.
-	 *
-	 * @param DataContainer $dc the current data container.
-	 */
-	public function setBook(DataContainer $dc)
-	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
-
-		// Return if chapter already exists
-		if ($dc->activeRecord->tstamp > 0)
-		{
-			return;
-		}
-
-		// Set book as parent if insert as root element
-		if ($dc->activeRecord->pid == 0)
-		{
-			$book_id = Input::get('book_id');
-			$this->Database->prepare("UPDATE tl_book_chapter SET book_id=? WHERE id=?")->execute($book_id, $dc->id);
-		}
 	}
 
 
