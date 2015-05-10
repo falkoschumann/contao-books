@@ -36,6 +36,10 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 				'alias' => 'index'
 			)
 		),
+		'onsubmit_callback' => array
+		(
+			array('tl_book', 'createRootChapterIfNotExist')
+		),
 		'ondelete_callback' => array
 		(
 			array('tl_book', 'deleteChapters')
@@ -379,6 +383,30 @@ class tl_book extends Backend
 
 
 	/**
+	 * This `onsubmit_callback` create the root chapter of a book if not exists.
+	 *
+	 * @param \DataContainer $dc
+	 */
+	public function createRootChapterIfNotExist(DataContainer $dc)
+	{
+		if ($dc->activeRecord->root_chapter) {
+			return;
+		}
+
+		$rootChapter = new \Muspellheim\Books\ChapterModel();
+		$rootChapter->title = $dc->activeRecord->title;
+		if ($dc->activeRecord->subtitle)
+		{
+			$rootChapter->title .= '. ' . $dc->activeRecord->subtitle;
+		}
+		$rootChapter->show_in_toc = false;
+		$rootChapter = $rootChapter->save();
+
+		$this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($rootChapter->id, $dc->id);
+	}
+
+
+	/**
 	 * This `ondelete_callback` delete all chapters from a book.
 	 *
 	 * @param \DataContainer $dc
@@ -390,11 +418,11 @@ class tl_book extends Backend
 			return;
 		}
 
-
-		$rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->root_chapter);
-		if ($rootChapter !== null)
+		$rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->activeRecord->root_chapter);
+		if ($rootChapter)
 		{
 			$rootChapter->delete();
+			// TODO test if child chapters are already deleted
 //			$chapterTable = new DC_Table('tl_book_chapter');
 //			$chapterTable->intId = $rootChapter->id;
 //			$chapterTable->delete(true);
