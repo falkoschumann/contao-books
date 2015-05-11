@@ -28,10 +28,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 		'ctable'            => array('tl_content'),
 		'dataContainer'     => 'Table',
 		'enableVersioning'  => true,
-		'onload_callback'   => array
-		(
-			array('tl_book_chapter', 'addBreadcrumb'),
-		),
 		'sql'               => array
 		(
 			'keys' => array
@@ -54,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 			'mode'        => 5,
 			'panelLayout' => 'search',
 			'icon'        => 'system/modules/books/assets/book.png',
-//			'rootPaste'   => true
+			'rootPaste'   => true
 		),
 		'label'             => array
 		(
@@ -220,10 +216,21 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
 
 if (Input::get('book_id'))
 {
-	$book_id = Input::get('book_id');
-	$GLOBALS['TL_DCA']['tl_book_chapter']['config']['label'] = \Muspellheim\Books\BookModel::findByPk($book_id)->title;
-	$GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($book_id);
+	$book = \Muspellheim\Books\BookModel::findByPk(Input::get('book_id'));
+	$title = $book->title;
+	if ($book->subtitle)
+	{
+		$title .= '. ' . $book->subtitle;
+	}
+	$GLOBALS['TL_DCA']['tl_book_chapter']['config']['label'] = $title;
+	$result = $this->Database->prepare("SELECT id FROM tl_book_chapter WHERE pid=?")->execute($book->root_chapter);
+	$chapters = array();
+	while ($result->next()) {
+		$chapters[] = $result->id;
+	}
+	$GLOBALS['TL_DCA']['tl_book_chapter']['list']['sorting']['root'] = $chapters;
 }
+
 
 /**
  * Provide miscellaneous methods that are used by the data container array of
@@ -266,8 +273,7 @@ class tl_book_chapter extends Backend
 			return $result;
 		}
 
-		// Add the breadcrumb link
-		$result .= ' <a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		$result .= ' ' . $label;
 
 		if ($row['tags'])
 		{
@@ -363,15 +369,6 @@ class tl_book_chapter extends Backend
 		}
 
 		return $value;
-	}
-
-
-	/**
-	 * Add the breadcrumb menu.
-	 */
-	public function addBreadcrumb()
-	{
-		Backend::addPagesBreadcrumb();
 	}
 
 }

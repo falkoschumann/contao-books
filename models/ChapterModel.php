@@ -55,15 +55,12 @@ class ChapterModel extends \Model
 
 	/**
 	 * @param int $pid
-	 * @param int $book_id
 	 * @return ChapterModel|Collection|null
 	 */
-	public static function findPublishedByPid($pid, $book_id=0)
+	public static function findPublishedByPid($pid)
 	{
 		$t = static::$strTable;
 		$columns = array("$t.pid=?");
-		if ($book_id)
-			$columns[] = "$t.book_id=?";
 		$options['order'] = "$t.pid, $t.sorting";
 
 		if (!BE_USER_LOGGED_IN)
@@ -71,7 +68,7 @@ class ChapterModel extends \Model
 			$columns[] = "$t.published=1";
 		}
 
-		$values = array($pid, $book_id);
+		$values = array($pid);
 		return static::findBy($columns, $values, $options);
 	}
 
@@ -111,7 +108,6 @@ class ChapterModel extends \Model
 			'order' => 'sorting DESC'
 		);
 		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
-
 	}
 
 
