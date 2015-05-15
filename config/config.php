@@ -40,4 +40,4 @@ $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('\Muspellheim\Books\BookInse
  * Model mappings
  */
 $GLOBALS['TL_MODELS'][\Muspellheim\Books\BookModel::getTable()]    = '\Muspellheim\Books\BookModel';
-$GLOBALS['TL_MODELS'][\Muspellheim\Books\ChapterModel::getTable()] = '\Muspellheim\Books\ChapterModel';
+$GLOBALS['TL_MODELS'][\Muspellheim\Books\BookChapterModel::getTable()] = '\Muspellheim\Books\BookChapterModel';

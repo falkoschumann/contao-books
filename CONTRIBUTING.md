@@ -1,7 +1,7 @@
 Contributing Guidelines
 =======================
 
-**Common field order:** id, pid, sorting, tstamp, title, alias, ...
+**Common field order:** id, pid, sorting, tstamp, title, alias, type, ...
 
 
 Code Style

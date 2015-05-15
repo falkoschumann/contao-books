@@ -6,7 +6,7 @@
  * Copyright (c) 2012-2015 Falko Schumann
  *
  * @package Models
- * @link https://github.com/falkoschumann/contao-books
+ * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -20,21 +20,23 @@ namespace Muspellheim\Books;
  * @copyright  2015 Falko Schumann
  * @author     Falko Schumann <falko.schumann@muspellheim.de>
  * @package    Models
- * @property int     $id             Die ID des Buches
- * @property int     $tstamp         Das Änderungsdatum der Metainformationen des Buches
- * @property string  $title          Der Titel des Buches
- * @property string  $alias          Der Buchalias
- * @property string  $subtitle       Der Untertitel des Buches
- * @property string  $author         Der Autor des Buches
- * @property string  $year           Das Erscheinungsjahr des Buches
- * @property string  $palce          Der Erscheinungsort des Buches
- * @property string  $language       Die Sprache des Buches
- * @property string  $tags           Kommagetrennte Liste von Tags zur Katalogisierung von Büchern
- * @property string  $abstract       Abstract oder Einleitung zum Buch
- * @property boolean $published      Flag ob das Buch veröffentlicht ist
+ * @property int     $id             book id
+ * @property int     $tstamp         timestamp of last edit
+ * @property string  $title          book title
+ * @property string  $alias          URL alias
+ * @property int     $root_chapter   id of the root chapter
+ * @property string  $subtitle       book subtitle
+ * @property string  $author         book author
+ * @property string  $year           year of publication
+ * @property string  $place          place of publication
+ * @property string  $language       books language
+ * @property string  $tags           comma seperated list of tags
+ * @property boolean $published      show book in frontend?
  */
 class BookModel extends \Model
 {
+
+	// TODO call root chapter by reference, instead of id
 
 	/**
 	 * Table name
@@ -53,7 +55,8 @@ class BookModel extends \Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN) {
+		if (!BE_USER_LOGGED_IN)
+		{
 			$arrColumns[] = "$t.published=1";
 		}
 		return static::findOneBy($arrColumns, $id);
