@@ -19,7 +19,7 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['alias']     = array('Alias du chapitre',
 $GLOBALS['TL_LANG']['tl_book_chapter']['note']      = array('Note', '');
 $GLOBALS['TL_LANG']['tl_book_chapter']['text']      = array('Texte', 'Vous pouvez utiliser des balises HTML pour formater le texte.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['published'] = array('Publier le chapitre', 'Rendre le chapitre visible sur ​​le site.');
-$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'] = array('Voir le chapitre dans la table des matières', 'Si cette case n\'est pas cochée, le chapitre ne sera pas visible dans la table des matières.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['hide']      = array('Voir le chapitre dans la table des matières', 'Si cette case n\'est pas cochée, le chapitre ne sera pas visible dans la table des matières.');
 
 
 /**

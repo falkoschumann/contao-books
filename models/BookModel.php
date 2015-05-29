@@ -36,30 +36,29 @@ namespace Muspellheim\Books;
 class BookModel extends \Model
 {
 
-	// TODO call root chapter by reference, instead of id
+    // TODO call root chapter by reference, instead of id
 
-	/**
-	 * Table name
-	 *
-	 * @var string
-	 */
-	protected static $strTable = 'tl_book';
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected static $strTable = 'tl_book';
 
 
-	/**
-	 * @param int id
-	 * @return BookModel|null
-	 */
-	public static function findPublishedById($id)
-	{
-		$t = static::$strTable;
-		$arrColumns = array("$t.id=?");
+    /**
+     * @param int id
+     * @return BookModel|null
+     */
+    public static function findPublishedById($id)
+    {
+        $t = static::$strTable;
+        $arrColumns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$arrColumns[] = "$t.published=1";
-		}
-		return static::findOneBy($arrColumns, $id);
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $arrColumns[] = "$t.published=1";
+        }
+        return static::findOneBy($arrColumns, $id);
+    }
 
 }

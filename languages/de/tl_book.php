@@ -24,7 +24,7 @@ $GLOBALS['TL_LANG']['tl_book']['language'] = array('Sprache', 'Bitte geben Sie d
 $GLOBALS['TL_LANG']['tl_book']['tags'] = array('Tags', 'Kommagetrennte Liste von Tags für das Buch; z.B. "Buch", "Satsang" oder "Sat Sandesh"');
 $GLOBALS['TL_LANG']['tl_book']['abstract'] = array('Zusammenfassung', 'Sie können HTML-Tags verwenden, um den Text zu formatieren.');
 $GLOBALS['TL_LANG']['tl_book']['published'] = array('Buch veröffentlichen', 'Das Buch auf der Webseite anzeigen.');
-$GLOBALS['TL_LANG']['tl_book']['show_in_toc'] = array('Kapitel im Inhaltsverzeichnis anzeigen', 'Ist das Häckchen nicht gesetzt, erscheint kein Link zum Kapitel im Inhaltsverzeichnis.');
+// TODO root_chapter ergänzen
 
 
 /**

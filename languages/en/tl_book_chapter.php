@@ -19,7 +19,7 @@ $GLOBALS['TL_LANG']['tl_book_chapter']['alias']     = array('Chapter alias', 'Th
 $GLOBALS['TL_LANG']['tl_book_chapter']['note']      = array('Note', '');
 $GLOBALS['TL_LANG']['tl_book_chapter']['text']      = array('Text', 'You can use HTML tags to format the text.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['published'] = array('Publish chapter', 'Make the chapter publicly visible on the website.');
-$GLOBALS['TL_LANG']['tl_book_chapter']['show_in_toc'] = array('Show chapter in table of content', 'If this checkbox is unchecked there is no link to chapter in table of content.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['hide']      = array('Show chapter in table of content', 'If this checkbox is unchecked there is no link to chapter in table of content.');
 
 
 /**

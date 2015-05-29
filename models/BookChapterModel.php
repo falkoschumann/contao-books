@@ -33,102 +33,97 @@ namespace Muspellheim\Books;
 class BookChapterModel extends \Model
 {
 
-	/**
-	 * Table name
-	 *
-	 * @var string
-	 */
-	protected static $strTable = 'tl_book_chapter';
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected static $strTable = 'tl_book_chapter';
 
 
-	public function __get($key)
-	{
-		switch ($key)
-		{
-			case 'relatedBook':
-				return $this->getRelated('pid');
-			default:
-				return parent::__get($key);
-		}
-	}
+    public function __get($key)
+    {
+        switch ($key) {
+            case 'relatedBook':
+                return $this->getRelated('pid');
+            default:
+                return parent::__get($key);
+        }
+    }
 
 
-	/**
-	 * @param int $pid
-	 * @return ChapterModel|Collection|null
-	 */
-	public static function findPublishedByPid($pid)
-	{
-		$t = static::$strTable;
-		$columns = array("$t.pid=?");
-		$options['order'] = "$t.pid, $t.sorting";
+    /**
+     * @param int $pid
+     * @return ChapterModel|Collection|null
+     */
+    public static function findPublishedByPid($pid)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?");
+        $options['order'] = "$t.pid, $t.sorting";
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
 
-		$values = array($pid);
-		return static::findBy($columns, $values, $options);
-	}
-
-
-	/**
-	 * @param int $id
-	 * @return ChapterModel|null
-	 */
-	public static function findPublishedById($id)
-	{
-		$t = static::$strTable;
-		$columns = array("$t.id=?");
-
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		return static::findOneBy($columns, $id);
-	}
+        $values = array($pid);
+        return static::findBy($columns, $values, $options);
+    }
 
 
-	/**
-	 * @param ChapterModel $chapter
-	 * @return ChapterModel|null
-	 */
-	public static function findPreviousPublishedFor($chapter)
-	{
-		$t = static::$strTable;
-		$columns = array("$t.pid=?", "$t.sorting<?");
+    /**
+     * @param int $id
+     * @return ChapterModel|null
+     */
+    public static function findPublishedById($id)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.id=?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		$options = array
-		(
-				'order' => 'sorting DESC'
-		);
-		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        return static::findOneBy($columns, $id);
+    }
 
 
-	/**
-	 * @param ChapterModel $chapter
-	 * @return ChapterModel|null
-	 */
-	public static function findNextPublishedFor($chapter)
-	{
-		$t = static::$strTable;
-		$columns = array("$t.pid=?", "$t.sorting>?");
+    /**
+     * @param ChapterModel $chapter
+     * @return ChapterModel|null
+     */
+    public static function findPreviousPublishedFor($chapter)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?", "$t.sorting<?");
 
-		if (!BE_USER_LOGGED_IN)
-		{
-			$columns[] = "$t.published=1";
-		}
-		$options = array
-		(
-				'order' => 'sorting'
-		);
-		return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
-	}
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        $options = array
+        (
+            'order' => 'sorting DESC'
+        );
+        return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
+    }
+
+
+    /**
+     * @param ChapterModel $chapter
+     * @return ChapterModel|null
+     */
+    public static function findNextPublishedFor($chapter)
+    {
+        $t = static::$strTable;
+        $columns = array("$t.pid=?", "$t.sorting>?");
+
+        if (!BE_USER_LOGGED_IN) {
+            $columns[] = "$t.published=1";
+        }
+        $options = array
+        (
+            'order' => 'sorting'
+        );
+        return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
+    }
 
 }
