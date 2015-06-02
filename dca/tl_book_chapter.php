@@ -149,7 +149,9 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
     (
         'id'        => array
         (
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
+            'label'  => array('ID'),
+            'search' => true,
+            'sql'    => "int(10) unsigned NOT NULL auto_increment"
         ),
         'pid'       => array
         (
