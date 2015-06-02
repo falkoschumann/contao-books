@@ -196,6 +196,7 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
         ),
         'type'      => array
         (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['type'],
             'default' => 'regular',
             'sql'     => "varchar(32) NOT NULL default ''"
         ),

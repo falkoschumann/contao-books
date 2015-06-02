@@ -17,6 +17,7 @@
 $GLOBALS['TL_LANG']['tl_book_chapter']['tstamp']    = array('Änderungsdatum', 'Datum und Uhrzeit der letzten Änderung.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['title']     = array('Titel', 'Bitte geben Sie den Kapiteltitel ein.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['alias']     = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
+$GLOBALS['TL_LANG']['tl_book_chapter']['type']      = array('Kapiteltyp');
 $GLOBALS['TL_LANG']['tl_book_chapter']['published'] = array('Kapitel veröffentlichen', 'Das Kapitel auf der Webseite anzeigen.');
 $GLOBALS['TL_LANG']['tl_book_chapter']['tags']      = array('Tags', 'Kommagetrennte Liste von Tags für das Kapitel; z.B. "Geprüft", "Unvollständig" oder "in Bearbeitung"');
 $GLOBALS['TL_LANG']['tl_book_chapter']['book_id']   = array('Buch', 'Das Kapitel gehört zu diesem Buch.');

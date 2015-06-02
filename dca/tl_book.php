@@ -167,6 +167,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'root_chapter' => array
         (
+            'label'      => &$GLOBALS['TL_LANG']['tl_book']['root_chapter'],
             'sql'        => "int(10) unsigned NOT NULL default '0'",
             'foreignKey' => 'tl_book_chapter.id',
             'relation'   => array('type' => 'hasOne', 'load' => 'lazy')
