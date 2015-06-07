@@ -200,14 +200,6 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
             'default' => 'regular',
             'sql'     => "varchar(32) NOT NULL default ''"
         ),
-        'published' => array
-        (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
-            'exclude'   => true,
-            'inputType' => 'checkbox',
-            'eval'      => array('tl_class' => 'w50'),
-            'sql'       => "char(1) NOT NULL default ''"
-        ),
         'tags'      => array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['tags'],
@@ -216,6 +208,14 @@ $GLOBALS['TL_DCA']['tl_book_chapter'] = array
             'inputType' => 'text',
             'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
+        ),
+        'published' => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book_chapter']['published'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => array('tl_class' => 'w50'),
+            'sql'       => "char(1) NOT NULL default ''"
         ),
         'hide'      => array
         (
@@ -262,8 +262,8 @@ class tl_book_chapter extends Backend
         $disablePI = false;
 
         // Disable all buttons if there is a circular reference
-        if ($arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id']) || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || in_array($row['id'],
-                        $arrClipboard['id'])))
+        if ($arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id'])
+                || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || in_array($row['id'], $arrClipboard['id'])))
         ) {
             $disablePA = true;
             $disablePI = true;
@@ -298,11 +298,17 @@ class tl_book_chapter extends Backend
             sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
 
         if ($row['id'] > 0) {
-            $return = $disablePA ? Image::getHtml('pasteafter_.gif') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1],
+            $return = $disablePA ? Image::getHtml('pasteafter_.gif') . ' ' :
+                    '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] .
+                    (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) .
+                    '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1],
                     $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
         }
 
-        return $return . ($disablePI ? Image::getHtml('pasteinto_.gif') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1],
+        return $return . ($disablePI ? Image::getHtml('pasteinto_.gif') . ' ' :
+                '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] .
+                (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) .
+                '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1],
                 $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
     }
 
