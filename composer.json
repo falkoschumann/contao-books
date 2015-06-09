@@ -1,0 +1,16 @@
+{
+  "name": "falkoschumann/contao-books",
+  "description": "Contao Extension Books: Manage books as dedicated objects in backend and display a book as content element in frontend.",
+  "version": "v2.0.0-dev",
+  "homepage": "https://github.com/falkoschumann/contao-books",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Falko Schumann",
+      "email": "falko.schumann@muspellheim.de"
+    }
+  ],
+  "require": {
+    "contao/core": "~3.4"
+  }
+}
