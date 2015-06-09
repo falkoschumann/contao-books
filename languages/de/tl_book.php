@@ -1,14 +1,10 @@
 <?php
 
 /**
- * Contao Open Source CMS
+ * Contao Extension Books
  *
- * Copyright (c) 2005-2015 Leo Feyer
- *
- * @package   Muspellheim
- * @author    Falko Schumann
- * @license   MIT
- * @copyright 2012-2015 Falko Schumann
+ * Copyright (c) 2012-2015 Falko Schumann
+ * Released under the terms of the MIT License (MIT).
  */
 
 
