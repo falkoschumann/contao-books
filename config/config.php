@@ -34,6 +34,17 @@
  * have to be set. Take a look at the system/modules/core/config/config.php
  * file to see how back end modules are configured.
  */
+/**
+ * Back end modules
+ */
+array_insert($GLOBALS['BE_MOD']['content'], 1, array
+(
+    'books' => array
+    (
+        'tables'      => array('tl_book', 'tl_content'),
+        'icon'        => 'system/modules/books/assets/icon.png'
+    )
+));
 
 
 /**

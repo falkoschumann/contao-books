@@ -11,7 +11,7 @@
 /**
  * Back end modules
  */
-$GLOBALS['TL_LANG']['MOD'][''] = array('', '');
+$GLOBALS['TL_LANG']['MOD']['books'] = array('Bücher', 'Bücher und Kapitel verwalten');
 
 
 /**

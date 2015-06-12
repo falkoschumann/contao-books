@@ -64,7 +64,53 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'operations'        => array
         (
-            'show' => array
+            'edit'       => array
+            (
+                'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
+                'href'  => 'act=edit',
+                'icon'  => 'edit.gif',
+//                'button_callback' => array('tl_book', 'editPage')
+            ),
+            'copy'       => array
+            (
+                'label'      => &$GLOBALS['TL_LANG']['tl_book']['copy'],
+                'href'       => 'act=paste&amp;mode=copy',
+                'icon'       => 'copy.gif',
+                'attributes' => 'onclick="Backend.getScrollOffset()"',
+//                'button_callback' => array('tl_book', 'copyPage')
+            ),
+            'copyChilds' => array
+            (
+                'label'      => &$GLOBALS['TL_LANG']['tl_book']['copyChilds'],
+                'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
+                'icon'       => 'copychilds.gif',
+                'attributes' => 'onclick="Backend.getScrollOffset()"',
+//                'button_callback' => array('tl_book', 'copyPageWithSubpages')
+            ),
+            'cut'        => array
+            (
+                'label'      => &$GLOBALS['TL_LANG']['tl_book']['cut'],
+                'href'       => 'act=paste&amp;mode=cut',
+                'icon'       => 'cut.gif',
+                'attributes' => 'onclick="Backend.getScrollOffset()"',
+//                'button_callback' => array('tl_book', 'cutPage')
+            ),
+            'delete'     => array
+            (
+                'label'      => &$GLOBALS['TL_LANG']['tl_book']['delete'],
+                'href'       => 'act=delete',
+                'icon'       => 'delete.gif',
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+//                'button_callback' => array('tl_book', 'deletePage')
+            ),
+            'toggle'     => array
+            (
+                'label'      => &$GLOBALS['TL_LANG']['tl_book']['toggle'],
+                'icon'       => 'visible.gif',
+                'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+//                'button_callback' => array('tl_book', 'toggleIcon')
+            ),
+            'show'       => array
             (
                 'label' => &$GLOBALS['TL_LANG']['tl_book']['show'],
                 'href'  => 'act=show',
@@ -77,9 +123,9 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array('type'),
-        'default'      => '{title_legend},title,alias,type',
-        'regular'      => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{search_legend},noSearch;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published',
-        'root'         => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,staticFiles,staticPlugins,language,fallback;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published',
+//        'default'      => '{title_legend},title,alias,type',
+        'regular'      => '{title_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssClass,hide;{publish_legend},published',
+        'root'         => '{title_legend},title,subtitle,alias;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published',
     ),
     // Fields
     'fields'   => array
@@ -118,15 +164,15 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'alias'     => array
         (
-            'label'         => &$GLOBALS['TL_LANG']['tl_book']['alias'],
-            'exclude'       => true,
-            'inputType'     => 'text',
-            'search'        => true,
-            'eval'          => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50'),
-            'save_callback' => array(
-                array('tl_book', 'generateAlias')
-            ),
-            'sql'           => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['alias'],
+            'exclude'   => true,
+            'inputType' => 'text',
+            'search'    => true,
+            'eval'      => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50'),
+//            'save_callback' => array(
+//                array('tl_book', 'generateAlias')
+//            ),
+            'sql'       => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
         ),
         'type'      => array
         (
@@ -222,3 +268,13 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         )
     )
 );
+
+
+/**
+ * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @author Falko Schumann <https://github.com/falkoschumann>
+ */
+class tl_page extends Backend
+{
+}
