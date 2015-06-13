@@ -11,8 +11,8 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_book']['title']      = array('Buchname/Kapitelname', 'Bitte geben Sie den Namen des Buches/Kapitels ein.');
-$GLOBALS['TL_LANG']['tl_book']['alias']      = array('Buchalias/Kapitelalias', 'Der Buchalias/Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Buch-ID/Kapitel-ID aufgerufen werden kann.');
+$GLOBALS['TL_LANG']['tl_book']['title']      = array('Buchtitel/Kapitelname', 'Bitte geben Sie den Namen des Buches/Kapitels ein.');
+$GLOBALS['TL_LANG']['tl_book']['alias']      = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
 $GLOBALS['TL_LANG']['tl_book']['type']       = array('Buchtyp/Kapiteltyp', '');
 $GLOBALS['TL_LANG']['tl_book']['subtitle']   = array('Untertitel', 'Bitte geben Sie den Untertitel des Buches ein.');
 $GLOBALS['TL_LANG']['tl_book']['year']       = array('Jahr', 'Bitte geben Sie das Erscheinungsjahr des Buches ein.');

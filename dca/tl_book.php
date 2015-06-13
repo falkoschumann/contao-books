@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         '__selector__' => array('type'),
 //        'default'      => '{title_legend},title,alias,type',
         'regular'      => '{title_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssClass,hide;{publish_legend},published',
-        'root'         => '{title_legend},title,subtitle,alias;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published',
+        'root'         => '{title_legend},title,subtitle;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published',
     ),
     // Fields
     'fields'   => array
@@ -169,15 +169,15 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'alias'     => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['alias'],
-            'exclude'   => true,
-            'inputType' => 'text',
-            'search'    => true,
-            'eval'      => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50'),
 //            'save_callback' => array(
 //                array('tl_book', 'generateAlias')
 //            ),
-            'sql'       => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+            'label'         => &$GLOBALS['TL_LANG']['tl_book']['alias'],
+            'exclude'       => true,
+            'inputType'     => 'text',
+            'search'        => true,
+            'eval'          => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50 clr'),
+            'sql'           => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
         ),
         'type'      => array
         (
@@ -237,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
-            'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
+            'eval'      => array('maxlength' => 255, 'tl_class' => 'w50 clr'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
         'cssClass'  => array
@@ -293,8 +293,8 @@ class tl_book extends Backend
             $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
         } elseif (Input::get('mode') == 1) {
             $objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-                    ->limit(1)
-                    ->execute(Input::get('pid'));
+            ->limit(1)
+            ->execute(Input::get('pid'));
 
             if ($objPage->pid == 0) {
                 $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
@@ -314,7 +314,14 @@ class tl_book extends Backend
      * @param boolean
      * @return string
      */
-    public function addIcon($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false) {
+    public function addIcon(
+        $row,
+        $label,
+        DataContainer $dc = null,
+        $imageAttribute = '',
+        $blnReturnImage = false,
+        $blnProtected = false
+    ) {
 //        if ($blnProtected) {
 //            $row['protected'] = true;
 //        }
