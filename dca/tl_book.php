@@ -21,6 +21,10 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         'dataContainer'    => 'Table',
         'ctable'           => array('tl_content'),
         'enableVersioning' => true,
+        'onload_callback'  => array
+        (
+            array('tl_book', 'setRootType'),
+        ),
         'sql'              => array
         (
             'keys' => array
@@ -223,13 +227,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
-            'eval'      => array(
-                'mandatory' => true,
-                'rgxp'      => 'language',
-                'maxlength' => 5,
-                'nospace'   => true,
-                'tl_class'  => 'w50 clr'
-            ),
+            'eval'      => array('rgxp' => 'language', 'maxlength' => 5, 'nospace' => true, 'tl_class' => 'w50 clr'),
             'sql'       => "varchar(5) NOT NULL default ''"
         ),
         'tags'      => array
@@ -275,6 +273,32 @@ $GLOBALS['TL_DCA']['tl_book'] = array
  *
  * @author Falko Schumann <https://github.com/falkoschumann>
  */
-class tl_page extends Backend
+class tl_book extends Backend
 {
+
+    /**
+     * Make new top-level elements books or root chapters.
+     *
+     * @param \DataContainer
+     */
+    public function setRootType(DataContainer $dc)
+    {
+        if (Input::get('act') != 'create') {
+            return;
+        }
+
+        // Insert into
+        if (Input::get('pid') == 0) {
+            $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
+        } elseif (Input::get('mode') == 1) {
+            $objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+            ->limit(1)
+            ->execute(Input::get('pid'));
+
+            if ($objPage->pid == 0) {
+                $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
+            }
+        }
+    }
+
 }
