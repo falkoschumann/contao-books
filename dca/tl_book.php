@@ -47,8 +47,9 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'label'             => array
         (
-            'fields' => array('title'),
-            'format' => '%s'
+            'fields'         => array('title'),
+            'format'         => '%s',
+            'label_callback' => array('tl_book', 'addIcon')
         ),
         'global_operations' => array
         (
@@ -292,13 +293,85 @@ class tl_book extends Backend
             $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
         } elseif (Input::get('mode') == 1) {
             $objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-            ->limit(1)
-            ->execute(Input::get('pid'));
+                    ->limit(1)
+                    ->execute(Input::get('pid'));
 
             if ($objPage->pid == 0) {
                 $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
             }
         }
+    }
+
+
+    /**
+     * Add an image to each book in the tree.
+     *
+     * @param array
+     * @param string
+     * @param \DataContainer
+     * @param string
+     * @param boolean
+     * @param boolean
+     * @return string
+     */
+    public function addIcon($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false) {
+//        if ($blnProtected) {
+//            $row['protected'] = true;
+//        }
+
+        $image = tl_book::getBookStatusIcon((object)$row);
+
+        // Return the image only
+        if ($blnReturnImage) {
+            return \Image::getHtml($image, '', $imageAttribute);
+        }
+
+        // Mark root
+        if ($row['type'] == 'root') {
+            $label = '<strong>' . $label . '</strong>';
+        }
+
+//        // Add the breadcrumb link
+//        $label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+
+        // Return the image
+        //return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">' . \Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+        return \Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
+    }
+
+
+    /**
+     * Calculate the book status icon name based on the book parameters.
+     *
+     * @param object $objBook The book object.
+     * @return string The status icon name.
+     */
+    private static function getBookStatusIcon($objBook)
+    {
+        $sub = 0;
+        $image = 'system/modules/books/assets/' . $objBook->type . '.png';
+
+        // Book not published or not active
+        if (!$objBook->published || ($objBook->start != '' && $objBook->start > time()) || ($objBook->stop != '' && $objBook->stop < time())) {
+            $sub += 1;
+        }
+
+        // Book hidden from menu
+        if ($objBook->hide && !in_array($objBook->type, array('root'))) {
+            $sub += 2;
+        }
+
+//        // Book protected
+//        if ($objBook->protected && !in_array($objBook->type, array('root'))) {
+//            $sub += 4;
+//        }
+
+        // Get the image name
+        if ($sub > 0) {
+            $image = 'system/modules/books/assets/' . $objBook->type . '_' . $sub . '.png';
+        }
+
+        return $image;
     }
 
 }
