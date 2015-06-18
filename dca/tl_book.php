@@ -272,7 +272,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Falko Schumann <https://github.com/falkoschumann>
+ * @author Falko Schumann <https://github.com/falkoschumann/contao-books>
  */
 class tl_book extends Backend
 {

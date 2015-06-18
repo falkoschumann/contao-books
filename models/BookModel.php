@@ -16,9 +16,7 @@ namespace Muspellheim;
 /**
  * Class BookModel
  *
- * @copyright  2012-2015 Falko Schumann
- * @author     Falko Schumann
- * @package    Devtools
+ * @author Falko Schumann <https://github.com/falkoschumann/contao-books>
  */
 class BookModel extends \Model
 {

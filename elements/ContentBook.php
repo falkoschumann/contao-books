@@ -17,9 +17,7 @@ namespace Muspellheim;
 /**
  * Class ContentBook
  *
- * @copyright  2012-2015 Falko Schumann
- * @author     Falko Schumann
- * @package    Devtools
+ * @author Falko Schumann <https://github.com/falkoschumann/contao-books>
  */
 class ContentBook extends \ContentElement
 {
