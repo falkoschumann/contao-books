@@ -128,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array('type'),
-//        'default'      => '{title_legend},title,alias,type',
+        'default'      => '{title_legend},title,alias,type',
         'regular'      => '{title_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssClass,hide;{publish_legend},published',
         'root'         => '{title_legend},title,subtitle;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published',
     ),
@@ -322,10 +322,6 @@ class tl_book extends Backend
         $blnReturnImage = false,
         $blnProtected = false
     ) {
-//        if ($blnProtected) {
-//            $row['protected'] = true;
-//        }
-
         $image = tl_book::getBookStatusIcon((object)$row);
 
         // Return the image only
@@ -342,7 +338,6 @@ class tl_book extends Backend
 //        $label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 
         // Return the image
-        //return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '"' . (($dc->table != 'tl_page') ? ' class="tl_gray"' : '') . ' target="_blank">' . \Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
         return \Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
     }
 
@@ -367,11 +362,6 @@ class tl_book extends Backend
         if ($objBook->hide && !in_array($objBook->type, array('root'))) {
             $sub += 2;
         }
-
-//        // Book protected
-//        if ($objBook->protected && !in_array($objBook->type, array('root'))) {
-//            $sub += 4;
-//        }
 
         // Get the image name
         if ($sub > 0) {
