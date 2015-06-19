@@ -169,14 +169,14 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'alias'     => array
         (
-//            'save_callback' => array(
-//                array('tl_book', 'generateAlias')
-//            ),
             'label'         => &$GLOBALS['TL_LANG']['tl_book']['alias'],
             'exclude'       => true,
             'inputType'     => 'text',
             'search'        => true,
             'eval'          => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50 clr'),
+            'save_callback' => array(
+                array('tl_book', 'generateAlias')
+            ),
             'sql'           => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
         ),
         'type'      => array
@@ -379,6 +379,64 @@ class tl_book extends Backend
         }
 
         return $image;
+    }
+
+
+    /**
+     * Auto-generate a book alias if it has not been set yet.
+     *
+     * @param mixed
+     * @param \DataContainer
+     * @return string
+     * @throws \Exception
+     */
+    public function generateAlias($varValue, DataContainer $dc)
+    {
+        if ($dc->activeRecord->type === "root") {
+            return;
+        }
+
+        $autoAlias = false;
+
+        // Generate an alias if there is none
+        if ($varValue == '') {
+            $autoAlias = true;
+            $varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
+        }
+
+        $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE id=? OR alias=?")->execute($dc->id,
+            $varValue);
+
+        // Check whether the book alias exists
+        if ($objAlias->numRows > ($autoAlias ? 0 : 1)) {
+            $arrBooks = array();
+            $strBook = 0;
+
+            while ($objAlias->next()) {
+                $objCurrentBook = BookModel::findWithDetails($objAlias->id);
+                $book = $objCurrentBook->book_id;
+
+                // Store the current book's data
+                if ($objCurrentBook->id == $dc->id) {
+                    $strBook = $book;
+                } else {
+                    $arrBooks[$book][] = $objAlias->id;
+                }
+            }
+
+            $arrCheck = $arrBooks[$strBook];
+
+            // Check if there are multiple results for the current domain
+            if (!empty($arrCheck)) {
+                if ($autoAlias) {
+                    $varValue .= '-' . $dc->id;
+                } else {
+                    throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+                }
+            }
+        }
+
+        return $varValue;
     }
 
 }
