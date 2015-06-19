@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
                 'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
                 'icon'       => 'copychilds.gif',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_book', 'copyPageWithSubpages')
+                'button_callback' => array('tl_book', 'copyBookWithSubbooks')
             ),
             'cut'        => array
             (
@@ -425,6 +425,32 @@ class tl_book extends Backend
         }
 
         return $varValue;
+    }
+
+    /**
+     * Return the copy book with subbooks button.
+     *
+     * @param array
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @return string
+     */
+    public function copyBookWithSubbooks($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
+        {
+            return '';
+        }
+
+        $objSubpages = $this->Database->prepare("SELECT * FROM tl_book WHERE pid=?")
+        ->limit(1)
+        ->execute($row['id']);
+
+        return $objSubpages->numRows ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
     }
 
 }
