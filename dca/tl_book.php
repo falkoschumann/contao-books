@@ -73,8 +73,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             (
                 'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
                 'href'  => 'act=edit',
-                'icon'  => 'edit.gif',
-//                'button_callback' => array('tl_book', 'editPage')
+                'icon'  => 'edit.gif'
             ),
             'copy'       => array
             (
@@ -82,7 +81,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
                 'href'       => 'act=paste&amp;mode=copy',
                 'icon'       => 'copy.gif',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_book', 'copyPage')
             ),
             'copyChilds' => array
             (
