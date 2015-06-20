@@ -7,8 +7,8 @@ TODO
 ----
 
 - [X] Configure Composer.
-- [ ] Configure DCA tl_book with one tree view for books and chapters.
-- [ ] Configure DCA tl_book with list view for books and tree view for chapters.
+- [ ] Configure DCA tl_chapter with one tree view for books and chapters.
+- [ ] Configure DCA tl_chapter with list view for books and tree view for chapters.
 - [ ] Implement content element book to show book in frontend.
 - [ ] Implement batch script to porting data from old Book extension
 - [ ] Separate translation of books and chapters

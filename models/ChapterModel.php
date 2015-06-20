@@ -11,7 +11,7 @@ namespace Muspellheim;
 
 
 /**
- * Reads and writes books.
+ * Reads and writes chapters.
  *
  * @property integer $id
  * @property integer $pid
@@ -29,10 +29,10 @@ namespace Muspellheim;
  * @property string  $cssClass
  * @property boolean $hide
  * @property boolean $published
- * @property integer $book_id    id of the root element from current path.
+ * @property integer $book    id of the root element from current path.
  * @author Falko Schumann <https://github.com/falkoschumann/contao-books>
  */
-class BookModel extends \Model
+class ChapterModel extends \Model
 {
 
     /**
@@ -40,7 +40,7 @@ class BookModel extends \Model
      *
      * @var string
      */
-    protected static $strTable = 'tl_book';
+    protected static $strTable = 'tl_chapter';
 
     /**
      * Details loaded.
@@ -51,50 +51,50 @@ class BookModel extends \Model
 
 
     /**
-     * Find the parent books of a book.
+     * Find the parent chapters of a chapter.
      *
-     * @param integer $intId The book's ID.
-     * @return \Model\Collection|null A collection of models or null if there are no parent books.
+     * @param integer $intId The chapter's ID.
+     * @return \Model\Collection|null A collection of models or null if there are no parent chapters.
      */
     public static function findParentsById($intId)
     {
         $arrModels = array();
 
-        while ($intId > 0 && ($objBook = static::findByPk($intId)) !== null) {
-            $intId = $objBook->pid;
-            $arrModels[] = $objBook;
+        while ($intId > 0 && ($objChapter = static::findByPk($intId)) !== null) {
+            $intId = $objChapter->pid;
+            $arrModels[] = $objChapter;
         }
 
         if (empty($arrModels)) {
             return null;
         }
 
-        return static::createCollection($arrModels, 'tl_book');
+        return static::createCollection($arrModels, 'tl_chapter');
     }
 
 
     /**
-     * Find a book by its ID and return it with the inherited details.
+     * Find a chapter by its ID and return it with the inherited details.
      *
-     * @param integer $intId The book's ID.
-     * @return \Model|null The model or null if there is no matching book.
+     * @param integer $intId The chapter's ID.
+     * @return \Model|null The model or null if there is no matching chapter.
      */
     public static function findWithDetails($intId)
     {
-        $objBook = static::findByPk($intId);
+        $objChapter = static::findByPk($intId);
 
-        if ($objBook === null) {
+        if ($objChapter === null) {
             return null;
         }
 
-        return $objBook->loadDetails();
+        return $objChapter->loadDetails();
     }
 
 
     /**
-     * Get the details of a book including inherited parameters.
+     * Get the details of a chapter including inherited parameters.
      *
-     * @return \Model The book model
+     * @return \Model The chapter model
      */
     public function loadDetails()
     {
@@ -105,9 +105,9 @@ class BookModel extends \Model
 
         $parents = $this->findParentsById($this->id);
         if ($parents === null) {
-            $this->book_id = $this->id;
+            $this->book = $this->id;
         } else {
-            $this->book_id = $parents->last()->id;
+            $this->book = $parents->last()->id;
         }
 
         // Prevent saving

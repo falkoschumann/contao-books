@@ -9,9 +9,9 @@
 
 
 /**
- * Table tl_book
+ * Table tl_chapter
  */
-$GLOBALS['TL_DCA']['tl_book'] = array
+$GLOBALS['TL_DCA']['tl_chapter'] = array
 (
 
     // Config
@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         'enableVersioning' => true,
         'onload_callback'  => array
         (
-            array('tl_book', 'setRootType'),
+            array('tl_chapter', 'setRootType'),
         ),
         'sql'              => array
         (
@@ -49,7 +49,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         (
             'fields'         => array('title'),
             'format'         => '%s',
-            'label_callback' => array('tl_book', 'addIcon')
+            'label_callback' => array('tl_chapter', 'addIcon')
         ),
         'global_operations' => array
         (
@@ -71,64 +71,63 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         (
             'edit'       => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_book']['edit'],
+                'label' => &$GLOBALS['TL_LANG']['tl_chapter']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif'
             ),
             'copy'       => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_book']['copy'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['copy'],
                 'href'       => 'act=paste&amp;mode=copy',
                 'icon'       => 'copy.gif',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
             ),
             'copyChilds' => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_book']['copyChilds'],
-                'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
-                'icon'       => 'copychilds.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => array('tl_book', 'copyBookWithSubbooks')
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['copyChilds'],
+                'href'            => 'act=paste&amp;mode=copy&amp;childs=1',
+                'icon'            => 'copychilds.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset()"',
+                'button_callback' => array('tl_chapter', 'copyChapterWithSubchapters')
             ),
             'cut'        => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_book']['cut'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['cut'],
                 'href'       => 'act=paste&amp;mode=cut',
                 'icon'       => 'cut.gif',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_book', 'cutPage')
+//                'button_callback' => array('tl_chapter', 'cutPage')
             ),
             'delete'     => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_book']['delete'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_book', 'deletePage')
+//                'button_callback' => array('tl_chapter', 'deletePage')
             ),
             'toggle'     => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_book']['toggle'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['toggle'],
                 'icon'       => 'visible.gif',
                 'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-//                'button_callback' => array('tl_book', 'toggleIcon')
+//                'button_callback' => array('tl_chapter', 'toggleIcon')
             ),
             'show'       => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_book']['show'],
+                'label' => &$GLOBALS['TL_LANG']['tl_chapter']['show'],
                 'href'  => 'act=show',
                 'icon'  => 'show.gif'
             )
         )
     ),
     // Palettes
-    // TODO Check if types regular and root are necessary or it can be book and chapter
     'palettes' => array
     (
         '__selector__' => array('type'),
         'default'      => '{title_legend},title,alias,type',
-        'regular'      => '{title_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssClass,hide;{publish_legend},published',
-        'root'         => '{title_legend},title,subtitle;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published',
+        'regular'      => '{title_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssID,hide;{publish_legend},published',
+        'root'         => '{title_legend},title,subtitle;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssID;{publish_legend},published',
     ),
     // Fields
     'fields'   => array
@@ -153,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'title'     => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['title'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['title'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -167,26 +166,26 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'alias'     => array
         (
-            'label'         => &$GLOBALS['TL_LANG']['tl_book']['alias'],
+            'label'         => &$GLOBALS['TL_LANG']['tl_chapter']['alias'],
             'exclude'       => true,
             'inputType'     => 'text',
             'search'        => true,
             'eval'          => array('rgxp' => 'folderalias', 'maxlength' => 128, 'tl_class' => 'w50 clr'),
             'save_callback' => array(
-                array('tl_book', 'generateAlias')
+                array('tl_chapter', 'generateAlias')
             ),
             'sql'           => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
         ),
         'type'      => array
         (
-            'label'   => &$GLOBALS['TL_LANG']['tl_book']['type'],
+            'label'   => &$GLOBALS['TL_LANG']['tl_chapter']['type'],
             'exclude' => true,
             'default' => 'regular',
             'sql'     => "varchar(32) NOT NULL default ''"
         ),
         'subtitle'  => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['subtitle'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['subtitle'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -195,7 +194,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'author'    => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['author'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['author'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -204,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'year'      => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['year'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['year'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -213,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'place'     => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['place'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['place'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -222,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'language'  => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['language'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['language'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
@@ -231,25 +230,24 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'tags'      => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['tags'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['tags'],
             'exclude'   => true,
             'inputType' => 'text',
             'search'    => true,
             'eval'      => array('maxlength' => 255, 'tl_class' => 'w50 clr'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
-        'cssClass'  => array
+        'cssID'     => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['cssClass'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['cssID'],
             'exclude'   => true,
             'inputType' => 'text',
-            'search'    => true,
-            'eval'      => array('maxlength' => 64, 'tl_class' => 'w50'),
-            'sql'       => "varchar(64) NOT NULL default ''"
+            'eval'      => array('multiple' => true, 'size' => 2, 'tl_class' => 'w50 clr'),
+            'sql'       => "varchar(255) NOT NULL default ''"
         ),
         'hide'      => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['hide'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['hide'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => array('tl_class' => 'w50'),
@@ -257,7 +255,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         ),
         'published' => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['published'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['published'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => array('submitOnChange' => true, 'doNotCopy' => true),
@@ -272,11 +270,11 @@ $GLOBALS['TL_DCA']['tl_book'] = array
  *
  * @author Falko Schumann <https://github.com/falkoschumann/contao-books>
  */
-class tl_book extends Backend
+class tl_chapter extends Backend
 {
 
     /**
-     * Make new top-level elements books or root chapters.
+     * Make new top-level elements root chapters (books).
      *
      * @param \DataContainer
      */
@@ -288,21 +286,19 @@ class tl_book extends Backend
 
         // Insert into
         if (Input::get('pid') == 0) {
-            $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
+            $GLOBALS['TL_DCA']['tl_chapter']['fields']['type']['default'] = 'root';
         } elseif (Input::get('mode') == 1) {
-            $objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-            ->limit(1)
-            ->execute(Input::get('pid'));
+            $objChapter = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")->limit(1)->execute(Input::get('pid'));
 
-            if ($objPage->pid == 0) {
-                $GLOBALS['TL_DCA']['tl_book']['fields']['type']['default'] = 'root';
+            if ($objChapter->pid == 0) {
+                $GLOBALS['TL_DCA']['tl_chapter']['fields']['type']['default'] = 'root';
             }
         }
     }
 
 
     /**
-     * Add an image to each book in the tree.
+     * Add an image to each chapter in the tree.
      *
      * @param array
      * @param string
@@ -320,7 +316,9 @@ class tl_book extends Backend
         $blnReturnImage = false,
         $blnProtected = false
     ) {
-        $image = tl_book::getBookStatusIcon((object)$row);
+        // TODO display subtitle and author if given
+
+        $image = tl_chapter::getChapterStatusIcon((object)$row);
 
         // Return the image only
         if ($blnReturnImage) {
@@ -332,38 +330,35 @@ class tl_book extends Backend
             $label = '<strong>' . $label . '</strong>';
         }
 
-//        // Add the breadcrumb link
-//        $label = '<a href="' . \Controller::addToUrl('node=' . $row['id']) . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
-
         // Return the image
         return \Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
     }
 
 
     /**
-     * Calculate the book status icon name based on the book parameters.
+     * Calculate the chapter status icon name based on the chapter parameters.
      *
-     * @param object $objBook The book object.
+     * @param object $objChapter The chapter object.
      * @return string The status icon name.
      */
-    private static function getBookStatusIcon($objBook)
+    private static function getChapterStatusIcon($objChapter)
     {
         $sub = 0;
-        $image = 'system/modules/books/assets/' . $objBook->type . '.png';
+        $image = 'system/modules/books/assets/' . $objChapter->type . '.png';
 
-        // Book not published or not active
-        if (!$objBook->published || ($objBook->start != '' && $objBook->start > time()) || ($objBook->stop != '' && $objBook->stop < time())) {
+        // Chapter not published or not active
+        if (!$objChapter->published || ($objChapter->start != '' && $objChapter->start > time()) || ($objChapter->stop != '' && $objChapter->stop < time())) {
             $sub += 1;
         }
 
-        // Book hidden from menu
-        if ($objBook->hide && !in_array($objBook->type, array('root'))) {
+        // Chapter hidden from table of contents
+        if ($objChapter->hide && !in_array($objChapter->type, array('root'))) {
             $sub += 2;
         }
 
         // Get the image name
         if ($sub > 0) {
-            $image = 'system/modules/books/assets/' . $objBook->type . '_' . $sub . '.png';
+            $image = 'system/modules/books/assets/' . $objChapter->type . '_' . $sub . '.png';
         }
 
         return $image;
@@ -371,7 +366,7 @@ class tl_book extends Backend
 
 
     /**
-     * Auto-generate a book alias if it has not been set yet.
+     * Auto-generate a chapter alias if it has not been set yet.
      *
      * @param mixed
      * @param \DataContainer
@@ -392,29 +387,29 @@ class tl_book extends Backend
             $varValue = standardize(String::restoreBasicEntities($dc->activeRecord->title));
         }
 
-        $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE id=? OR alias=?")->execute($dc->id,
+        $objAlias = $this->Database->prepare("SELECT id FROM tl_chapter WHERE id=? OR alias=?")->execute($dc->id,
             $varValue);
 
-        // Check whether the book alias exists
+        // Check whether the chapter alias exists
         if ($objAlias->numRows > ($autoAlias ? 0 : 1)) {
-            $arrBooks = array();
-            $strBook = 0;
+            $arrChapters = array();
+            $strChapter = 0;
 
             while ($objAlias->next()) {
-                $objCurrentBook = BookModel::findWithDetails($objAlias->id);
-                $book = $objCurrentBook->book_id;
+                $objCurrentChapter = ChapterModel::findWithDetails($objAlias->id);
+                $book = $objCurrentChapter->book;
 
-                // Store the current book's data
-                if ($objCurrentBook->id == $dc->id) {
-                    $strBook = $book;
+                // Store the current chapter's data
+                if ($objCurrentChapter->id == $dc->id) {
+                    $strChapter = $book;
                 } else {
-                    $arrBooks[$book][] = $objAlias->id;
+                    $arrChapters[$book][] = $objAlias->id;
                 }
             }
 
-            $arrCheck = $arrBooks[$strBook];
+            $arrCheck = $arrChapters[$strChapter];
 
-            // Check if there are multiple results for the current domain
+            // Check if there are multiple results for the current book
             if (!empty($arrCheck)) {
                 if ($autoAlias) {
                     $varValue .= '-' . $dc->id;
@@ -427,8 +422,9 @@ class tl_book extends Backend
         return $varValue;
     }
 
+
     /**
-     * Return the copy book with subbooks button.
+     * Return the copy chapter with subchapters button.
      *
      * @param array
      * @param string
@@ -439,18 +435,16 @@ class tl_book extends Backend
      * @param string
      * @return string
      */
-    public function copyBookWithSubbooks($row, $href, $label, $title, $icon, $attributes, $table)
+    public function copyChapterWithSubchapters($row, $href, $label, $title, $icon, $attributes, $table)
     {
-        if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
-        {
+        if ($GLOBALS['TL_DCA'][$table]['config']['closed']) {
             return '';
         }
 
-        $objSubpages = $this->Database->prepare("SELECT * FROM tl_book WHERE pid=?")
-        ->limit(1)
-        ->execute($row['id']);
+        $objSubchapters = $this->Database->prepare("SELECT * FROM tl_chapter WHERE pid=?")->limit(1)->execute($row['id']);
 
-        return $objSubpages->numRows ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
+        return $objSubchapters->numRows ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
     }
 
 }

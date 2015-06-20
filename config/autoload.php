@@ -26,7 +26,7 @@ ClassLoader::addClasses(array
 	'Muspellheim\ContentBook' => 'system/modules/books/elements/ContentBook.php',
 
 	// Models
-	'Muspellheim\BookModel'   => 'system/modules/books/models/BookModel.php',
+	'Muspellheim\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
 ));
 
 
