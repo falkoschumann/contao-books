@@ -36,9 +36,11 @@ $GLOBALS['TL_LANG']['tl_chapter']['publish_legend'] = 'Veröffentlichung';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_chapter']['new']    = array('Neues Buch/Kapitel', 'Ein neues Buch/Kapitel anlegen');
-$GLOBALS['TL_LANG']['tl_chapter']['show']   = array('Buchdetails/Kapiteldetails', 'Details des Buches/Kapitels ID %s anzeigen');
-$GLOBALS['TL_LANG']['tl_chapter']['edit']   = array('Buch/Kapitel bearbeiten', 'Buch/Kapitel ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_chapter']['cut']    = array('Buch/Kapitel verschieben', 'Buch/Kapitel ID %s verschieben');
-$GLOBALS['TL_LANG']['tl_chapter']['copy']   = array('Buch/Kapitel duplizieren', 'Buch/Kapitel ID %s duplizieren');
-$GLOBALS['TL_LANG']['tl_chapter']['delete'] = array('Buch/Kapitel löschen', 'Buch/Kapitel ID %s löschen');
+$GLOBALS['TL_LANG']['tl_chapter']['new']        = array('Neues Buch/Kapitel', 'Ein neues Buch/Kapitel anlegen');
+$GLOBALS['TL_LANG']['tl_chapter']['show']       = array('Buchdetails/Kapiteldetails', 'Details des Buches/Kapitels ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_chapter']['edit']       = array('Buch/Kapitel bearbeiten', 'Buch/Kapitel ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_chapter']['cut']        = array('Buch/Kapitel verschieben', 'Buch/Kapitel ID %s verschieben');
+$GLOBALS['TL_LANG']['tl_chapter']['copy']       = array('Buch/Kapitel duplizieren', 'Buch/Kapitel ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_chapter']['copyChilds'] = array('Buch/Kapitel mit Unterkapiteln duplizieren', 'Buch/Kapitel ID %s inklusive Unterkapiteln duplizieren');
+$GLOBALS['TL_LANG']['tl_chapter']['delete']     = array('Buch/Kapitel löschen', 'Buch/Kapitel ID %s löschen');
+$GLOBALS['TL_LANG']['tl_chapter']['toggle']     = array('Buch/Kapitel veröffentlichen/unveröffentlichen', 'Buch/Kapitel ID %s veröffentlichen/unveröffentlichen');
