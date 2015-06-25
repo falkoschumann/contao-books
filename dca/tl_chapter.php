@@ -41,9 +41,10 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
     (
         'sorting'           => array
         (
-            'mode'        => 5,
-            'icon'        => 'pagemounts.gif',
-            'panelLayout' => 'filter,search'
+            'mode'                  => 5,
+            'icon'                  => 'pagemounts.gif',
+            'paste_button_callback' => array('tl_chapter', 'pasteChapter'),
+            'panelLayout'           => 'filter,search'
         ),
         'label'             => array
         (
@@ -292,6 +293,60 @@ class tl_chapter extends Backend
                 $GLOBALS['TL_DCA']['tl_chapter']['fields']['type']['default'] = 'root';
             }
         }
+    }
+
+
+    /**
+     * Return the paste chapter button.
+     *
+     * @param \DataContainer
+     * @param array
+     * @param string
+     * @param boolean
+     * @param array
+     * @return string
+     */
+    public function pasteChapter(DataContainer $dc, $row, $table, $cr, $arrClipboard = null)
+    {
+        $disablePA = false;
+        $disablePI = false;
+
+        // Disable all buttons if there is a circular reference
+        if ($arrClipboard !== false && ($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id']) || $arrClipboard['mode'] == 'cutAll' && ($cr == 1 || in_array($row['id'],
+                        $arrClipboard['id'])))
+        ) {
+            $disablePA = true;
+            $disablePI = true;
+        }
+
+        // Prevent adding non-root chapters on top-level
+        if (Input::get('mode') != 'create' && $row['pid'] == 0) {
+            $objChapter = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")->limit(1)->execute(Input::get('id'));
+
+            if ($objChapter->type != 'root') {
+                $disablePA = true;
+
+                if ($row['id'] == 0) {
+                    $disablePI = true;
+                }
+            }
+        }
+
+        $return = '';
+
+        // Return the buttons
+        $imagePasteAfter = Image::getHtml('pasteafter.gif',
+            sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']));
+        $imagePasteInto = Image::getHtml('pasteinto.gif',
+            sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
+
+        if ($row['id'] > 0) {
+            $return = $disablePA ? Image::getHtml('pasteafter_.gif') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1],
+                    $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+        }
+
+        return $return . ($disablePI ? Image::getHtml('pasteinto_.gif') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1],
+                $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
     }
 
 
