@@ -95,23 +95,21 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
                 'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['cut'],
                 'href'       => 'act=paste&amp;mode=cut',
                 'icon'       => 'cut.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_chapter', 'cutPage')
+                'attributes' => 'onclick="Backend.getScrollOffset()"'
             ),
             'delete'     => array
             (
                 'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
-//                'button_callback' => array('tl_chapter', 'deletePage')
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
             ),
             'toggle'     => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['toggle'],
-                'icon'       => 'visible.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-//                'button_callback' => array('tl_chapter', 'toggleIcon')
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['toggle'],
+                'icon'            => 'visible.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                'button_callback' => array('tl_chapter', 'toggleIcon')
             ),
             'show'       => array
             (
@@ -445,6 +443,68 @@ class tl_chapter extends Backend
 
         return $objSubchapters->numRows ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
                 $label) . '</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+    }
+
+
+    /**
+     * Return the "toggle visibility" button.
+     *
+     * @param array
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @return string
+     */
+    public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+    {
+        if (strlen(Input::get('tid'))) {
+            $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+            $this->redirect($this->getReferer());
+        }
+
+        $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+
+        if (!$row['published']) {
+            $icon = 'invisible.gif';
+        }
+
+        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+            $label) . '</a> ';
+    }
+
+
+    /**
+     * Disable/enable a chapter.
+     *
+     * @param integer
+     * @param boolean
+     * @param \DataContainer
+     */
+    public function toggleVisibility($intId, $blnVisible, DataContainer $dc = null)
+    {
+        $objVersions = new Versions('tl_chapter', $intId);
+        $objVersions->initialize();
+
+        // Trigger the save_callback
+        if (is_array($GLOBALS['TL_DCA']['tl_chapter']['fields']['published']['save_callback'])) {
+            foreach ($GLOBALS['TL_DCA']['tl_chapter']['fields']['published']['save_callback'] as $callback) {
+                if (is_array($callback)) {
+                    $this->import($callback[0]);
+                    $blnVisible = $this->$callback[0]->$callback[1]($blnVisible, ($dc ?: $this));
+                } elseif (is_callable($callback)) {
+                    $blnVisible = $callback($blnVisible, ($dc ?: $this));
+                }
+            }
+        }
+
+        // Update the database
+        $this->Database->prepare("UPDATE tl_chapter SET tstamp=" . time() . ", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")->execute($intId);
+
+        $objVersions->create();
+        $this->log('A new version of record "tl_chapter.id=' . $intId . '" has been created' . $this->getParentEntries('tl_chapter',
+                $intId), __METHOD__, TL_GENERAL);
     }
 
 }
