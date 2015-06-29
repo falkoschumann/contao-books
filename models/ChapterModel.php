@@ -7,7 +7,7 @@
  * Released under the terms of the MIT License (MIT).
  */
 
-namespace Muspellheim;
+namespace Muspellheim\Book;
 
 
 /**

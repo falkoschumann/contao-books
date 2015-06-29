@@ -11,7 +11,7 @@
 /**
  * Namespace
  */
-namespace Muspellheim;
+namespace Muspellheim\Book;
 
 
 /**

@@ -13,7 +13,7 @@
  */
 ClassLoader::addNamespaces(array
 (
-	'Muspellheim',
+	'Muspellheim\Book',
 ));
 
 
@@ -23,10 +23,10 @@ ClassLoader::addNamespaces(array
 ClassLoader::addClasses(array
 (
 	// Elements
-	'Muspellheim\ContentBook' => 'system/modules/books/elements/ContentBook.php',
+	'Muspellheim\Book\ContentBook' => 'system/modules/books/elements/ContentBook.php',
 
 	// Models
-	'Muspellheim\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
+	'Muspellheim\Book\ChapterModel'   => 'system/modules/books/models/ChapterModel.php',
 ));
 
 
