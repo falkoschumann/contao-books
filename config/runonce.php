@@ -83,11 +83,34 @@ class BooksRunonceJob extends \Controller
     private function upgradeBooks() {
         $book = $this->Database->execute("SELECT * FROM tl_book");
         while ($book->next()) {
+            // TODO Testcode entfernen
+            //if ($book->id != 847) continue;
+
             $this->log("insert book " . $book->title, __FUNCTION__, TL_GENERAL);
             $statement = $this->Database->prepare("INSERT INTO tl_chapter (tstamp, title, type, subtitle, author, language, tags, published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $statement->execute($book->tstamp, $book->title, "root", $book->subtitle, $book->author, $book->language, $book->category, $book->published);
-            $this->log("book with id " . $statement->insertId . " inserted", __FUNCTION__, TL_GENERAL);
+            $book_id = $statement->insertId;
+            $this->log("book with id " . $book_id . " inserted", __FUNCTION__, TL_GENERAL);
+
+            $chapter = $this->Database->prepare("SELECT * FROM tl_book_chapter WHERE pid=?")->execute($book->id);
+            while ($chapter->next()) {
+                $this->log("add chapter " . $chapter->title . " to book " . $book->title, __FUNCTION__, TL_GENERAL);
+                $statement = $this->Database->prepare("INSERT INTO tl_chapter (pid, sorting, tstamp, title, alias, type, hide, published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $statement->execute($book_id, $chapter->sorting, $chapter->tstamp, $this->getChapterTitle($chapter), $chapter->alias, "regular", !$chapter->show_in_toc, $chapter->published);
+                $this->log("chapter with id " . $statement->insertId . " added to book " . $book->title, __FUNCTION__, TL_GENERAL);
+            }
         }
+    }
+
+    /**
+     * @param \Database\Result $chapter
+     * @return string
+     */
+    private function getChapterTitle($chapter)
+    {
+        $arrHeadline = deserialize($chapter->title);
+        $headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+        return $headline;
     }
 
 }
