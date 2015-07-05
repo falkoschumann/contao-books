@@ -31,11 +31,10 @@ class BooksRunonceJob extends \Controller
 
     public function run()
     {
-        $this->log("call books runonce", __FUNCTION__, TL_GENERAL);
-
         if ($this->needUpgrade()) {
             $this->createChapterTable();
-            $this->upgradeBooks();
+            $books = new BooksRunonce();
+            $books->upgrade();
         }
     }
 
@@ -43,9 +42,11 @@ class BooksRunonceJob extends \Controller
     /**
      * @return boolean
      */
-    private function needUpgrade() {
+    private function needUpgrade()
+    {
         return !$this->Database->tableExists('tl_chapter') && $this->Database->tableExists('tl_book') && $this->Database->tableExists('tl_book_chapter');
     }
+
 
     private function createChapterTable()
     {
@@ -80,37 +81,154 @@ class BooksRunonceJob extends \Controller
         );
     }
 
-    private function upgradeBooks() {
+}
+
+class BooksRunonce extends \Controller
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->import('Database');
+    }
+
+
+    public function upgrade()
+    {
         $book = $this->Database->execute("SELECT * FROM tl_book");
         while ($book->next()) {
-            // TODO Testcode entfernen
-            //if ($book->id != 847) continue;
-
-            $this->log("insert book " . $book->title, __FUNCTION__, TL_GENERAL);
             $statement = $this->Database->prepare("INSERT INTO tl_chapter (tstamp, title, type, subtitle, author, language, tags, published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $statement->execute($book->tstamp, $book->title, "root", $book->subtitle, $book->author, $book->language, $book->category, $book->published);
-            $book_id = $statement->insertId;
-            $this->log("book with id " . $book_id . " inserted", __FUNCTION__, TL_GENERAL);
+            $statement->execute(
+                $book->tstamp,
+                $book->title,
+                "root",
+                $book->subtitle,
+                $book->author,
+                $book->language,
+                $book->category,
+                $book->published
+            );
+            $bookId = $statement->insertId;
+            $chapters = $this->Database->prepare("SELECT * FROM tl_book_chapter WHERE pid=? ORDER BY sorting")->execute($book->id);
+            $chapters = new ChaptersRunonce($bookId, $chapters);
+            $chapters->upgrade();
+        }
+    }
 
-            $chapter = $this->Database->prepare("SELECT * FROM tl_book_chapter WHERE pid=?")->execute($book->id);
-            while ($chapter->next()) {
-                $this->log("add chapter " . $chapter->title . " to book " . $book->title, __FUNCTION__, TL_GENERAL);
-                $statement = $this->Database->prepare("INSERT INTO tl_chapter (pid, sorting, tstamp, title, alias, type, hide, published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                $statement->execute($book_id, $chapter->sorting, $chapter->tstamp, $this->getChapterTitle($chapter), $chapter->alias, "regular", !$chapter->show_in_toc, $chapter->published);
-                $this->log("chapter with id " . $statement->insertId . " added to book " . $book->title, __FUNCTION__, TL_GENERAL);
+}
+
+class ChaptersRunonce extends \Controller
+{
+
+    /**
+     * @var array path of a chapter in the book. The first element is the books
+     * id, the last element is id of current parent chapter.
+     */
+    private $chapterTreePath = array();
+
+    /**
+     * @var \Database\Result
+     */
+    private $chapters;
+
+
+    public function __construct($bookId, $chapters)
+    {
+        parent::__construct();
+
+        $this->chapterTreePath[] = $bookId;
+        $this->chapters = $chapters;
+
+        $this->import('Database');
+    }
+
+
+    public function upgrade()
+    {
+        while ($this->chapters->next()) {
+            $statement = $this->Database->prepare("INSERT INTO tl_chapter (pid, sorting, tstamp, title, alias, type, hide, published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $statement->execute(
+                $this->getPid(),
+                $this->chapters->sorting,
+                $this->chapters->tstamp,
+                $this->getChapterTitle(),
+                $this->chapters->alias, "regular",
+                !$this->chapters->show_in_toc,
+                $this->chapters->published
+            );
+            $chapterId = $statement->insertId;
+            $this->updateChapterTreePath($chapterId);
+        }
+    }
+
+
+    /**
+     * @return int
+     */
+    private function getPid()
+    {
+        return $this->chapterTreePath[$this->getChapterTreeLevel() - 1];
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getChapterTitle()
+    {
+        $arrHeadline = deserialize($this->chapters->title);
+        $headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
+        return $headline;
+    }
+
+
+    /**
+     * @param int $chapterId id of current chapter.
+     */
+    private function updateChapterTreePath($chapterId)
+    {
+        $level = static::getChapterTreeLevel();
+        $pathSize = count($this->chapterTreePath) - 1;
+        if ($level > $pathSize) {
+            $this->chapterTreePath[] = $chapterId;
+        }
+        if ($level == $pathSize) {
+            $this->chapterTreePath[$pathSize] = $chapterId;
+        }
+        if ($level < $pathSize) {
+            while ($level < $pathSize) {
+                array_pop($this->chapterTreePath);
+                $pathSize--;
+                $this->chapterTreePath[$pathSize] = $chapterId;
             }
         }
     }
 
+
     /**
-     * @param \Database\Result $chapter
-     * @return string
+     * @return int
      */
-    private function getChapterTitle($chapter)
+    private
+    function getChapterTreeLevel()
     {
-        $arrHeadline = deserialize($chapter->title);
-        $headline = is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-        return $headline;
+        $arrHeadline = deserialize($this->chapters->title);
+        $hl = is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+        switch ($hl) {
+            case 'h1':
+                return 1;
+            case 'h2':
+                return 2;
+            case 'h3':
+                return 3;
+            case 'h4':
+                return 4;
+            case 'h5':
+                return 5;
+            case 'h6':
+                return 6;
+            default:
+                throw new \LogicException("unreachable code");
+        }
     }
 
 }
