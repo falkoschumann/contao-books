@@ -24,6 +24,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         'onload_callback'  => array
         (
             array('tl_chapter', 'setRootType'),
+            array('tl_chapter', 'applyFilter'),
         ),
         'sql'              => array
         (
@@ -72,9 +73,15 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         (
             'edit'       => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_chapter']['edit'],
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['edit'],
+                'icon'            => 'edit.gif',
+                'button_callback' => array('tl_chapter', 'editChapters')
+            ),
+            'editheader' => array
+            (
+                'label' => &$GLOBALS['TL_LANG']['tl_chapter']['editheader'],
                 'href'  => 'act=edit',
-                'icon'  => 'edit.gif'
+                'icon'  => 'header.gif',
             ),
             'copy'       => array
             (
@@ -293,6 +300,37 @@ class tl_chapter extends Backend
                 $GLOBALS['TL_DCA']['tl_chapter']['fields']['type']['default'] = 'root';
             }
         }
+    }
+
+
+    /**
+     * Apply a filter to single (root) chapter if set.
+     *
+     * @param \DataContainer
+     */
+    public function applyFilter(DataContainer $dc)
+    {
+        if (Input::get('book_id') !== null) {
+            $GLOBALS['TL_DCA']['tl_chapter']['list']['sorting']['root'] = array(Input::get('book_id'));
+        }
+    }
+
+
+    /**
+     * Return the edit chapters button.
+     *
+     * @param array
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @param string
+     * @return string
+     */
+    public function editChapters($row, $href, $label, $title, $icon, $attributes)
+    {
+        return '<a href="' . $this->addToUrl($href . '&amp;book_id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+            $label) . '</a> ';
     }
 
 
