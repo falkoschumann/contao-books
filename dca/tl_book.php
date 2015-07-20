@@ -15,8 +15,8 @@
  * Data container array for table `tl_book`.
  *
  * Store books meta data like title and author. The books chapters are stored in
- * `tl_book_chapter`. The chapter table is not a child table because pid column
- * is used for the chapter tree. Instead a root chapter is defined.
+ * `tl_chapter`. The chapter table is not a child table because pid column is
+ * used for the chapter tree. Instead a root chapter is defined.
  *
  * The books are shown as list view.
  */
@@ -32,13 +32,12 @@ $GLOBALS['TL_DCA']['tl_book'] = array
         (
             'keys' => array
             (
-                'id'    => 'primary',
-                'alias' => 'index'
+                'id' => 'primary'
             )
         ),
         'onsubmit_callback' => array
         (
-            array('tl_book', 'createOrUpdateRootChapter')
+            array('tl_book', 'createRootChapterIfNotExists')
         ),
         'ondelete_callback' => array
         (
@@ -120,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array(''),
-        'default'      => '{book_legend},title,subtitle,alias,author;{meta_legend:hide},year,place,language,tags;{publish_legend},published'
+        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published'
     ),
     // Fields
     'fields'   => array
@@ -144,33 +143,6 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'inputType' => 'text',
             'eval'      => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
-        ),
-        'alias'        => array
-        (
-            'label'         => &$GLOBALS['TL_LANG']['tl_book']['alias'],
-            'exclude'       => true,
-            'search'        => true,
-            'inputType'     => 'text',
-            'eval'          => array(
-                'rgxp'              => 'alnum',
-                'unique'            => true,
-                'doNotCopy'         => true,
-                'spaceToUnderscore' => true,
-                'maxlength'         => 128,
-                'tl_class'          => 'w50'
-            ),
-            'sql'           => "varbinary(128) NOT NULL default ''",
-            'save_callback' => array
-            (
-                array('tl_book', 'generateAlias')
-            )
-        ),
-        'root_chapter' => array
-        (
-            'label'      => &$GLOBALS['TL_LANG']['tl_book']['root_chapter'],
-            'sql'        => "int(10) unsigned NOT NULL default '0'",
-            'foreignKey' => 'tl_book_chapter.id',
-            'relation'   => array('type' => 'hasOne', 'load' => 'lazy')
         ),
         'subtitle'     => array
         (
@@ -231,6 +203,14 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
+        'cssID'        => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_article']['cssID'],
+            'exclude'   => true,
+            'inputType' => 'text',
+            'eval'      => array('multiple' => true, 'size' => 2, 'tl_class' => 'w50 clr'),
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ),
         'published'    => array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_book']['published'],
@@ -240,6 +220,13 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'eval'      => array('tl_class' => 'w50'),
             'sql'       => "char(1) NOT NULL default ''"
         ),
+        'root_chapter' => array
+        (
+            'label'      => &$GLOBALS['TL_LANG']['tl_book']['root_chapter'],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'foreignKey' => 'tl_chapter.id',
+            'relation'   => array('type' => 'hasOne', 'load' => 'lazy')
+        )
     )
 );
 
@@ -292,7 +279,7 @@ class tl_book extends Backend
      */
     public function editChapters($row, $href, $label, $title, $icon)
     {
-        $href = $this->addToUrl($href . '&amp;table=tl_book_chapter&amp;book_id=' . $row['id']);
+        $href = $this->addToUrl($href . '&amp;table=tl_chapter&amp;book_id=' . $row['id']);
         return '<a href="' . $href . '" title="' . specialchars($title) . '">' . Image::getHtml($icon,
             $label) . '</a> ';
     }
@@ -344,67 +331,21 @@ class tl_book extends Backend
 
 
     /**
-     * This `save_callback` generate the book alias if it does not exist.
-     *
-     * @param mixed         $value current alias, can maybe be empty.
-     * @param DataContainer $dc    the current data container.
-     * @return mixed the new alias.
-     * @throws Exception if alias ist not auto generated and already exists.
-     */
-    public function generateAlias($value, DataContainer $dc)
-    {
-        $autoAlias = false;
-
-        // Generate alias if there is none
-        if (!strlen($value)) {
-            $autoAlias = true;
-            $value = standardize(String::restoreBasicEntities($dc->activeRecord->title));
-        }
-
-        $objAlias = $this->Database->prepare("SELECT id FROM tl_book WHERE alias=?")->execute($value);
-
-        // Check whether the books alias exists
-        if ($objAlias->numRows > 1 && !$autoAlias) {
-            throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $value));
-        }
-
-        // Add ID to alias
-        if ($objAlias->numRows && $autoAlias) {
-            $value .= '-' . $dc->id;
-        }
-
-        return $value;
-    }
-
-
-    /**
      * This `onsubmit_callback` create or update the root chapter of a book.
      *
      * @param \DataContainer $dc
      */
-    public function createOrUpdateRootChapter(DataContainer $dc)
+    public function createRootChapterIfNotExists(DataContainer $dc)
     {
         $rootChapterExists = $dc->activeRecord->root_chapter;
         if ($rootChapterExists) {
-            $rootChapter = \Muspellheim\Books\BookChapterModel::findByPk($dc->activeRecord->root_chapter);
-        } else {
-            $rootChapter = new \Muspellheim\Books\BookChapterModel();
+            return;
         }
 
-        $rootChapter->title = $dc->activeRecord->title;
-        if ($dc->activeRecord->subtitle) {
-            $rootChapter->title .= '. ' . $dc->activeRecord->subtitle;
-        }
-        $rootChapter->hide = true;
-        $rootChapter->tstamp = time();
-        $rootChapter->type = 'root';
-        $rootChapter->published = $dc->activeRecord->published;
+        $rootChapter = new \Muspellheim\Books\BookChapterModel();
         $rootChapter = $rootChapter->save();
 
-        if (!$rootChapterExists) {
-            $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($rootChapter->id,
-                $dc->id);
-        }
+        $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($rootChapter->id, $dc->id);
     }
 
 
@@ -440,7 +381,7 @@ class tl_book extends Backend
     {
         $this->log('Copy ' . $bookTable->table . ' ' . $bookTable->id . ' to ' . $newBookId, __METHOD__, TL_GENERAL);
         $chapterIds = \Muspellheim\Books\BookChapterModel::findChapterIdsByBookIds($bookTable->id);
-        $chapterTable = new DC_Table('tl_book_chapter');
+        $chapterTable = new DC_Table('tl_chapter');
         foreach ($chapterIds as $id) {
             $this->log('Copy chapter ' . $id, __METHOD__, TL_GENERAL);
             $chapterTable->intId = $id;

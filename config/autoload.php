@@ -16,7 +16,7 @@
  */
 ClassLoader::addNamespaces(array
 (
-	'Muspellheim\Books',
+    'Muspellheim\Books',
 ));
 
 
@@ -25,19 +25,17 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Classes
-	'Muspellheim\Books\BaseBooks'        => 'system/modules/books/classes/BaseBooks.php',
-	'Muspellheim\Books\Renderer'         => 'system/modules/books/classes/Renderer.php',
-	'Muspellheim\Books\BookRenderer'     => 'system/modules/books/classes/BookRenderer.php',
-	'Muspellheim\Books\ChapterRenderer'  => 'system/modules/books/classes/ChapterRenderer.php',
-	'Muspellheim\Books\BookInsertTags'   => 'system/modules/books/classes/BookInsertTags.php',
-
-	// Elements
-	'Muspellheim\Books\ContentBook'      => 'system/modules/books/elements/ContentBook.php',
-
-	// Models
-	'Muspellheim\Books\BookModel'        => 'system/modules/books/models/BookModel.php',
-	'Muspellheim\Books\BookChapterModel' => 'system/modules/books/models/BookChapterModel.php',
+    // Classes
+    'Muspellheim\Books\BaseBooks'       => 'system/modules/books/classes/BaseBooks.php',
+    'Muspellheim\Books\Renderer'        => 'system/modules/books/classes/Renderer.php',
+    'Muspellheim\Books\BookRenderer'    => 'system/modules/books/classes/BookRenderer.php',
+    'Muspellheim\Books\ChapterRenderer' => 'system/modules/books/classes/ChapterRenderer.php',
+    'Muspellheim\Books\BookInsertTags'  => 'system/modules/books/classes/BookInsertTags.php',
+    // Elements
+    'Muspellheim\Books\ContentBook'     => 'system/modules/books/elements/ContentBook.php',
+    // Models
+    'Muspellheim\Books\BookModel'       => 'system/modules/books/models/BookModel.php',
+    'Muspellheim\Books\ChapterModel'    => 'system/modules/books/models/ChapterModel.php',
 ));
 
 
@@ -46,7 +44,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'ce_book'       => 'system/modules/books/templates',
-	'books_book'    => 'system/modules/books/templates',
-	'books_chapter' => 'system/modules/books/templates',
+    'ce_book'       => 'system/modules/books/templates',
+    'books_book'    => 'system/modules/books/templates',
+    'books_chapter' => 'system/modules/books/templates',
 ));

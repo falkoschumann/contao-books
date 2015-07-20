@@ -15,7 +15,7 @@ namespace Muspellheim\Books;
 
 
 /**
- * The model for book chapter.
+ * The model for chapter.
  *
  * @copyright  2015 Falko Schumann
  * @author     Falko Schumann <falko.schumann@muspellheim.de>
@@ -30,7 +30,7 @@ namespace Muspellheim\Books;
  * @property boolean $book_id        Die ID des Buches zu dem das Kapitel gehört
  * @property boolean $show_in_toc    Das Kapitel im Inhaltsverzeichnis anzeigen
  */
-class BookChapterModel extends \Model
+class ChapterModel extends \Model
 {
 
     /**
@@ -38,7 +38,7 @@ class BookChapterModel extends \Model
      *
      * @var string
      */
-    protected static $strTable = 'tl_book_chapter';
+    protected static $strTable = 'tl_chapter';
 
 
     public function __get($key)
