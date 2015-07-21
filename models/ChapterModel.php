@@ -26,6 +26,7 @@ namespace Muspellheim\Books;
  * @property int     $tstamp         Das Änderungsdatum der Metainformationen des Kapitels
  * @property string  $title          Der Titel des Kapitels
  * @property string  $alias          Der Kapitelalias
+ * @property string  $type           Der Kapiteltyp
  * @property boolean $published      Flag ob das Kapitel veröffentlicht ist
  * @property boolean $book_id        Die ID des Buches zu dem das Kapitel gehört
  * @property boolean $show_in_toc    Das Kapitel im Inhaltsverzeichnis anzeigen
@@ -124,6 +125,21 @@ class ChapterModel extends \Model
             'order' => 'sorting'
         );
         return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
+    }
+
+    /**
+     * The chapters label contains the title; tags added to the title if present.
+     *
+     * @return string the book label.
+     */
+    public function label()
+    {
+        $result = $this->title;
+        if ($this->tags) {
+            $tags = '[' . implode('] [', preg_split('/\s*,\s*/', $this->tags)) . ']';
+            $result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">' . $tags . '</span>';
+        }
+        return $result;
     }
 
 }

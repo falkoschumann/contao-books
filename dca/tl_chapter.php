@@ -193,6 +193,12 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
                 array('tl_chapter', 'generateAlias')
             )
         ),
+        'type'      => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['type'],
+            'default' => 'regular',
+            'sql'     => "varchar(32) NOT NULL default ''"
+        ),
         'tags'      => array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['tags'],
@@ -326,6 +332,9 @@ class tl_chapter extends Backend
      */
     public function chapterLabel($row, $label, DataContainer $dc = null, $imageAttribute = '', $blnReturnImage = false)
     {
+        $chapter = new ChapterModel();
+        $chapter->setRow($row);
+
         $image = $this::getChapterStatusIcon((object)$row);
         $image = \Image::getHtml($image, '', $imageAttribute);
 
@@ -335,13 +344,12 @@ class tl_chapter extends Backend
         }
 
         // Mark root pages
-        if ($row['type'] == 'root' || Input::get('do') == 'article') {
-            $label = '<strong>' . $label . '</strong>';
-        }
-
-        if ($row['tags']) {
-            $label .= ' <span style="font-weight:bold;padding-left:20px;float:right;">[' . implode('] [',
-                    preg_split('/\s*,\s*/', $row['tags'])) . ']</span>';
+        if ($row['type'] == 'root') {
+            $this->log("search book with root_chapter=" . $chapter->id, __FUNCTION__, TL_GENERAL);
+            $book = Muspellheim\Books\BookModel::findByRootChapter($chapter->id);
+            $label = '<strong>' . $book->label() . '</strong>';
+        } else {
+            $label = $chapter->label();
         }
 
         // Return the image

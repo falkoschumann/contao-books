@@ -243,27 +243,16 @@ class tl_book extends Backend
 {
 
     /**
-     * This `label_callback` add subtitle, author and tags if present to the
-     * default label.
+     * This `label_callback` return the label of a book.
      *
-     * @param array  $row   a books data row.
-     * @param string $label the default label, usually the books title.
-     * @return string the new label.
+     * @param array $row a data row for a book.
+     * @return string the book label.
      */
-    public function bookLabel($row, $label)
+    public function bookLabel($row)
     {
-        $result = $label;
-        if ($row['subtitle']) {
-            $result .= '. ' . $row['subtitle'];
-        }
-        if ($row['author']) {
-            $result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $row['author'] . ']</span>';
-        }
-        if ($row['tags']) {
-            $tags = '[' . implode('] [', preg_split('/\s*,\s*/', $row['tags'])) . ']';
-            $result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">' . $tags . '</span>';
-        }
-        return $result;
+        $book = new BookModel();
+        $book->setRow($row);
+        return $book->label();
     }
 
 
@@ -337,12 +326,14 @@ class tl_book extends Backend
      */
     public function createRootChapterIfNotExists(DataContainer $dc)
     {
-        $rootChapterExists = $dc->activeRecord->root_chapter;
-        if ($rootChapterExists) {
+        $rootChapterId = $dc->activeRecord->root_chapter;
+        if ($rootChapterId > 0) {
             return;
         }
 
         $rootChapter = new \Muspellheim\Books\ChapterModel();
+        $rootChapter->published = true;
+        $rootChapter->type = 'root';
         $rootChapter = $rootChapter->save();
 
         $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($rootChapter->id, $dc->id);
@@ -360,7 +351,7 @@ class tl_book extends Backend
             return;
         }
 
-        $rootChapter = \Muspellheim\Books\BookChapterModel::findByPk($dc->activeRecord->root_chapter);
+        $rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->activeRecord->root_chapter);
         if ($rootChapter) {
             $rootChapter->delete();
             // TODO test if child chapters are already deleted
@@ -380,13 +371,13 @@ class tl_book extends Backend
     public function copyChapters($newBookId, DC_Table $bookTable)
     {
         $this->log('Copy ' . $bookTable->table . ' ' . $bookTable->id . ' to ' . $newBookId, __METHOD__, TL_GENERAL);
-        $chapterIds = \Muspellheim\Books\BookChapterModel::findChapterIdsByBookIds($bookTable->id);
+        $chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($bookTable->id);
         $chapterTable = new DC_Table('tl_chapter');
         foreach ($chapterIds as $id) {
             $this->log('Copy chapter ' . $id, __METHOD__, TL_GENERAL);
             $chapterTable->intId = $id;
             $newChapterId = $chapterTable->copy(true);
-            $chapter = \Muspellheim\Books\BookChapterModel::findByPk($newChapterId);
+            $chapter = \Muspellheim\Books\ChapterModel::findByPk($newChapterId);
             $chapter->book_id = $newBookId;
             $chapter->save();
         }

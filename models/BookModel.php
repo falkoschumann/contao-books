@@ -61,4 +61,36 @@ class BookModel extends \Model
         return static::findOneBy($arrColumns, $id);
     }
 
+    /**
+     * @param int rootChapterId
+     * @return BookModel|null
+     */
+    public static function findByRootChapter($rootChapterId)
+    {
+        $t = static::$strTable;
+        $arrColumns = array("$t.root_chapter=?");
+        return static::findOneBy($arrColumns, $rootChapterId);
+    }
+
+    /**
+     * The books label contains the title; subtitle, author and tags added to the title if present.
+     *
+     * @return string the book label.
+     */
+    public function label()
+    {
+        $result = $this->title;
+        if ($this->subtitle) {
+            $result .= '. ' . $this->subtitle;
+        }
+        if ($this->author) {
+            $result .= ' <span style="color:#b3b3b3;padding-left:3px">[' . $this->author . ']</span>';
+        }
+        if ($this->tags) {
+            $tags = '[' . implode('] [', preg_split('/\s*,\s*/', $this->tags)) . ']';
+            $result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">' . $tags . '</span>';
+        }
+        return $result;
+    }
+
 }
