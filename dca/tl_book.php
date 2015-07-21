@@ -342,7 +342,7 @@ class tl_book extends Backend
             return;
         }
 
-        $rootChapter = new \Muspellheim\Books\BookChapterModel();
+        $rootChapter = new \Muspellheim\Books\ChapterModel();
         $rootChapter = $rootChapter->save();
 
         $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($rootChapter->id, $dc->id);

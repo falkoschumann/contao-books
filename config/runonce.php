@@ -236,6 +236,6 @@ class ChapterRunonce extends \Controller
 
 }
 
-
-$objBooksRunonceJob = new BooksRunonceJob();
-$objBooksRunonceJob->run();
+// FIXME run runonce job
+//$objBooksRunonceJob = new BooksRunonceJob();
+//$objBooksRunonceJob->run();
