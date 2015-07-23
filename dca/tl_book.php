@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array(''),
-        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssClass;{publish_legend},published'
+        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssID;{publish_legend},published'
     ),
     // Fields
     'fields'   => array

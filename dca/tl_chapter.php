@@ -89,37 +89,42 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
             ),
             'editheaders' => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_chapter']['editheader'],
-                'href'  => 'act=edit',
-                'icon'  => 'header.gif'
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['editheader'],
+                'href'            => 'act=edit',
+                'icon'            => 'header.gif',
+                'button_callback' => array('tl_chapter', 'editHeaders')
             ),
             'copy'        => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['copy'],
-                'href'       => 'act=paste&amp;mode=copy',
-                'icon'       => 'copy.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset()"'
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['copy'],
+                'href'            => 'act=paste&amp;mode=copy',
+                'icon'            => 'copy.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset()"',
+                'button_callback' => array('tl_chapter', 'copyChapter')
             ),
             'copyChilds'  => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['copyChilds'],
-                'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
-                'icon'       => 'copychilds.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset()"'
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['copyChilds'],
+                'href'            => 'act=paste&amp;mode=copy&amp;childs=1',
+                'icon'            => 'copychilds.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset()"',
+                'button_callback' => array('tl_chapter', 'copyChapterWithSubchapters')
             ),
             'cut'         => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['cut'],
-                'href'       => 'act=paste&amp;mode=cut',
-                'icon'       => 'cut.gif',
-                'attributes' => 'onclick="Backend.getScrollOffset()"'
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['cut'],
+                'href'            => 'act=paste&amp;mode=cut',
+                'icon'            => 'cut.gif',
+                'attributes'      => 'onclick="Backend.getScrollOffset()"',
+                'button_callback' => array('tl_chapter', 'cutChapter')
             ),
             'delete'      => array
             (
-                'label'      => &$GLOBALS['TL_LANG']['tl_chapter']['delete'],
-                'href'       => 'act=delete',
-                'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+                'label'           => &$GLOBALS['TL_LANG']['tl_chapter']['delete'],
+                'href'            => 'act=delete',
+                'icon'            => 'delete.gif',
+                'attributes'      => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
+                'button_callback' => array('tl_chapter', 'deleteChapter')
             ),
             'toggle'      => array
             (
@@ -141,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
     (
         '__selector__' => array('type'),
         'default'      => '',
-        'regular'      => '{chapter_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssClass,hide;{publish_legend},published'
+        'regular'      => '{chapter_legend},title,alias;{meta_legend:hide},tags;{expert_legend:hide},cssID,hide;{publish_legend},published'
     ),
     // Fields
     'fields'   => array
@@ -195,7 +200,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         ),
         'type'      => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['type'],
+            'label'   => &$GLOBALS['TL_LANG']['tl_chapter']['type'],
             'default' => 'regular',
             'sql'     => "varchar(32) NOT NULL default ''"
         ),
@@ -208,7 +213,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
             'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
             'sql'       => "varchar(255) NOT NULL default ''"
         ),
-        'cssID'        => array
+        'cssID'     => array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_article']['cssID'],
             'exclude'   => true,
@@ -389,6 +394,123 @@ class tl_chapter extends Backend
 
 
     /**
+     * Return the copy chapter button.
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     * @param string $table
+     * @return string
+     */
+    public function editHeaders($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        // TODO edit book headers for root chapter
+
+        $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ';
+        return $row['type'] === 'root' ? $disabled : $enabled;
+    }
+
+
+    /**
+     * Return the copy chapter button.
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     * @param string $table
+     * @return string
+     */
+    public function copyChapter($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        if ($GLOBALS['TL_DCA'][$table]['config']['closed']) {
+            return '';
+        }
+
+        $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ';
+        return $row['type'] === 'root' ? $disabled : $enabled;
+    }
+
+
+    /**
+     * Return the copy chapter with subchapters button.
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     * @param string $table
+     * @return string
+     */
+    public function copyChapterWithSubchapters($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        if ($GLOBALS['TL_DCA'][$table]['config']['closed']) {
+            return '';
+        }
+
+        $objSubchapters = $this->Database->prepare("SELECT * FROM tl_chapter WHERE pid=?")->limit(1)->execute($row['id']);
+
+        $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ';
+        return ($objSubchapters->numRows && $row['type'] === 'root') ? $disabled : $enabled;
+    }
+
+
+    /**
+     * Return the cut chapter button.
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     * @param string $table
+     * @return string
+     */
+    public function cutChapter($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ';
+        return $row['type'] === 'root' ? $disabled : $enabled;
+    }
+
+
+    /**
+     * Return the delete chapter button.
+     *
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     * @param string $table
+     * @return string
+     */
+    public function deleteChapter($row, $href, $label, $title, $icon, $attributes, $table)
+    {
+        $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
+        $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
+                $label) . '</a> ';
+        return $row['type'] === 'root' ? $disabled : $enabled;
+    }
+
+
+    /**
      * This `button_callback` returns the link to toggle chapter visibility.
      *
      * @param array  $row        a books data row.
@@ -401,6 +523,8 @@ class tl_chapter extends Backend
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
+        // TODO do not toggle visibiity of root or sync state with book
+
         if (strlen($this->Input->get('tid'))) {
             $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
             $this->redirect($this->getReferer());
