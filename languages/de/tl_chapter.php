@@ -14,15 +14,13 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_chapter']['tstamp']    = array('Änderungsdatum', 'Datum und Uhrzeit der letzten Änderung.');
 $GLOBALS['TL_LANG']['tl_chapter']['title']     = array('Titel', 'Bitte geben Sie den Kapiteltitel ein.');
 $GLOBALS['TL_LANG']['tl_chapter']['alias']     = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
 $GLOBALS['TL_LANG']['tl_chapter']['type']      = array('Kapiteltyp');
-$GLOBALS['TL_LANG']['tl_chapter']['published'] = array('Kapitel veröffentlichen', 'Das Kapitel auf der Webseite anzeigen.');
 $GLOBALS['TL_LANG']['tl_chapter']['tags']      = array('Tags', 'Kommagetrennte Liste von Tags für das Kapitel; z.B. "Geprüft", "Unvollständig" oder "in Bearbeitung"');
-$GLOBALS['TL_LANG']['tl_chapter']['book_id']   = array('Buch', 'Das Kapitel gehört zu diesem Buch.');
-$GLOBALS['TL_LANG']['tl_chapter']['hide']      = array('Kapitel im Inhaltsverzeichnis anzeigen', 'Ist das Häckchen nicht gesetzt, erscheint kein Link zum Kapitel im Inhaltsverzeichnis.');
-// TODO type ergänzen
+$GLOBALS['TL_LANG']['tl_chapter']['cssID']     = array('CSS-ID/Klasse', 'Hier können Sie eine ID und beliebig viele Klassen eingeben.');
+$GLOBALS['TL_LANG']['tl_chapter']['hide']      = array('Kapitel im Inhaltsverzeichnis verstecken', 'Ist das Häckchen gesetzt, erscheint kein Link zum Kapitel im Inhaltsverzeichnis.');
+$GLOBALS['TL_LANG']['tl_chapter']['published'] = array('Kapitel veröffentlichen', 'Das Kapitel auf der Webseite anzeigen.');
 
 
 /**
@@ -30,6 +28,7 @@ $GLOBALS['TL_LANG']['tl_chapter']['hide']      = array('Kapitel im Inhaltsverzei
  */
 $GLOBALS['TL_LANG']['tl_chapter']['chapter_legend'] = 'Kapitel';
 $GLOBALS['TL_LANG']['tl_chapter']['meta_legend']    = 'Meta-Informationen';
+$GLOBALS['TL_LANG']['tl_chapter']['expert_legend']  = 'Experten-Einstellungen';
 $GLOBALS['TL_LANG']['tl_chapter']['publish_legend'] = 'Veröffentlichung';
 
 

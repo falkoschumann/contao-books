@@ -215,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         ),
         'cssID'     => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_article']['cssID'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['cssID'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => array('multiple' => true, 'size' => 2, 'tl_class' => 'w50 clr'),
