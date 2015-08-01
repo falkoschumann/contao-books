@@ -146,12 +146,13 @@ class ChapterRunonce extends \Controller
         $this->renameFieldShowInTocToHideAndToogleValue();
         $this->createFieldType();
 
-//        $this->chapter = $this->Database->execute("SELECT * FROM tl_chapter ORDER BY pid, sorting WHERE pid>0");
-//        while ($this->chapter->next()) {
-//            $this->updateChapterTreePath();
-//            $this->updateChapter();
-//            $this->createContentElement();
-//        }
+        $this->chapter = $this->Database->execute("SELECT * FROM tl_chapter WHERE pid>0 ORDER BY pid, sorting");
+        while ($this->chapter->next()) {
+            $this->log("Migrate chapter " . $this->getChapterTitle() . " (". $this->chapter->id . ").", __METHOD__, TL_GENERAL);
+            $this->updateChapterTreePath();
+            $this->updateChapter();
+            $this->createContentElement();
+        }
     }
 
 
@@ -205,18 +206,27 @@ class ChapterRunonce extends \Controller
                 }
             }
         }
+        $this->log("Chapter tree path is " . implode("->", $this->chapterTreePath) . " (" . $level . ").", __METHOD__, TL_GENERAL);
     }
 
 
     private function updateChapter()
     {
-        $this->Database->prepare("UPDATE tl_chapter SET title=?, book_id=?, pid=? WHERE id=?")
-            ->execute($this->getChapterTitle(), $this->chapter->pid, $this->getPid(), $this->chapter->id);
+        $this->log("update chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
+        $pathLength = count($this->chapterTreePath);
+        if ($pathLength > 1) {
+            $this->Database->prepare("UPDATE tl_chapter SET title=?, pid=? WHERE id=?")
+                ->execute($this->getChapterTitle(), $this->getPid(), $this->chapter->id);
+        } else {
+            $this->Database->prepare("UPDATE tl_chapter SET title=? WHERE id=?")
+                ->execute($this->getChapterTitle(), $this->chapter->id);
+        }
     }
 
 
     private function createContentElement()
     {
+        $this->log("create content element for chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
         $this->Database->prepare("INSERT INTO tl_content (pid, ptable, tstamp, type, headline, text) VALUES (?, ?, ?, ?, ?, ?)")
             ->execute($this->chapter->id, 'tl_chapter', $this->chapter->tstamp, 'text', $this->chapter->title, $this->chapter->text);
     }
@@ -239,11 +249,7 @@ class ChapterRunonce extends \Controller
     private function getPid()
     {
         $pathLength = count($this->chapterTreePath);
-        if ($pathLength > 1) {
-            return $this->chapterTreePath[$pathLength - 2];
-        } else {
-            return 0;
-        }
+        return $this->chapterTreePath[$pathLength - 2];
     }
 
 
