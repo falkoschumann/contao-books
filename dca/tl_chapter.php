@@ -38,7 +38,11 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
                 'alias' => 'index'
             )
         ),
-        'backlink'         => 'do=books'
+        'backlink'         => 'do=books',
+        'onload_callback'  => array
+        (
+            array('tl_chapter', 'filterChaptersOfSelectedBook')
+        )
     ),
     // List
     'list'     => array
@@ -241,12 +245,6 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
 );
 
 
-if (Input::get('book_id')) {
-    $book = \Muspellheim\Books\BookModel::findByPk(Input::get('book_id'));
-    $GLOBALS['TL_DCA']['tl_chapter']['list']['sorting']['root'] = array($book->root_chapter);
-}
-
-
 /**
  * Provide miscellaneous methods that are used by the data container array of
  * table `tl_chapter`.
@@ -257,6 +255,15 @@ if (Input::get('book_id')) {
  */
 class tl_chapter extends Backend
 {
+
+    public function filterChaptersOfSelectedBook(DataContainer $dc)
+    {
+        if (Input::get('book_id')) {
+            $book = BookModel::findByPk(Input::get('book_id'));
+            $GLOBALS['TL_DCA']['tl_chapter']['list']['sorting']['root'] = array($book->root_chapter);
+        }
+    }
+
 
     /**
      * This `paste_button_callback` returns the paste chapter button.
