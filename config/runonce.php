@@ -99,11 +99,16 @@ class ChapterRunonce extends \Controller
 {
 
     /**
+     * Each path element is a chapter id. The first path element is a top level chapter. The last path element is the
+     * current chapter.
+     *
      * @var array
      */
     private $chapterTreePath = array();
 
     /**
+     * The current chapter in work.
+     *
      * @var \Database\Result
      */
     private $chapter;
@@ -179,13 +184,9 @@ class ChapterRunonce extends \Controller
     }
 
 
-    /**
-     * Update the path of the current chapter in the table of content tree. Each path element is a chapter id. The first
-     * path element is a top level chapter. The last path element is the current chapter.
-     */
     private function updateChapterTreePath()
     {
-        $level = static::getChapterTreeLevel($this->chapter);
+        $level = $this::getChapterTreeLevel();
         $pathLength = count($this->chapterTreePath);
         if ($level > $pathLength) {
             $this->chapterTreePath[] = $this->chapter->id;
@@ -217,8 +218,7 @@ class ChapterRunonce extends \Controller
     private function createContentElement()
     {
         $this->Database->prepare("INSERT INTO tl_content (pid, ptable, tstamp, type, headline, text) VALUES (?, ?, ?, ?, ?, ?)")
-            ->execute($this->chapter->id, 'tl_chapter', $this->chapter->tstamp, 'text',
-                $this->chapter->title, $this->chapter->text);
+            ->execute($this->chapter->id, 'tl_chapter', $this->chapter->tstamp, 'text', $this->chapter->title, $this->chapter->text);
     }
 
 
