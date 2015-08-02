@@ -530,7 +530,9 @@ class tl_chapter extends Backend
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
-        // TODO do not toggle visibiity of root or sync state with book
+        if ($row['type'] === 'root') {
+            return Image::getHtml('invisible.gif') . ' ';
+        }
 
         if (strlen($this->Input->get('tid'))) {
             $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));

@@ -165,11 +165,10 @@ class ChapterRunonce extends \Controller
 
     private function renameFieldShowInTocToHideAndToogleValue()
     {
-        if ($this->Database->fieldExists('show_in_toc', 'tl_chapter') && !$this->Database->fieldExists('hide',
-                'tl_chapter')
-        ) {
+        if ($this->Database->fieldExists('show_in_toc', 'tl_chapter') && !$this->Database->fieldExists('hide', 'tl_chapter')) {
             $this->log("rename field tl_chapter.show_in_toc to tl_chapter.hide and toogle value.", __METHOD__, TL_GENERAL);
             $this->Database->execute("ALTER TABLE tl_chapter CHANGE show_in_toc hide char(1) NOT NULL default ''");
+            $this->Database->execute("UPDATE tl_chapter SET hide = !hide");
         }
     }
 
