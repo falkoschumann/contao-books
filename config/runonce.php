@@ -169,6 +169,7 @@ class ChapterRunonce extends \Controller
             $this->log("rename field tl_chapter.show_in_toc to tl_chapter.hide and toogle value.", __METHOD__, TL_GENERAL);
             $this->Database->execute("ALTER TABLE tl_chapter CHANGE show_in_toc hide char(1) NOT NULL default ''");
             $this->Database->execute("UPDATE tl_chapter SET hide = !hide");
+            $this->Database->execute("UPDATE tl_chapter SET hide = '' WHERE hide='0'");
         }
     }
 
