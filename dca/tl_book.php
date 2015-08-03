@@ -353,11 +353,10 @@ class tl_book extends Backend
 
         $rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->activeRecord->root_chapter);
         if ($rootChapter) {
-            $rootChapter->delete();
-            // TODO test if child chapters are already deleted
-//			$chapterTable = new DC_Table('tl_book_chapter');
-//			$chapterTable->intId = $rootChapter->id;
-//			$chapterTable->delete(true);
+            $this->log('Delete root chapter ' . $rootChapter->id . '.', __METHOD__, TL_GENERAL);
+			$chapterTable = new DC_Table('tl_chapter');
+			$chapterTable->intId = $rootChapter->id;
+			$chapterTable->delete(true);
         }
     }
 
