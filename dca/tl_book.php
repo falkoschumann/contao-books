@@ -369,16 +369,14 @@ class tl_book extends Backend
      */
     public function copyChapters($newBookId, DC_Table $bookTable)
     {
-        $this->log('Copy ' . $bookTable->table . ' ' . $bookTable->id . ' to ' . $newBookId, __METHOD__, TL_GENERAL);
-        $chapterIds = \Muspellheim\Books\ChapterModel::findChapterIdsByBookIds($bookTable->id);
-        $chapterTable = new DC_Table('tl_chapter');
-        foreach ($chapterIds as $id) {
-            $this->log('Copy chapter ' . $id, __METHOD__, TL_GENERAL);
-            $chapterTable->intId = $id;
+        $book = \Muspellheim\Books\BookModel::findByPk($bookTable->id);
+        $rootChapter = \Muspellheim\Books\ChapterModel::findByPk($book->root_chapter);
+        if ($rootChapter) {
+            $this->log('Copy root chapter ' . $rootChapter->id . '.', __METHOD__, TL_GENERAL);
+            $chapterTable = new DC_Table('tl_chapter');
+            $chapterTable->intId = $rootChapter->id;
             $newChapterId = $chapterTable->copy(true);
-            $chapter = \Muspellheim\Books\ChapterModel::findByPk($newChapterId);
-            $chapter->book_id = $newBookId;
-            $chapter->save();
+            $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($newChapterId, $newBookId);
         }
     }
 
