@@ -237,6 +237,7 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         (
             'label'     => &$GLOBALS['TL_LANG']['tl_chapter']['published'],
             'exclude'   => true,
+            'filter'    => true,
             'inputType' => 'checkbox',
             'eval'      => array('tl_class' => 'w50'),
             'sql'       => "char(1) NOT NULL default ''"
@@ -534,51 +535,58 @@ class tl_chapter extends Backend
             return Image::getHtml('invisible.gif') . ' ';
         }
 
+        $this->import('BackendUser', 'User');
+
         if (strlen($this->Input->get('tid'))) {
-            $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 1));
+            $this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 0));
             $this->redirect($this->getReferer());
         }
 
-        $href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+        // Check permissions AFTER checking the tid, so hacking attempts are logged
+        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chapter::published', 'alexf')) {
+            return '';
+        }
+
+        $href .= '&amp;id=' . $this->Input->get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
 
         if (!$row['published']) {
             $icon = 'invisible.gif';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
-            $label) . '</a> ';
+        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
     }
 
 
     /**
      * Toggle the visibility of the chapter with given id.
      *
-     * @param integer       the chapter id.
-     * @param boolean       the current visibility.
-     * @param DataContainer the data container.
+     * @param integer $intId        the chapter id.
+     * @param boolean $blnPublished the current visibility.
      */
-    public function toggleVisibility($id, $visible, DataContainer $dc = null)
+    public function toggleVisibility($intId, $blnPublished)
     {
-        $objVersions = new Versions('tl_chapter', $id);
+        // Check permissions to publish
+        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chapter::published', 'alexf')) {
+            $this->log('Not enough permissions to show/hide record ID "' . $intId . '"', 'tl_chapter toggleVisibility', TL_ERROR);
+            $this->redirect('contao/main.php?act=error');
+        }
+
+        $objVersions = new Versions('tl_chapter', $intId);
         $objVersions->initialize();
 
         // Trigger the save_callback
         if (is_array($GLOBALS['TL_DCA']['tl_chapter']['fields']['published']['save_callback'])) {
             foreach ($GLOBALS['TL_DCA']['tl_chapter']['fields']['published']['save_callback'] as $callback) {
-                if (is_array($callback)) {
-                    $this->import($callback[0]);
-                    $blnVisible = $this->$callback[0]->$callback[1]($visible, ($dc ?: $this));
-                } elseif (is_callable($callback)) {
-                    $blnVisible = $callback($blnVisible, ($dc ?: $this));
-                }
+                $this->import($callback[0]);
+                $blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
             }
         }
 
         // Update the database
-        $this->Database->prepare("UPDATE tl_chapter SET tstamp=" . time() . ", published='" . ($visible ? 1 : '') . "' WHERE id=?")->execute($id);
+        $this->Database->prepare("UPDATE tl_chapter SET tstamp=" . time() . ", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")->execute($intId);
 
         $objVersions->create();
-        $this->log('A new version of record "tl_chapter.id=' . $id . '" has been created', __METHOD__, TL_GENERAL);
+        $this->log('A new version of record "tl_chapter.id=' . $intId . '" has been created', __METHOD__, TL_GENERAL);
     }
 
 
