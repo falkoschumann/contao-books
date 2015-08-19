@@ -21,53 +21,55 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class BookRenderer extends Renderer
+class BookRenderer extends TemplateRenderer
 {
 
-	/**
-	 * @var string
-	 */
-	protected $strTemplate = 'books_book';
+    /**
+     * @var string
+     */
+    protected $strTemplate = 'books_book';
+
+    /**
+     * @var string
+     */
+    protected $type = 'book';
 
 
-	protected function compileTemplate()
-	{
-		$this->Template->toc = $this->getTableOfContents();
-	}
+    protected function compile()
+    {
+        $this->Template->toc = $this->getTableOfContents();
+    }
 
 
-	/**
-	 * @return string
-	 */
-	private function getTableOfContents()
-	{
-		return static::getHtmlListForChapters(ChapterModel::findPublishedByPid(0, $this->id));
-	}
+    /**
+     * @return string
+     */
+    private function getTableOfContents()
+    {
+        return static::getHtmlListForChapters(ChapterModel::findPublishedByPid(0, $this->id));
+    }
 
 
-	/**
-	 * @param ChapterModel
-	 * @return string
-	 */
-	private static function getHtmlListForChapters($chapters)
-	{
-		if ($chapters === null)
-		{
-			return '';
-		}
+    /**
+     * @param ChapterModel
+     * @return string
+     */
+    private static function getHtmlListForChapters($chapters)
+    {
+        if ($chapters === null) {
+            return '';
+        }
 
-		$html = "<ul>\n";
-		foreach ($chapters as $e)
-		{
-			if ($e->show_in_toc)
-			{
-				$html .= '<li><a href="' . static::getUrlForChapter($e) . '">' . $e->title . '</a>';
-				$html .= static::getHtmlListForChapters(ChapterModel::findPublishedByPid($e->id));
-				$html .= "</li>\n";
-			}
-		}
-		$html .= "</ul>\n";
-		return $html;
-	}
+        $html = "<ul>\n";
+        foreach ($chapters as $e) {
+            if ($e->show_in_toc) {
+                $html .= '<li><a href="' . static::getUrlForChapter($e) . '">' . $e->title . '</a>';
+                $html .= static::getHtmlListForChapters(ChapterModel::findPublishedByPid($e->id));
+                $html .= "</li>\n";
+            }
+        }
+        $html .= "</ul>\n";
+        return $html;
+    }
 
 }

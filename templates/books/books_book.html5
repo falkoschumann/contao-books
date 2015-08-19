@@ -1,20 +1,22 @@
-<?php if ($this->author): ?>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+  <?php if ($this->author): ?>
   <p class="author">  <?= $this->author; ?></p>
-<?php endif; ?>
+  <?php endif; ?>
   <h1 class="title">  <?= $this->title; ?></h1>
-<?php if ($this->subtitle): ?>
+  <?php if ($this->subtitle): ?>
   <h2 class="subtitle">  <?= $this->subtitle; ?></h2>
-<?php endif; ?>
-<?php if ($this->abstract): ?>
+  <?php endif; ?>
+  <?php if ($this->abstract): ?>
   <div class="abstract">
     <?= $this->abstract; ?>
   </div>
-<?php endif; ?>
+  <?php endif; ?>
 
-<?php if ($this->toc): ?>
+  <?php if ($this->toc): ?>
   <!-- indexer::stop -->
   <nav class="toc">
     <?= $this->toc; ?>
   </nav>
   <!-- indexer::continue -->
-<?php endif; ?>
+  <?php endif; ?>
+</div>

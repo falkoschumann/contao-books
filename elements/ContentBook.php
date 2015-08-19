@@ -66,11 +66,11 @@ class ContentBook extends \ContentElement
         // TODO Check if chapter exists
 
         if ($this->objChapter === null) {
-            $bookParser = new BookRenderer($this->objBook);
-            $this->Template->book_or_chapter = $bookParser->generateHtml();
+            $bookRenderer = new BookRenderer($this->objBook);
+            $this->Template->book_or_chapter = $bookRenderer->generate();
         } else {
-            $chapterParser = new ChapterRenderer($this->objChapter);
-            $this->Template->book_or_chapter = $chapterParser->generateHtml();
+            $chapterRenderer = new ChapterRenderer($this->objChapter);
+            $this->Template->book_or_chapter = $chapterRenderer->generate();
         }
     }
 

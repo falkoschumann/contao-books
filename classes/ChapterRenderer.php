@@ -21,7 +21,7 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <http://www.muspellheim.de>
  * @package    Books
  */
-class ChapterRenderer extends Renderer
+class ChapterRenderer extends TemplateRenderer
 {
 
 	/**
