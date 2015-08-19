@@ -37,7 +37,24 @@ class BookRenderer extends TemplateRenderer
 
     protected function compile()
     {
+        $this->Template->abstract = $this->getAbstract();
         $this->Template->toc = $this->getTableOfContents();
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getAbstract()
+    {
+        $strContent = '';
+        $objElements = \ContentModel::findPublishedByPidAndTable($this->getModel()->root_chapter, 'tl_chapter');
+        if ($objElements !== null) {
+            while ($objElements->next()) {
+                $strContent .= $this->getContentElement($objElements->id);
+            }
+        }
+        return $strContent;
     }
 
 
