@@ -146,9 +146,14 @@ class ChapterRunonce extends \Controller
         $this->renameFieldShowInTocToHideAndToogleValue();
         $this->createFieldType();
 
+        $this->chapter = $this->Database->execute("SELECT * FROM tl_chapter WHERE pid=0");
+        while ($this->chapter->next()) {
+            $this->createContentElement();
+        }
+
         $this->chapter = $this->Database->execute("SELECT * FROM tl_chapter WHERE pid>0 ORDER BY pid, sorting");
         while ($this->chapter->next()) {
-            $this->log("Migrate chapter " . $this->getChapterTitle() . " (". $this->chapter->id . ").", __METHOD__, TL_GENERAL);
+            $this->log("Migrate chapter " . $this->getChapterTitle() . " (" . $this->chapter->id . ").", __METHOD__, TL_GENERAL);
             $this->updateChapterTreePath();
             $this->updateChapter();
             $this->createContentElement();
