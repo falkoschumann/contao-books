@@ -44,7 +44,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-    'ce_book'       => 'system/modules/books/templates',
-    'books_book'    => 'system/modules/books/templates',
-    'books_chapter' => 'system/modules/books/templates',
+    'ce_book'       => 'system/modules/books/templates/elements',
+    'books_book'    => 'system/modules/books/templates/books',
+    'books_chapter' => 'system/modules/books/templates/books',
 ));
