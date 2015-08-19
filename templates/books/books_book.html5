@@ -1,23 +1,20 @@
 <?php if ($this->author): ?>
-  	<p class="author"><?php echo $this->author; ?></p>
+  <p class="author">  <?= $this->author; ?></p>
 <?php endif; ?>
-
-<h1 class="title"><?php echo $this->title; ?></h1>
-
+  <h1 class="title">  <?= $this->title; ?></h1>
 <?php if ($this->subtitle): ?>
-	<h2 class="subtitle"><?php echo $this->subtitle; ?></h2>
+  <h2 class="subtitle">  <?= $this->subtitle; ?></h2>
 <?php endif; ?>
-
 <?php if ($this->abstract): ?>
-	<div class="abstract">
-		<?php echo $this->abstract; ?>
-	</div>
+  <div class="abstract">
+    <?= $this->abstract; ?>
+  </div>
 <?php endif; ?>
 
 <?php if ($this->toc): ?>
-	<!-- indexer::stop -->
-	<nav class="toc">
-		<?php echo $this->toc; ?>
-	</nav>
-	<!-- indexer::continue -->
+  <!-- indexer::stop -->
+  <nav class="toc">
+    <?= $this->toc; ?>
+  </nav>
+  <!-- indexer::continue -->
 <?php endif; ?>
