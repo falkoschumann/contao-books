@@ -23,7 +23,7 @@ namespace Muspellheim\Books;
  * @author     Falko Schumann <falko.schumann@muspellheim.de>
  * @package    Books
  */
-abstract class Renderer extends BaseBooks
+abstract class Renderer extends \Frontend
 {
 
 	/**

@@ -127,6 +127,7 @@ class ChapterModel extends \Model
         return static::findOneBy($columns, array($chapter->pid, $chapter->sorting), $options);
     }
 
+
     /**
      * The chapters label contains the title; tags added to the title if present.
      *
@@ -140,6 +141,20 @@ class ChapterModel extends \Model
             $result .= ' <span style="font-weight:bold;padding-left:20px;float:right;">' . $tags . '</span>';
         }
         return $result;
+    }
+
+
+    /**
+     * @param ChapterModel
+     * @return string
+     */
+    public static function getUrlForChapter($chapter)
+    {
+        $prefix = $GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/';
+        $aliasIsSet = $chapter->alias != '';
+        $aliasEnabled = !$GLOBALS['TL_CONFIG']['disableAlias'];
+        $item = ($aliasIsSet && $aliasEnabled) ? $chapter->alias : $chapter->id;
+        return Controller::generateFrontendUrl($GLOBALS['objPage']->row(), $prefix . $item);
     }
 
 }
