@@ -56,13 +56,6 @@ abstract class TemplateRenderer extends \Frontend
      */
     protected $arrData = array();
 
-    /**
-     * Style array
-     *
-     * @var array
-     */
-    protected $arrStyle = array();
-
 
     /**
      * Initialize the object.
@@ -147,21 +140,11 @@ abstract class TemplateRenderer extends \Frontend
             return '';
         }
 
-        if ($this->arrData['space'][0] != '') {
-            $this->arrStyle[] = 'margin-top:' . $this->arrData['space'][0] . 'px;';
-        }
-
-        if ($this->arrData['space'][1] != '') {
-            $this->arrStyle[] = 'margin-bottom:' . $this->arrData['space'][1] . 'px;';
-        }
-
-
         $this->Template = new \FrontendTemplate($this->strTemplate);
         $this->Template->setData($this->arrData);
 
         $this->compile();
 
-        $this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
         $this->Template->class = trim('books_' . $this->type . ' ' . $this->cssID[1]);
         $this->Template->cssID = ($this->cssID[0] != '') ? ' id="' . $this->cssID[0] . '"' : '';
 

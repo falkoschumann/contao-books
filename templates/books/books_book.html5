@@ -1,4 +1,4 @@
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?>>
   <?php if ($this->author): ?>
   <p class="author">  <?= $this->author; ?></p>
   <?php endif; ?>
