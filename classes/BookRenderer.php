@@ -38,7 +38,7 @@ class BookRenderer extends TemplateRenderer
     protected function compile()
     {
         $this->Template->abstract = $this->renderAbstract();
-        $this->Template->toc = $this->renderTableOfContents();
+        $this->Template->contents = $this->renderTableOfContents();
     }
 
 
@@ -63,37 +63,45 @@ class BookRenderer extends TemplateRenderer
      */
     private function renderTableOfContents()
     {
-        return static::renderChapterListForParent(ChapterModel::findPublishedById($this->objModel->root_chapter));
+        return static::renderChapterListForParent(ChapterModel::findPublishedById($this->objModel->root_chapter), 1);
     }
 
 
     /**
-     * @param ChapterModel
+     * @param ChapterModel $parent
+     * @param int          $level
      * @return string
      */
-    private static function renderChapterListForParent($parent)
+    private static function renderChapterListForParent($parent, $level)
     {
         if ($parent === null) {
             return '';
         }
 
-        $chapters = ChapterModel::findPublishedByPid($parent->id);
-        if ($chapters === null) {
+        $objSubchapters = ChapterModel::findPublishedByPid($parent->id);
+        if ($objSubchapters === null) {
             return '';
         }
 
-        $html = "<ul>\n";
-        while ($chapters->next()) {
-            if ($chapters->hide) {
+        $objTemplate = new \FrontendTemplate('books_contents');
+        $objTemplate->level = 'level_' . $level++;
+
+        $chapters = array();
+        while ($objSubchapters->next()) {
+            if ($objSubchapters->hide) {
                 continue;
             }
 
-            $html .= '<li><a href="' . ChapterModel::getUrlForChapter($chapters) . '">' . $chapters->title . '</a>';
-            $html .= static::renderChapterListForParent(ChapterModel::findPublishedById($chapters->id));
-            $html .= "</li>\n";
+            $chapter = $objSubchapters->row();
+            $chapter['href'] = ChapterModel::getUrlForChapter($objSubchapters);
+            $chapter['title'] = specialchars($objSubchapters->title, true);
+            $chapter['link'] = $objSubchapters->title;
+            $chapter['subchapters'] = static::renderChapterListForParent(ChapterModel::findPublishedById($objSubchapters->id), $level);
+            $chapters[] = $chapter;
         }
-        $html .= "</ul>\n";
-        return $html;
+        $objTemplate->chapters = $chapters;
+
+        return $objTemplate->parse();
     }
 
 }

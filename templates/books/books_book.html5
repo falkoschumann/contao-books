@@ -12,10 +12,10 @@
   </div>
   <?php endif; ?>
 
-  <?php if ($this->toc): ?>
+  <?php if ($this->contents): ?>
   <!-- indexer::stop -->
-  <nav class="toc">
-    <?= $this->toc; ?>
+  <nav class="contents">
+    <?= $this->contents; ?>
   </nav>
   <!-- indexer::continue -->
   <?php endif; ?>

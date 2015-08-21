@@ -1,0 +1,6 @@
+
+<ul class="<?= $this->level ?>" role="contents">
+  <?php foreach ($this->chapters as $chapter): ?>
+    <li<?php if ($chapter['class']): ?> class="<?= $chapter['class'] ?>"<?php endif; ?>><a href="<?= $chapter['href'] ?>" title="<?= $chapter['title'] ?>"<?php if ($chapter['class']): ?> class="<?= $chapter['class'] ?>"<?php endif; ?><?php if (!empty($chapter['subchapters'])): ?> aria-haspopup="true"<?php endif; ?>><?= $chapter['link'] ?></a><?= $chapter['subchapters'] ?></li>
+  <?php endforeach; ?>
+</ul>
