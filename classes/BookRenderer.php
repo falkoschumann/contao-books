@@ -37,15 +37,15 @@ class BookRenderer extends TemplateRenderer
 
     protected function compile()
     {
-        $this->Template->abstract = $this->getAbstract();
-        $this->Template->toc = $this->getTableOfContents();
+        $this->Template->abstract = $this->renderAbstract();
+        $this->Template->toc = $this->renderTableOfContents();
     }
 
 
     /**
      * @return string
      */
-    private function getAbstract()
+    private function renderAbstract()
     {
         $strContent = '';
         $objElements = \ContentModel::findPublishedByPidAndTable($this->getModel()->root_chapter, 'tl_chapter');
@@ -61,9 +61,9 @@ class BookRenderer extends TemplateRenderer
     /**
      * @return string
      */
-    private function getTableOfContents()
+    private function renderTableOfContents()
     {
-        return static::getHtmlListForChapters(ChapterModel::findPublishedByPid(0, $this->id));
+        return static::renderChapterListForParent(ChapterModel::findPublishedById($this->objModel->root_chapter));
     }
 
 
@@ -71,19 +71,26 @@ class BookRenderer extends TemplateRenderer
      * @param ChapterModel
      * @return string
      */
-    private static function getHtmlListForChapters($chapters)
+    private static function renderChapterListForParent($parent)
     {
+        if ($parent === null) {
+            return '';
+        }
+
+        $chapters = ChapterModel::findPublishedByPid($parent->id);
         if ($chapters === null) {
             return '';
         }
 
         $html = "<ul>\n";
-        foreach ($chapters as $e) {
-            if ($e->show_in_toc) {
-                $html .= '<li><a href="' . static::getUrlForChapter($e) . '">' . $e->title . '</a>';
-                $html .= static::getHtmlListForChapters(ChapterModel::findPublishedByPid($e->id));
-                $html .= "</li>\n";
+        while ($chapters->next()) {
+            if ($chapters->hide) {
+                continue;
             }
+
+            $html .= '<li><a href="' . ChapterModel::getUrlForChapter($chapters) . '">' . $chapters->title . '</a>';
+            $html .= static::renderChapterListForParent(ChapterModel::findPublishedById($chapters->id));
+            $html .= "</li>\n";
         }
         $html .= "</ul>\n";
         return $html;

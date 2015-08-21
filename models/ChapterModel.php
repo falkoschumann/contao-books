@@ -154,7 +154,7 @@ class ChapterModel extends \Model
         $aliasIsSet = $chapter->alias != '';
         $aliasEnabled = !$GLOBALS['TL_CONFIG']['disableAlias'];
         $item = ($aliasIsSet && $aliasEnabled) ? $chapter->alias : $chapter->id;
-        return Controller::generateFrontendUrl($GLOBALS['objPage']->row(), $prefix . $item);
+        return \Controller::generateFrontendUrl($GLOBALS['objPage']->row(), $prefix . $item);
     }
 
 }
