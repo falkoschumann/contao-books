@@ -472,7 +472,7 @@ class tl_chapter extends Backend
         $disabled = Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)) . ' ';
         $enabled = '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon,
                 $label) . '</a> ';
-        return ($objSubchapters->numRows && $row['type'] === 'root') ? $disabled : $enabled;
+        return ($objSubchapters->numRows && $row['type'] !== 'root') ? $enabled : $disabled;
     }
 
 
