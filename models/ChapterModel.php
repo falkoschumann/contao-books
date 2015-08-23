@@ -157,4 +157,21 @@ class ChapterModel extends \Model
         return \Controller::generateFrontendUrl($GLOBALS['objPage']->row(), $prefix . $item);
     }
 
+
+    /**
+     * @param int $chapterId
+     * @return string
+     */
+    public static function renderContent($chapterId)
+    {
+        $strContent = '';
+        $objElements = \ContentModel::findPublishedByPidAndTable($chapterId, 'tl_chapter');
+        if ($objElements !== null) {
+            while ($objElements->next()) {
+                $strContent .= \Controller::getContentElement($objElements->id);
+            }
+        }
+        return $strContent;
+    }
+
 }

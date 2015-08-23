@@ -47,14 +47,7 @@ class BookRenderer extends TemplateRenderer
      */
     private function renderAbstract()
     {
-        $strContent = '';
-        $objElements = \ContentModel::findPublishedByPidAndTable($this->getModel()->root_chapter, 'tl_chapter');
-        if ($objElements !== null) {
-            while ($objElements->next()) {
-                $strContent .= $this->getContentElement($objElements->id);
-            }
-        }
-        return $strContent;
+        return ChapterModel::renderContent($this->getModel()->root_chapter);
     }
 
 
