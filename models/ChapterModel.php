@@ -174,4 +174,18 @@ class ChapterModel extends \Model
         return $strContent;
     }
 
+
+    /**
+     * @param ChapterModel $objChapter
+     * @return ChapterModel|null
+     */
+    public static function findRoot($objChapter)
+    {
+        $objParentChapter = $objChapter;
+        do {
+            $objParentChapter = static::findById($objParentChapter->pid);
+        } while ($objParentChapter !== null && $objParentChapter->pid != 0);
+        return $objParentChapter;
+    }
+
 }

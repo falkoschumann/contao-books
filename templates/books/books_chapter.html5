@@ -1,19 +1,17 @@
 <div class="chapter">
-	<?php echo $this->content; ?>
+  <?php echo $this->content; ?>
 </div>
 
 <!-- indexer::stop -->
 <nav class="chapter">
-	<ul>
-		<?php if (isset($this->previousUrl))
-		{ ?>
-			<li><a href="<?php echo $this->previousUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookPreviousPage']; ?></a></li>
-		<?php } ?>
-		<li><a href="<?php echo $this->tableOfContent; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookToc']; ?></a></li>
-		<?php if (isset($this->nextUrl))
-		{ ?>
-			<li><a href="<?php echo $this->nextUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookNextPage']; ?></a></li>
-		<?php } ?>
-	</ul>
+  <ul>
+    <?php if ($this->previousChapterUrl !== null):?>
+    <li><a href="<?php echo $this->previousChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookPreviousPage']; ?></a></li>
+    <?php endif; ?>
+    <li><a href="<?php echo $this->tableOfContentUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookToc']; ?></a></li>
+    <?php if ($this->nextChapterUrl !== null):?>
+    <li><a href="<?php echo $this->nextChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookNextPage']; ?></a></li>
+    <?php endif; ?>
+  </ul>
 </nav>
 <!-- indexer::continue -->

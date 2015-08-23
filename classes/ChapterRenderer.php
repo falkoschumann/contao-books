@@ -38,17 +38,9 @@ class ChapterRenderer extends TemplateRenderer
     protected function compile()
     {
         $this->Template->content = $this->renderContentElements();
-        $this->Template->tableOfContent = $this->getBookUrl();
-
-        $objPreviousChapter = $this->findPreviousChapterFor(ChapterModel::findPublishedById($this->id));
-        if ($objPreviousChapter !== null) {
-            $this->Template->previousUrl = $this->getUrlForChapter($objPreviousChapter);
-        }
-
-        $objNextChapter = $this->findNextChapterFor(ChapterModel::findPublishedById($this->id));
-        if ($objNextChapter !== null) {
-            $this->Template->nextUrl = $this->getUrlForChapter($objNextChapter);
-        }
+        $this->Template->tableOfContentUrl = $this->getBookUrl();
+        $this->Template->previousChapterUrl = $this->getPreviousChapterUrl();
+        $this->Template->nextChapterUrl = $this->getNextChapterUrl();
     }
 
 
@@ -67,6 +59,36 @@ class ChapterRenderer extends TemplateRenderer
     private function getBookUrl()
     {
         return $this->generateFrontendUrl($GLOBALS['objPage']->row());
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getPreviousChapterUrl()
+    {
+        $objPreviousChapter = $this->findPreviousChapterFor(ChapterModel::findPublishedById($this->id));
+        if ($objPreviousChapter !== null) {
+            return ChapterModel::getUrlForChapter($objPreviousChapter);
+        }
+
+        // fallback
+        return null;
+    }
+
+
+    /**
+     * @return string
+     */
+    private function getNextChapterUrl()
+    {
+        $objNextChapter = $this->findNextChapterFor(ChapterModel::findPublishedById($this->id));
+        if ($objNextChapter !== null) {
+            return ChapterModel::getUrlForChapter($objNextChapter);
+        }
+
+        // fallback
+        return null;
     }
 
 
@@ -119,7 +141,8 @@ class ChapterRenderer extends TemplateRenderer
     private function getChapterList()
     {
         if ($this->chapterList === null) {
-            $this->chapterList = static::getChapterListFor(ChapterModel::findPublishedByPid(0, $this->book_id));
+            $rootChapter = ChapterModel::findRoot($this->getModel());
+            $this->chapterList = static::getChapterListFor(ChapterModel::findPublishedByPid($rootChapter->id));
         }
         return $this->chapterList;
     }
@@ -136,11 +159,10 @@ class ChapterRenderer extends TemplateRenderer
         }
 
         $chapterList = array();
-        foreach ($chapters as $e) {
-            if ($e->show_in_toc) {
-                $chapterList[] = $e;
-                $chapterList = array_merge($chapterList,
-                    static::getChapterListFor(ChapterModel::findPublishedByPid($e->id)));
+        foreach ($chapters as $chapter) {
+            if (!$chapter->hide) {
+                $chapterList[] = $chapter;
+                $chapterList = array_merge($chapterList, static::getChapterListFor(ChapterModel::findPublishedByPid($chapter->id)));
             }
         }
         return $chapterList;
