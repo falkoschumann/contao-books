@@ -13,6 +13,7 @@
   <?php endif; ?>
 
   <?php if ($this->contents): ?>
+
   <!-- indexer::stop -->
   <nav class="contents">
     <?= $this->contents; ?>

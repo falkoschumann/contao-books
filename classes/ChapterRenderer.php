@@ -30,6 +30,11 @@ class ChapterRenderer extends TemplateRenderer
     protected $strTemplate = 'books_chapter';
 
     /**
+     * @var string
+     */
+    protected $type = 'chapter';
+
+    /**
      * @var array
      */
     private $chapterList = null;
