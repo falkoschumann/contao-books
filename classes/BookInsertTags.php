@@ -15,7 +15,7 @@ namespace Muspellheim\Books;
 
 
 /**
- * Class BookInsertTags
+ * Replace insert tags.
  *
  * @copyright  Falko Schumann 2015
  * @author     Falko Schumann <http://www.muspellheim.de>
@@ -24,6 +24,12 @@ namespace Muspellheim\Books;
 class BookInsertTags extends \Frontend
 {
 
+    /**
+     * Hook for replacing book insert tags.
+     *
+     * @param string $strTag an insert tag.
+     * @return bool|string false if insert tag is not replaced, otherwise the replacement.
+     */
     public function replaceBookInsertTags($strTag)
     {
         $arrSplit = explode('::', $strTag);
@@ -61,19 +67,33 @@ class BookInsertTags extends \Frontend
     }
 
 
-    function beginsWith($str, $sub)
+    /**
+     * @param string $str a string.
+     * @param string $sub substring at beginning of string to search for.
+     * @return bool
+     */
+    private function beginsWith($str, $sub)
     {
         return (substr($str, 0, strlen($sub)) == $sub);
     }
 
 
+    /**
+     * @param int|string $idOrAlias
+     * @return bool|\Database\Result
+     */
     private function getChapter($idOrAlias)
     {
-        $objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_chapter WHERE (id=? || alias=?) AND published=1')->execute($idOrAlias, $idOrAlias);
+        $objChapters = $this->Database->prepare('SELECT id, title, alias FROM tl_chapter WHERE (id=? || alias=?) AND published=1')->execute($idOrAlias,
+            $idOrAlias);
         return $objChapters->next();
     }
 
 
+    /**
+     * @param $objChapter
+     * @return string
+     */
     private function getChapterTitle($objChapter)
     {
         $arrHeadline = deserialize($objChapter->title);
@@ -81,6 +101,10 @@ class BookInsertTags extends \Frontend
     }
 
 
+    /**
+     * @param $objChapter
+     * @return string
+     */
     private function getChapterUrl($objChapter)
     {
         global $objPage;
@@ -95,6 +119,10 @@ class BookInsertTags extends \Frontend
     }
 
 
+    /**
+     * @param $objChapter
+     * @return bool
+     */
     private function isAliasSetAndEnabled($objChapter)
     {
         return $objChapter->alias != '' && !$GLOBALS['TL_CONFIG']['disableAlias'];
