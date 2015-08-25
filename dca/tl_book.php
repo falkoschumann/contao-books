@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array(''),
-        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,place,language,tags;{expert_legend:hide},cssID;{publish_legend},published'
+        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,location,language,tags;{expert_legend:hide},cssID;{publish_legend},published'
     ),
     // Fields
     'fields'   => array
@@ -174,9 +174,9 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'eval'      => array('minlength' => 4, 'maxlength' => 4, 'rgxp' => 'digit', 'tl_class' => 'w50'),
             'sql'       => "varchar(4) NOT NULL default ''"
         ),
-        'place'        => array
+        'location'        => array
         (
-            'label'     => &$GLOBALS['TL_LANG']['tl_book']['place'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['location'],
             'exclude'   => true,
             'search'    => true,
             'sorting'   => true,

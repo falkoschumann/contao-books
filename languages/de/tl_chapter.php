@@ -16,7 +16,7 @@
  */
 $GLOBALS['TL_LANG']['tl_chapter']['title']     = array('Titel', 'Bitte geben Sie den Kapiteltitel ein.');
 $GLOBALS['TL_LANG']['tl_chapter']['alias']     = array('Kapitelalias', 'Der Kapitelalias ist eine eindeutige Referenz, die anstelle der numerischen Kapitel-ID aufgerufen werden kann.');
-$GLOBALS['TL_LANG']['tl_chapter']['type']      = array('Kapiteltyp');
+$GLOBALS['TL_LANG']['tl_chapter']['type']      = array('Kapiteltyp', '');
 $GLOBALS['TL_LANG']['tl_chapter']['tags']      = array('Tags', 'Kommagetrennte Liste von Tags für das Kapitel; z.B. "Geprüft", "Unvollständig" oder "in Bearbeitung"');
 $GLOBALS['TL_LANG']['tl_chapter']['cssID']     = array('CSS-ID/Klasse', 'Hier können Sie eine ID und beliebig viele Klassen eingeben.');
 $GLOBALS['TL_LANG']['tl_chapter']['hide']      = array('Kapitel im Inhaltsverzeichnis verstecken', 'Ist das Häckchen gesetzt, erscheint kein Link zum Kapitel im Inhaltsverzeichnis.');

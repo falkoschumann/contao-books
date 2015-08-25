@@ -27,8 +27,8 @@ namespace Muspellheim\Books;
  * @property int     $root_chapter   id of the root chapter
  * @property string  $subtitle       book subtitle
  * @property string  $author         book author
- * @property string  $year           year of publication
- * @property string  $place          place of publication
+ * @property string  $year           publication year
+ * @property string  $location       publication location
  * @property string  $language       books language
  * @property string  $tags           comma seperated list of tags
  * @property boolean $published      show book in frontend?

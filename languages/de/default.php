@@ -14,9 +14,9 @@
 /**
  * Miscellaneous
  */
-$GLOBALS['TL_LANG']['MSC']['bookToc'] = 'Inhaltsverzeichnis';
+$GLOBALS['TL_LANG']['MSC']['bookToc']          = 'Inhaltsverzeichnis';
 $GLOBALS['TL_LANG']['MSC']['bookPreviousPage'] = 'Vorherige Seite';
-$GLOBALS['TL_LANG']['MSC']['bookNextPage'] = 'Nächste Seite';
+$GLOBALS['TL_LANG']['MSC']['bookNextPage']     = 'Nächste Seite';
 
 /**
  * Content elements
