@@ -3,6 +3,8 @@ Contributing Guidelines
 
 **Common field order:** id, pid, sorting, tstamp, title, alias, type, ...
 
+Die Übersetzungen aller Texte dieser Contao-Erweiterung werden auf
+[Transifex][1] gepflegt.
 
 Code Style
 ----------
@@ -48,3 +50,5 @@ Code Style
         }
 
     }
+
+[1]: https://www.transifex.com/falkoschumann/contao-books/
