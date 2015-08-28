@@ -6,7 +6,7 @@
                 <source>Book</source>
             </trans-unit>
             <trans-unit id="tl_content.book.1">
-                <source></source>
+                <source>Please select a book to display.</source>
             </trans-unit>
         </body>
     </file>
