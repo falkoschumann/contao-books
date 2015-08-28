@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="system/modules/faq/languages/en/default.php" source-language="en" target-language="de">
+        <body>
+            <trans-unit id="MOD.books.0">
+                <source>Books</source>
+                <target>Bücher</target>
+            </trans-unit>
+            <trans-unit id="MOD.books.1">
+                <source>Manage books and chapters.</source>
+                <target>Bücher und Kapitel verwalten.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
