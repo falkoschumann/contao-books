@@ -1,0 +1,28 @@
+[main]
+host = https://www.transifex.com
+type = XLIFF
+
+[contao-books.default]
+source_file = languages/en/default.xlf
+source_lang = en
+file_filter = languages/<lang>/default.xlf
+
+[contao-books.modules]
+source_file = languages/en/modules.xlf
+source_lang = en
+file_filter = languages/<lang>/modules.xlf
+
+[contao-books.tl_book]
+source_file = languages/en/tl_book.xlf
+source_lang = en
+file_filter = languages/<lang>/tl_book.xlf
+
+[contao-books.tl_chapter]
+source_file = languages/en/tl_chapter.xlf
+source_lang = en
+file_filter = languages/<lang>/tl_chapter.xlf
+
+[contao-books.tl_content]
+source_file = languages/en/tl_content.xlf
+source_lang = en
+file_filter = languages/<lang>/tl_content.xlf
