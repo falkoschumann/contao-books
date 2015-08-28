@@ -8,8 +8,9 @@ Thumbs.db
 .settings/
 .build/
 .idea/
+*.iml
 nbproject/
 
-# Books
-build.properties
-*.zip
+# Composer
+vendor/
+composer.lock

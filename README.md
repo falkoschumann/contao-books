@@ -1,20 +1,31 @@
 Books Extension für Contao
 ==========================
 
-Contao bietet die Möglichkeit mit Hilfe des Moduls *Buchnavigation* implizit ein
-Buch über die Seitenstruktur zu erstellen. Will man mehrere Bücher anlegen oder
-innerhalb verschiedenen Webseiten (verschiedene Sprachen oder Domänen) nutzen,
-ist dieser Ansatz zu limitiert.
-
-Mit Hilfe der *Books*-Erweiterung können Bücher und Kapitel in Contao explizit
-angelegt und an verschiedenen Stellen eingefügt werden. Dazu gibt es einen neuen
-Menüpunkt *Bücher* im Abschnitt *Inhalte* des Backend-Menüs. Hier können
-beliebig viele Bücher angelegt und mit diversen Meta-Informationen versehen
-werden. Zu jeden Buch lassen sich beliebig viele Kapitel und Unterkapitel
-anlegen.
-
-Bücher können als Inhaltselement in Artikeln verwendet werden.
+Contao bietet die Möglichkeit mit Hilfe des Moduls *Buchnavigation* innerhalb
+der Seitenstruktur wie durch ein Buch zu navigieren. Diese Erweiterung geht
+einen Schritt weiter und erlaubt es eigenständige Bücher zu definieren, die sich
+in Artikeln als Inhaltselement einfügen lassen.
 
 Die Erweiterung kann über das
 [Contao Extension Repository](https://contao.org/extension-list/view/books.html)
 installiert werden.
+
+Verwendung
+----------
+
+Hinter dem neuen Menüpunkt *Bücher* werden im Backend die Bücher verwaltet.
+Jedes Buch kann beliebig viele Kapitel und Unterkapitel enthalten. Der Inhalt
+der Kapitel wird wie bei Artikeln durch Inhaltselemente definiert. 
+
+Innerhalb eines Buches kann mit den folgenden Insertags zwischen den Kapiteln
+eines Buches verlinkt werden.
+
+* `{{bookchapter::*}}` Fügt einen Link zu einem Kapitel dieses Buches ein. Der
+  Stern * muss durch die ID oder den Alias des Kapitels ersetzt werden.
+* `{{bookchapter_open::*}}Click here{{link_close}}` Fügt einen Link zu einem
+  anderen Kapitel dieses Buches ein. Der Stern * muss durch die ID oder den
+  Alias des Kapitels ersetzt werden.
+* `{{bookchapter_url::*}}` Fügt die URL zu einem Kapitel dieses Buches ein. Der
+  Stern * muss durch die ID oder den Alias des Kapitels ersetzt werden.
+* `{{bookchapter_title::*}}` Fügt den Titel eines Kapitels dieses Buches ein.
+  Der Stern * muss durch die ID oder den Alias des Kapitels ersetzt werden.

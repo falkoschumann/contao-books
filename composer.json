@@ -1,0 +1,22 @@
+{
+    "name": "falkoschumann/contao-books",
+    "description": "Manage books as backend module in Contao and use it as content element.",
+    "version": "v2.0.0-dev",
+    "keywords": [
+        "contao",
+        "extension",
+        "books",
+        "content"
+    ],
+    "homepage": "https://github.com/falkoschumann/contao-books",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Falko Schumann",
+            "homepage": "https://www.muspellheim.de"
+        }
+    ],
+    "require": {
+        "contao/core": "~3.2"
+    }
+}

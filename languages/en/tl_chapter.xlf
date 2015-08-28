@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/faq/languages/en/default.php" source-language="en">
+        <body>
+            <trans-unit id="tl_chapter.title.0">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.title.1">
+                <source>Please enter the chapter title.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.alias.0">
+                <source>Chapter alias</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.alias.1">
+                <source>The chapter alias is an unique reference to the chapter which can be called instead of its numeric id.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.type.0">
+                <source>Chapter type</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.type.1">
+                <source></source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.tags.0">
+                <source>Tags</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.tags.1">
+                <source>Comma separated list of tags.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.cssID.0">
+                <source>CSS ID/class</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.cssID.1">
+                <source>Here you can set an ID and one or more classes.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.hide.0">
+                <source>Hide chapter in table of content</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.hide.1">
+                <source>If this checkbox is checked there is no link to chapter in table of content.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.published.0">
+                <source>Publish chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.published.1">
+                <source>Make the chapter publicly visible on the website.</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.chapter_legend">
+                <source>Chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.meta_legend">
+                <source>Meta information</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.expert_legend">
+                <source>Expert settings</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.publish_legend">
+                <source>Publish settings</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.editbookheader.0">
+                <source>Edit book settings</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.editbookheader.1">
+                <source>Edit the settings of the book ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.new.0">
+                <source>New chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.new.1">
+                <source>Create a new chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.edit.0">
+                <source>Edit chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.edit.1">
+                <source>Edit chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.editheader.0">
+                <source>Edit chapter settings</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.editheader.1">
+                <source>Edit the settings of the chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.copy.0">
+                <source>Duplicate chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.copy.1">
+                <source>Duplicate chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.copyChilds.0">
+                <source>Duplicate with subchapters</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.copyChilds.1">
+                <source>Duplicate chapter ID %s with its subchapters</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.cut.0">
+                <source>Move chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.cut.1">
+                <source>Move chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.delete.0">
+                <source>Delete chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.delete.1">
+                <source>Delete chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.toggle.0">
+                <source>Publish/unpublish chapter</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.toggle.1">
+                <source>Publish/unpublish chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.show.0">
+                <source>Chapter details</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.show.1">
+                <source>Show the details of chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.pasteafter.0">
+                <source>Paste after</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.pasteafter.1">
+                <source>Paste after chapter ID %s</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.pasteinto.0">
+                <source>Paste into</source>
+            </trans-unit>
+            <trans-unit id="tl_chapter.pasteinto.1">
+                <source>Paste into page ID %s</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

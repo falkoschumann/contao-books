@@ -1,0 +1,23 @@
+<div class="<?= $this->class ?> block"<?= $this->cssID ?>>
+  <?php if ($this->author): ?>
+  <p class="author">  <?= $this->author; ?></p>
+  <?php endif; ?>
+  <h1 class="title">  <?= $this->title; ?></h1>
+  <?php if ($this->subtitle): ?>
+  <h2 class="subtitle">  <?= $this->subtitle; ?></h2>
+  <?php endif; ?>
+  <?php if ($this->abstract): ?>
+  <div class="abstract">
+    <?= $this->abstract; ?>
+  </div>
+  <?php endif; ?>
+
+  <?php if ($this->contents): ?>
+
+  <!-- indexer::stop -->
+  <nav class="contents">
+    <?= $this->contents; ?>
+  </nav>
+  <!-- indexer::continue -->
+  <?php endif; ?>
+</div>
