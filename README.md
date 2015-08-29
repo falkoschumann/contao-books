@@ -32,3 +32,11 @@ eines Buches verlinkt werden.
   Stern * muss durch die ID oder den Alias des Kapitels ersetzt werden.
 * `{{bookchapter_title::*}}` Fügt den Titel eines Kapitels dieses Buches ein.
   Der Stern * muss durch die ID oder den Alias des Kapitels ersetzt werden.
+
+**Ansicht der Bücher als Liste**
+
+![Bücherliste](screenshots/book-list.png)
+
+**Ansicht der Kapitel eines Buches als Baum**
+
+![Kapitelhierarchie](screenshots/chapter-tree.png)
