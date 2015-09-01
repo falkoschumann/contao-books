@@ -119,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_book'] = array
     'palettes' => array
     (
         '__selector__' => array(''),
-        'default'      => '{book_legend},title,subtitle,author;{meta_legend:hide},year,location,language,tags;{expert_legend:hide},cssID;{publish_legend},published'
+        'default'      => '{book_legend},title,subtitle,author,tags;{meta_legend:hide},publisher,location,year,edition,isbn,language;{expert_legend:hide},cssID;{publish_legend},published'
     ),
     // Fields
     'fields'   => array
@@ -193,6 +193,39 @@ $GLOBALS['TL_DCA']['tl_book'] = array
             'inputType' => 'text',
             'eval'      => array('minlength' => 2, 'maxlength' => 2, 'rgxp' => 'alpha', 'tl_class' => 'w50'),
             'sql'       => "varchar(2) NOT NULL default ''"
+        ),
+        'publisher'    => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['publisher'],
+            'exclude'   => true,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ),
+        'edition'    => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['edition'],
+            'exclude'   => true,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => array('maxlength' => 255, 'tl_class' => 'w50'),
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ),
+        'isbn'       => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_book']['isbn'],
+            'exclude'   => true,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => array('maxlength' => 30, 'tl_class' => 'w50'),
+            'sql'       => "varchar(255) NOT NULL default ''"
         ),
         'tags'         => array
         (
