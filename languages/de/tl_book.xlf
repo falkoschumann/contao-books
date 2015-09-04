@@ -49,6 +49,30 @@
                 <source>Please enter the book language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English).</source>
                 <target>Bitte geben Sie die Sprache des Buches gemäß des ISO-639-1 Standards ein (z.B. &quot;de&quot; für Deutsch).</target>
             </trans-unit>
+            <trans-unit id="tl_book.publisher.0">
+                <source>Publisher</source>
+                <target>Verlag</target>
+            </trans-unit>
+            <trans-unit id="tl_book.publisher.1">
+                <source>Please enter the books publisher.</source>
+                <target>Bitte geben Sie den Verlag ein.</target>
+            </trans-unit>
+            <trans-unit id="tl_book.edition.0">
+                <source>Edition</source>
+                <target>Auflage</target>
+            </trans-unit>
+            <trans-unit id="tl_book.edition.1">
+                <source>Please enter the books edition.</source>
+                <target>Bitte geben Sie die Auflage des Buches ein.</target>
+            </trans-unit>
+            <trans-unit id="tl_book.isbn.0">
+                <source>ISBN</source>
+                <target>ISBN</target>
+            </trans-unit>
+            <trans-unit id="tl_book.isbn.1">
+                <source>Please enter the books ISBN.</source>
+                <target>Bitte geben Sie die ISBN des Buches ein.</target>
+            </trans-unit>
             <trans-unit id="tl_book.tags.0">
                 <source>Tags</source>
                 <target>Tags</target>
