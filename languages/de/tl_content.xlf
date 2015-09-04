@@ -6,7 +6,8 @@
                 <target>Buch</target>
             </trans-unit>
             <trans-unit id="tl_content.book.1">
-                <source/>
+                <source>Please select a book to display.</source>
+                <target>Bitte wählen Sie das anzuzeigende Buch aus.</target>
             </trans-unit>
         </body>
     </file>
