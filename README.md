@@ -4,7 +4,7 @@ Books Extension für Contao
 Contao bietet die Möglichkeit mit Hilfe des Moduls *Buchnavigation* innerhalb
 der Seitenstruktur wie durch ein Buch zu navigieren. Diese Erweiterung geht
 einen Schritt weiter und erlaubt es Bücher als eigenständigen Inhalt zu
-definieren. Ein Buch definiert Meta-Informatione wie Author und Sprache, und
+definieren. Ein Buch definiert Meta-Informationen wie Author und Sprache, und
 besitzt eine Kapitelhierarchie. Jedes dieser Bücher kann in Form eines
 Inhaltselements in Artikeln auf jeder Webseite einer Contao-Installation
 eingefügt werden (multidomainfähig).
