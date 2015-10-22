@@ -62,7 +62,7 @@ class BookRunonce extends \Controller
     private function renameFieldCategoryToTags()
     {
         if ($this->Database->fieldExists('category', 'tl_book') && !$this->Database->fieldExists('tags', 'tl_book')) {
-            $this->log("Rename field tl_book.category to tl_book.tags.", __METHOD__, TL_GENERAL);
+//            $this->log("Rename field tl_book.category to tl_book.tags.", __METHOD__, TL_GENERAL);
             $this->Database->execute("ALTER TABLE tl_book CHANGE category tags varchar(255) NOT NULL default ''");
         }
     }
@@ -75,7 +75,7 @@ class BookRunonce extends \Controller
 
             $book = $this->Database->execute("SELECT * FROM tl_book");
             while ($book->next()) {
-                $this->log("Create root chapter for book " . $book->id . ".", __METHOD__, TL_GENERAL);
+//                $this->log("Create root chapter for book " . $book->id . ".", __METHOD__, TL_GENERAL);
                 $chapterId = $this->objChapterRunonce->createRootChapter($book);
                 $this->Database->prepare("UPDATE tl_book SET root_chapter=? WHERE id=?")
                     ->execute($chapterId, $book->id);
@@ -127,12 +127,12 @@ class ChapterRunonce extends \Controller
      */
     public function createRootChapter($book)
     {
-        $this->log("Insert root chapter for book " . $book->id . ".", __METHOD__, TL_GENERAL);
+//        $this->log("Insert root chapter for book " . $book->id . ".", __METHOD__, TL_GENERAL);
         $statement = $this->Database->prepare("INSERT INTO tl_book_chapter SET published=1, text=?");
         $statement->execute($book->text);
         $chapterId = $statement->insertId;
 
-        $this->log("Add chapters of book " . $book->id . " to root chapter " . $chapterId . ".", __METHOD__, TL_GENERAL);
+//        $this->log("Add chapters of book " . $book->id . " to root chapter " . $chapterId . ".", __METHOD__, TL_GENERAL);
         $this->Database->prepare("UPDATE tl_book_chapter SET pid=? WHERE pid=?")
             ->execute($chapterId, $book->id);
 
@@ -153,7 +153,7 @@ class ChapterRunonce extends \Controller
 
         $this->chapter = $this->Database->execute("SELECT * FROM tl_chapter WHERE pid>0 ORDER BY pid, sorting");
         while ($this->chapter->next()) {
-            $this->log("Migrate chapter " . $this->getChapterTitle() . " (" . $this->chapter->id . ").", __METHOD__, TL_GENERAL);
+//            $this->log("Migrate chapter " . $this->getChapterTitle() . " (" . $this->chapter->id . ").", __METHOD__, TL_GENERAL);
             $this->updateChapterTreePath();
             $this->updateChapter();
             $this->createContentElement();
@@ -163,7 +163,7 @@ class ChapterRunonce extends \Controller
 
     private function renameTableTlBookChapterToTlChapter()
     {
-        $this->log("Rename table tl_book_chapter to tl_chapter.", __METHOD__, TL_GENERAL);
+//        $this->log("Rename table tl_book_chapter to tl_chapter.", __METHOD__, TL_GENERAL);
         $this->Database->execute("RENAME TABLE tl_book_chapter TO tl_chapter");
     }
 
@@ -171,7 +171,7 @@ class ChapterRunonce extends \Controller
     private function renameFieldShowInTocToHideAndToogleValue()
     {
         if ($this->Database->fieldExists('show_in_toc', 'tl_chapter') && !$this->Database->fieldExists('hide', 'tl_chapter')) {
-            $this->log("rename field tl_chapter.show_in_toc to tl_chapter.hide and toogle value.", __METHOD__, TL_GENERAL);
+//            $this->log("rename field tl_chapter.show_in_toc to tl_chapter.hide and toogle value.", __METHOD__, TL_GENERAL);
             $this->Database->execute("ALTER TABLE tl_chapter CHANGE show_in_toc hide char(1) NOT NULL default ''");
             $this->Database->execute("UPDATE tl_chapter SET hide = !hide");
             $this->Database->execute("UPDATE tl_chapter SET hide = '' WHERE hide='0'");
@@ -182,7 +182,7 @@ class ChapterRunonce extends \Controller
     private function createFieldType()
     {
         if (!$this->Database->fieldExists('type', 'tl_chapter')) {
-            $this->log("Create field tl_chapter.type and set value.", __METHOD__, TL_GENERAL);
+//            $this->log("Create field tl_chapter.type and set value.", __METHOD__, TL_GENERAL);
             $this->Database->execute("ALTER TABLE tl_chapter ADD type varchar(32) NOT NULL default ''");
             $this->Database->execute("UPDATE tl_chapter SET type='root' WHERE pid=0");
             $this->Database->execute("UPDATE tl_chapter SET type='regular' WHERE pid>0");
@@ -211,13 +211,13 @@ class ChapterRunonce extends \Controller
                 }
             }
         }
-        $this->log("Chapter tree path is " . implode("->", $this->chapterTreePath) . " (" . $level . ").", __METHOD__, TL_GENERAL);
+//        $this->log("Chapter tree path is " . implode("->", $this->chapterTreePath) . " (" . $level . ").", __METHOD__, TL_GENERAL);
     }
 
 
     private function updateChapter()
     {
-        $this->log("update chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
+//        $this->log("update chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
         $pathLength = count($this->chapterTreePath);
         if ($pathLength > 1) {
             $this->Database->prepare("UPDATE tl_chapter SET title=?, pid=? WHERE id=?")
@@ -231,7 +231,7 @@ class ChapterRunonce extends \Controller
 
     private function createContentElement()
     {
-        $this->log("create content element for chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
+//        $this->log("create content element for chapter " . $this->chapter->id . ".", __METHOD__, TL_GENERAL);
         $this->Database->prepare("INSERT INTO tl_content (pid, ptable, tstamp, type, headline, text) VALUES (?, ?, ?, ?, ?, ?)")
             ->execute($this->chapter->id, 'tl_chapter', $this->chapter->tstamp, 'text', $this->chapter->title, $this->chapter->text);
     }
