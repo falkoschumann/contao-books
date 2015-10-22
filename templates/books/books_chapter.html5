@@ -7,11 +7,11 @@
   <nav class="chapter">
     <ul>
       <?php if ($this->previousChapterUrl !== null):?>
-      <li><a href="<?php echo $this->previousChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookPreviousPage']; ?></a></li>
+      <li class="previous"><a href="<?php echo $this->previousChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookPreviousPage']; ?></a></li>
       <?php endif; ?>
-      <li><a href="<?php echo $this->tableOfContentUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookToc']; ?></a></li>
+      <li class="toc"><a href="<?php echo $this->tableOfContentUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookToc']; ?></a></li>
       <?php if ($this->nextChapterUrl !== null):?>
-      <li><a href="<?php echo $this->nextChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookNextPage']; ?></a></li>
+      <li class="next"><a href="<?php echo $this->nextChapterUrl; ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['bookNextPage']; ?></a></li>
       <?php endif; ?>
     </ul>
   </nav>
