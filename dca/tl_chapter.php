@@ -171,7 +171,8 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
         ),
         'tstamp'    => array
         (
-            'sql' => "int(10) unsigned NOT NULL default '0'"
+            'label' => &$GLOBALS['TL_LANG']['tl_chapter']['tstamp'],
+            'sql'   => "int(10) unsigned NOT NULL default '0'"
         ),
         'title'     => array
         (
