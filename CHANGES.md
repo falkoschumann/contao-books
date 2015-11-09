@@ -1,8 +1,8 @@
 Changes
 =======
 
-v2.1.1 Update Templates
------------------------
+v2.1.1 Bugfix
+-------------
 
 - Fixes #11 Error while showing article that includes non existing book.
 
