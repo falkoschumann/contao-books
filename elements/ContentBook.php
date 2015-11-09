@@ -48,11 +48,12 @@ class ContentBook extends \ContentElement
     public function generate()
     {
         $this->objBook = BookModel::findPublishedById($this->book);
-        // TODO Check if book exists
 
         if (TL_MODE == 'BE') {
             return $this->displayWildcard();
         }
+
+        if ($this->objBook === null) return '';
         return parent::generate();
     }
 
@@ -63,7 +64,6 @@ class ContentBook extends \ContentElement
     protected function compile()
     {
         $this->objChapter = ChapterModel::findByIdOrAlias($this->getChapterIdOrAliasFromHttpParameter());
-        // TODO Check if chapter exists
 
         if ($this->objChapter === null) {
             $bookRenderer = new BookRenderer($this->objBook);
@@ -86,6 +86,8 @@ class ContentBook extends \ContentElement
             return \Input::get('items');
         } elseif ($GLOBALS['TL_CONFIG']['useAutoItem'] && isset($_GET['auto_item'])) {
             return \Input::get('auto_item');
+        } else {
+            return null;
         }
     }
 
@@ -99,10 +101,12 @@ class ContentBook extends \ContentElement
     {
         $objTemplate = new \BackendTemplate('be_wildcard');
         $objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['MOD']['books'][0]) . ' ###';
-        $objTemplate->title = $this->objBook->label();
-        $objTemplate->id = $this->objBook->id;
-        $objTemplate->link = $this->objBook->title;
-        $objTemplate->href = 'contao/main.php?do=books&table=tl_chapter&book_id=' . $this->objBook->id;
+        if ($this->objBook !== null) {
+            $objTemplate->title = $this->objBook->label();
+            $objTemplate->id = $this->objBook->id;
+            $objTemplate->link = $this->objBook->title;
+            $objTemplate->href = 'contao/main.php?do=books&table=tl_chapter&book_id=' . $this->objBook->id;
+        }
         return $objTemplate->parse();
     }
 
