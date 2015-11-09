@@ -1,7 +1,7 @@
 {
     "name": "falkoschumann/contao-books",
     "description": "Manage books as backend module in Contao and use it as content element.",
-    "version": "v2.1.1-dev",
+    "version": "v2.1.1",
     "keywords": [
         "contao",
         "extension",
