@@ -1,6 +1,12 @@
 Changes
 =======
 
+v2.1.2 Bugfix
+-------------
+
+- Include element show book title and id also if book is invisible.
+
+
 v2.1.1 Bugfix
 -------------
 
