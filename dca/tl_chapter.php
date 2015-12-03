@@ -190,10 +190,8 @@ $GLOBALS['TL_DCA']['tl_chapter'] = array
             'search'        => true,
             'inputType'     => 'text',
             'eval'          => array(
-                'rgxp'              => 'alnum',
-                'unique'            => true,
+                'rgxp'              => 'folderalias',
                 'doNotCopy'         => true,
-                'spaceToUnderscore' => true,
                 'maxlength'         => 128,
                 'tl_class'          => 'w50'
             ),
