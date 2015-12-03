@@ -1,6 +1,12 @@
 Changes
 =======
 
+v2.1.3 Bugfix
+-------------
+
+- Fix copy and delete book with internal cache activated.
+
+
 v2.1.2 Bugfix
 -------------
 
