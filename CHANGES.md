@@ -1,6 +1,13 @@
 Changes
 =======
 
+v2.1.2 Bugfix
+-------------
+
+- Include element show book title and id also if book is invisible.
+- Fix copy and delete book with internal cache activated.
+
+
 v2.1.1 Bugfix
 -------------
 

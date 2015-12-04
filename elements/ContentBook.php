@@ -47,7 +47,7 @@ class ContentBook extends \ContentElement
      */
     public function generate()
     {
-        $this->objBook = BookModel::findPublishedById($this->book);
+        $this->objBook = BookModel::findById($this->book);
 
         if (TL_MODE == 'BE') {
             return $this->displayWildcard();

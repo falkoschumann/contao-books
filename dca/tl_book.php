@@ -386,8 +386,10 @@ class tl_book extends Backend
 
         $rootChapter = \Muspellheim\Books\ChapterModel::findByPk($dc->activeRecord->root_chapter);
         if ($rootChapter) {
-            $this->log('Delete root chapter ' . $rootChapter->id . '.', __METHOD__, TL_GENERAL);
-			$chapterTable = new DC_Table('tl_chapter');
+            $this->log('Delete root chapter ' . $rootChapter->id . '. Check=' . $check, __METHOD__, TL_GENERAL);
+            $this->loadDataContainer('tl_chapter');
+            $strDriver = 'DC_' . $GLOBALS['TL_DCA']['tl_chapter']['config']['dataContainer'];
+            $chapterTable = new $strDriver('tl_chapter');
 			$chapterTable->intId = $rootChapter->id;
 			$chapterTable->delete(true);
         }
@@ -398,15 +400,17 @@ class tl_book extends Backend
      * This `oncopy_callback` copy all chapters from a book.
      *
      * @param integer   $newBookId
-     * @param \DC_Table $bookTable
+     * @param \DataContainer $bookTable
      */
-    public function copyChapters($newBookId, DC_Table $bookTable)
+    public function copyChapters($newBookId, DataContainer $bookTable)
     {
         $book = \Muspellheim\Books\BookModel::findByPk($bookTable->id);
         $rootChapter = \Muspellheim\Books\ChapterModel::findByPk($book->root_chapter);
         if ($rootChapter) {
             $this->log('Copy root chapter ' . $rootChapter->id . '.', __METHOD__, TL_GENERAL);
-            $chapterTable = new DC_Table('tl_chapter');
+            $this->loadDataContainer('tl_chapter');
+            $strDriver = 'DC_' . $GLOBALS['TL_DCA']['tl_chapter']['config']['dataContainer'];
+            $chapterTable = new $strDriver('tl_chapter');
             $chapterTable->intId = $rootChapter->id;
             $newChapterId = $chapterTable->copy(true);
             $this->Database->prepare('UPDATE tl_book SET root_chapter=? WHERE id=?')->execute($newChapterId, $newBookId);
