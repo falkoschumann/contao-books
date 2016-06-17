@@ -128,7 +128,7 @@ class ChapterRenderer extends TemplateRenderer
         $chapterCount = count($chapterList);
         for ($i = 0; $i < $chapterCount; $i++) {
             if ($chapterList[$i]->id == $chapter->id) {
-                if ($i < $chapterCount - 2) {
+                if ($i < $chapterCount - 1) {
                     return $chapterList[$i + 1];
                 }
             }
