@@ -1,6 +1,13 @@
 Changes
 =======
 
+v2.2.0-dev Library
+------------------
+
+*   Books can be group in sets.
+*   A set can be display like a book in frontend.
+
+
 v2.1.3 Bugfix
 -------------
 
