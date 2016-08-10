@@ -3,13 +3,11 @@
 /**
  * Books Extension for Contao
  *
- * Copyright (c) 2012-2015 Falko Schumann
+ * Copyright (c) 2012-2016 Falko Schumann
  *
- * @package Books
  * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 
 namespace Muspellheim\Books;
 
@@ -17,9 +15,7 @@ namespace Muspellheim\Books;
 /**
  * Replace insert tags.
  *
- * @copyright  Falko Schumann 2015
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Books
+ * @author Falko Schumann <http://www.muspellheim.de>
  */
 class BookInsertTags extends \Frontend
 {

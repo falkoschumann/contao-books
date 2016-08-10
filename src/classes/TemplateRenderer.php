@@ -3,13 +3,11 @@
 /**
  * Books Extension for Contao
  *
- * Copyright (c) 2012-2015 Falko Schumann
+ * Copyright (c) 2012-2016 Falko Schumann
  *
- * @package Books
  * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 
 namespace Muspellheim\Books;
 
@@ -19,9 +17,7 @@ namespace Muspellheim\Books;
  *
  * This renderer based on \Module and \ContentElement.
  *
- * @copyright  Falko Schumann 2012-2015
- * @author     Falko Schumann <falko.schumann@muspellheim.de>
- * @package    Books
+ * @author Falko Schumann <falko.schumann@muspellheim.de>
  */
 abstract class TemplateRenderer extends \Frontend
 {

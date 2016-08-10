@@ -3,10 +3,9 @@
 /**
  * Books Extension for Contao
  *
- * Copyright (c) 2012-2015 Falko Schumann
+ * Copyright (c) 2012-2016 Falko Schumann
  *
- * @package Books
- * @link https://github.com/falkoschumann/contao-books
+ * @link 	https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
 
@@ -48,9 +47,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['book'] = array
 /**
  * Class tl_content_book
  *
- * @copyright  2015 Falko Schumann
- * @author     Falko Schumann <falko.schumann@muspellheim.de>
- * @package    Books
+ * @author Falko Schumann <falko.schumann@muspellheim.de>
  */
 class tl_content_book extends Backend
 {

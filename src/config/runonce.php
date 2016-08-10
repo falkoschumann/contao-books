@@ -3,13 +3,11 @@
 /**
  * Books Extension for Contao
  *
- * Copyright (c) 2012-2015 Falko Schumann
+ * Copyright (c) 2012-2016 Falko Schumann
  *
- * @package Books
  * @link    https://github.com/falkoschumann/contao-books
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 
 namespace Muspellheim\Books;
 
@@ -17,10 +15,7 @@ namespace Muspellheim\Books;
 /**
  * Convert table tl_book from v1.x to v2.x table format.
  *
- * @copyright  Falko Schumann 2015
- * @author     Falko Schumann <http://www.muspellheim.de>
- * @package    Models
- * @license    BSD-2-Clause http://opensource.org/licenses/BSD-2-Clause
+ * @author Falko Schumann <http://www.muspellheim.de>
  */
 class BookRunonce extends \Controller
 {
